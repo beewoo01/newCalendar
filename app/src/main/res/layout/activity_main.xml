@@ -1,8 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <layout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
-    >
+    xmlns:tools="http://schemas.android.com/tools">
 
     <data class="CalendarListBinding">
 
@@ -149,13 +148,14 @@
                 android:layout_weight="1.8"></ListView>
 
             <com.google.android.material.floatingactionbutton.FloatingActionButton
-                android:layout_width="50dp"
-                android:layout_height="50dp"
+                android:id="@+id/fab_button"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
                 android:layout_gravity="bottom|right"
-                android:layout_margin="30dp"
-                android:scaleType="center"
-                android:src="@drawable/ic_add_white_24dp"
-                app:backgroundTint="@color/colorPrimaryDark" />
+                android:layout_margin="20sp"
+                android:backgroundTint="#9500ff"
+                android:src="@drawable/ic_add_white_24dp" />
+
         </LinearLayout>
     </LinearLayout>
 
