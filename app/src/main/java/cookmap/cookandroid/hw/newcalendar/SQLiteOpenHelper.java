@@ -10,6 +10,8 @@ public class SQLiteOpenHelper extends android.database.sqlite.SQLiteOpenHelper {
 
     public static final String table_Name = "contents";
     public static final String ID = "id";
+    //SQLite (id, 제목, 내용, 그림 , 날짜) 순으로 생성 바람
+
 
     public SQLiteOpenHelper(@Nullable Context context, @Nullable String name, @Nullable SQLiteDatabase.CursorFactory factory, int version) {
         super(context, name, factory, version);
