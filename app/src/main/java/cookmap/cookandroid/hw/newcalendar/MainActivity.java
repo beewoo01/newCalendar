@@ -57,10 +57,11 @@ public class MainActivity extends AppCompatActivity implements GestureDetector.O
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        binding = DataBindingUtil.setContentView(this, R.layout.activity_main);
+        setContentView(R.layout.activity_main);
+        //binding = DataBindingUtil.setContentView(this, R.layout.activity_main);
         //mode = ;
         //binding.setModel();
-        binding.setLifecycleOwner(this);
+        //binding.setLifecycleOwner(this);
         //observe();
         //obsetve 함수 만들어 주셈
 
@@ -82,12 +83,12 @@ public class MainActivity extends AppCompatActivity implements GestureDetector.O
         });
 
         mDayList = new ArrayList<DayInfo>();
-        fab.setOnClickListener(this.fabFunction());
-    }
-
-    private View.OnClickListener fabFunction(){
-        startActivity( new Intent(MainActivity.this, witeActivity.class));
-        return null;
+        fab.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                startActivity( new Intent(MainActivity.this, witeActivity.class));
+            }
+        });
     }
 
     @Override
