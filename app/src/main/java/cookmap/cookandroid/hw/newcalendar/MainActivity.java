@@ -2,17 +2,14 @@ package cookmap.cookandroid.hw.newcalendar;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.view.GestureDetectorCompat;
-import androidx.databinding.DataBindingUtil;
+import androidx.recyclerview.widget.RecyclerView;
 
 import android.content.Intent;
-import android.graphics.Point;
 import android.os.Bundle;
 import android.util.Log;
-import android.view.Display;
 import android.view.GestureDetector;
 import android.view.MotionEvent;
 import android.view.View;
-import android.widget.Button;
 import android.widget.GridView;
 import android.widget.ListView;
 import android.widget.TextView;
@@ -37,7 +34,7 @@ public class MainActivity extends AppCompatActivity implements GestureDetector.O
 
     private TextView mTvCalendarTitle;
     private GridView mGvCalendar;
-    private ListView memo_list;
+    private RecyclerView memo_list;
     private FloatingActionButton fab;
 
     private ArrayList<DayInfo> mDayList;
@@ -86,7 +83,7 @@ public class MainActivity extends AppCompatActivity implements GestureDetector.O
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                startActivity( new Intent(MainActivity.this, witeActivity.class));
+                startActivity( new Intent(MainActivity.this, writeActivity.class));
             }
         });
     }

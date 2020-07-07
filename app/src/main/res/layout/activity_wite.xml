@@ -6,7 +6,7 @@
     android:layout_height="match_parent"
     android:orientation="vertical"
     android:background="@color/colorWhite"
-    tools:context=".witeActivity">
+    tools:context=".writeActivity">
 
     <RelativeLayout
         android:layout_width="match_parent"
@@ -130,7 +130,7 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent">
         <EditText
-            android:id="@+id/discription_Edit"
+            android:id="@+id/description_Edit"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginLeft="15dp"

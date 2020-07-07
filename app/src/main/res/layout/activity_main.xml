@@ -140,11 +140,11 @@
                 android:layout_height="1dp"
                 android:background="#928E8E" />
 
-            <ListView
+            <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/Memo_List"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:layout_weight="1.8"></ListView>
+                android:layout_weight="1.8"></androidx.recyclerview.widget.RecyclerView>
 
             <com.google.android.material.floatingactionbutton.FloatingActionButton
                 android:id="@+id/fab_button"
