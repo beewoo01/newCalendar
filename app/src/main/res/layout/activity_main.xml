@@ -144,7 +144,9 @@
                 android:id="@+id/Memo_List"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:layout_weight="1.8"></androidx.recyclerview.widget.RecyclerView>
+                android:layout_weight="1.8"
+                android:overScrollMode="never"
+                ></androidx.recyclerview.widget.RecyclerView>
 
             <com.google.android.material.floatingactionbutton.FloatingActionButton
                 android:id="@+id/fab_button"

@@ -26,7 +26,7 @@ public class writeActivity extends AppCompatActivity implements View.OnClickList
     FloatingActionButton fap;
     String stime, etime;
     String dbName = "con_file.db";
-    int dbVersion = 1;
+    int dbVersion = 2;
     private SQLiteOpenHelper helper;
     private SQLiteDatabase db;
     String tag = "SQLite";
@@ -111,6 +111,7 @@ public class writeActivity extends AppCompatActivity implements View.OnClickList
 
         if (desEdit.getText().toString().trim().length() <= 0) des = none;
         else des = desEdit.getText().toString();
+        if(img.trim().length() <= 0) img = none;
         if (m_img.trim().length() <= 0) m_img = none;
         if (m_img.trim().length() <= 0 || img.trim().length() > 0) m_img = img;
 

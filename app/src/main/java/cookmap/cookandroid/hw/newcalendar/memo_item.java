@@ -3,10 +3,31 @@ package cookmap.cookandroid.hw.newcalendar;
 public class memo_item {
     String id;
     String title;
-    String label;
     String desc;
     String img_main;
     String imgs;
+    String s_date;
+    String e_date;
+    String label;
+
+
+    //title text, description text, main_Img text, img text, s_date text, e_date text, label text
+
+    public String getS_date() {
+        return s_date;
+    }
+
+    public void setS_date(String s_date) {
+        this.s_date = s_date;
+    }
+
+    public String getE_date() {
+        return e_date;
+    }
+
+    public void setE_date(String e_date) {
+        this.e_date = e_date;
+    }
 
     public String getId() {
         return id;

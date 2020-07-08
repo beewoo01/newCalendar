@@ -26,7 +26,7 @@
             android:layout_marginLeft="20sp"
             android:text="title"
             android:textColor="@color/colorBlack"
-            android:textSize="30sp"
+            android:textSize="25sp"
             android:textStyle="bold" />
 
         <TextView
@@ -38,7 +38,7 @@
             android:layout_marginBottom="5sp"
             android:text="title"
             android:textColor="#484848"
-            android:textSize="25sp" />
+            android:textSize="18sp" />
     </LinearLayout>
 
     <RelativeLayout

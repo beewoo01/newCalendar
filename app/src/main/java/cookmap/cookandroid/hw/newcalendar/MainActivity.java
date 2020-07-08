@@ -2,9 +2,13 @@ package cookmap.cookandroid.hw.newcalendar;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.view.GestureDetectorCompat;
+import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.content.Context;
 import android.content.Intent;
+import android.database.Cursor;
+import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.GestureDetector;
@@ -38,7 +42,11 @@ public class MainActivity extends AppCompatActivity implements GestureDetector.O
     private FloatingActionButton fab;
 
     private ArrayList<DayInfo> mDayList;
+    private ArrayList<memo_item> memo_items_List = new ArrayList<memo_item>();
     private CalendarAdapter mCalendarAdapter;
+    private memo_Recycler_Adapter memo_Adapter = null;
+
+    private SQLiteDatabase db;
 
     private CalendarListBinding binding;
 
@@ -80,6 +88,8 @@ public class MainActivity extends AppCompatActivity implements GestureDetector.O
         });
 
         mDayList = new ArrayList<DayInfo>();
+        LinearLayoutManager mLayoutManager = new LinearLayoutManager(this);
+        memo_list.setLayoutManager(mLayoutManager);
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -182,6 +192,69 @@ public class MainActivity extends AppCompatActivity implements GestureDetector.O
         }
 
         initCalendarAdapter();
+        sql_select();
+
+    }
+    private void initMemoAdapter(){
+        memo_Adapter = new memo_Recycler_Adapter(memo_items_List);
+        memo_Adapter.notifyDataSetChanged();
+        memo_list.setAdapter(memo_Adapter);
+        memo_Adapter.notifyDataSetChanged();
+
+        memo_list.addItemDecoration(new RecyclerViewDecoration(15));
+    }
+    void sql_select(){
+        String sql = "select * from " + "contents" + ";";
+        db = openOrCreateDatabase("con_file.db", Context.MODE_PRIVATE,null);
+        //Cursor results = db.rawQuery(sql,null);
+        Cursor results = db.query("contents",null, null, null, null,
+        null, null);
+        //memo_item list = new memo_item();
+
+        //results.moveToFirst();
+        while (results.moveToNext()){
+            int i = 1;
+            memo_item list = new memo_item();
+            int _id = results.getInt(0);
+            String title = results.getString(1);
+            String description = results.getString(2);
+            String main_Img = results.getString(3);
+            String img = results.getString(4);
+            String s_date = results.getString(5);
+            String e_date = results.getString(6);
+            String label = results.getString(7);
+
+            list.setId(String.valueOf(_id));
+            list.setTitle(title);
+            list.setDesc(description);
+            list.setImg_main(main_Img);
+            list.setImgs(img);
+            list.setS_date(s_date);
+            list.setE_date(e_date);
+            if (label == null) {
+                label = "#000000";
+            }
+            list.setLabel(label);
+
+            Log.d("와일문 ", String.valueOf(i));
+            Log.d("셀렉트 ID", String.valueOf(_id));
+            Log.d("셀렉트 제목", title);
+            Log.d("셀렉트 묘사", description);
+            Log.d("셀렉트 커버", main_Img);
+            Log.d("셀렉트 이미지", img);
+            Log.d("셀렉트 시작날", s_date);
+            Log.d("셀렉트 끝날", e_date);
+            Log.d("셀렉트 라벨", label);
+
+
+
+            //title text, description text, main_Img text, img text, s_date text, e_date text, label text
+            memo_items_List.add(list);
+        }
+
+        results.close();
+
+        initMemoAdapter();
     }
 
     /**
