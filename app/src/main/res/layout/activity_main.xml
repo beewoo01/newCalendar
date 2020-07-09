@@ -127,13 +127,21 @@
             android:layout_height="match_parent"
             android:orientation="vertical">
 
-            <GridView
+            <!--<GridView
                 android:id="@+id/Calendar_Grid"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:layout_weight="1.4"
                 android:gravity="center"
-                android:numColumns="7"></GridView>
+                android:numColumns="7"></GridView>-->
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/Calendar_Grid"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_weight="1.4"
+                android:overScrollMode="never"
+                app:layout_constrainedHeight="true"
+                ></androidx.recyclerview.widget.RecyclerView>
 
             <View
                 android:layout_width="match_parent"

@@ -2,6 +2,7 @@ package cookmap.cookandroid.hw.newcalendar;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.view.GestureDetectorCompat;
+import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -9,11 +10,16 @@ import android.content.Context;
 import android.content.Intent;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
+import android.graphics.Color;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Parcel;
 import android.util.Log;
 import android.view.GestureDetector;
 import android.view.MotionEvent;
 import android.view.View;
+import android.view.ViewTreeObserver;
+import android.widget.AdapterView;
 import android.widget.GridView;
 import android.widget.ListView;
 import android.widget.TextView;
@@ -24,7 +30,6 @@ import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import java.util.ArrayList;
 import java.util.Calendar;
 
-import cookmap.cookandroid.hw.newcalendar.databinding.CalendarListBinding;
 
 public class MainActivity extends AppCompatActivity implements GestureDetector.OnGestureListener {
 
@@ -38,17 +43,19 @@ public class MainActivity extends AppCompatActivity implements GestureDetector.O
 
     private TextView mTvCalendarTitle;
     private GridView mGvCalendar;
+    private RecyclerView mCalendar_Gv;
     private RecyclerView memo_list;
     private FloatingActionButton fab;
 
     private ArrayList<DayInfo> mDayList;
     private ArrayList<memo_item> memo_items_List = new ArrayList<memo_item>();
     private CalendarAdapter mCalendarAdapter;
+    private testRecyclerGrid mTestRecyclerAdapter;
     private memo_Recycler_Adapter memo_Adapter = null;
 
     private SQLiteDatabase db;
 
-    private CalendarListBinding binding;
+    //private CalendarListBinding binding;
 
     final static int DISTANCE = 200;
     final static int VELOCITY = 350;
@@ -72,24 +79,51 @@ public class MainActivity extends AppCompatActivity implements GestureDetector.O
 
 
         mTvCalendarTitle = (TextView) findViewById(R.id.Month_Text);
-        mGvCalendar = (GridView) findViewById(R.id.Calendar_Grid);
+        //mGvCalendar = (GridView) findViewById(R.id.Calendar_Grid);
+        mCalendar_Gv = findViewById(R.id.Calendar_Grid);
         memo_list = findViewById(R.id.Memo_List);
         fab = findViewById(R.id.fab_button);
-        //
-        detector = new GestureDetectorCompat(this, this);
 
         //그리드뷰 swipe시 필요
-        mGvCalendar.setOnTouchListener(new View.OnTouchListener() {
+        detector = new GestureDetectorCompat(this, this);
+        mCalendar_Gv.setOnTouchListener(new View.OnTouchListener() {
             @Override
             public boolean onTouch(View v, MotionEvent event) {
                 return detector.onTouchEvent(event);
             }
 
         });
-
         mDayList = new ArrayList<DayInfo>();
         LinearLayoutManager mLayoutManager = new LinearLayoutManager(this);
         memo_list.setLayoutManager(mLayoutManager);
+        memo_list.addItemDecoration(new RecyclerViewDecoration(15));
+
+        mCalendar_Gv.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Toast.makeText(MainActivity.this, mCalendar_Gv.getAdapter().getItemCount()
+                        ,Toast.LENGTH_SHORT).show();
+
+            }
+        });
+
+        /*mGvCalendar.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                Toast.makeText(MainActivity.this, "No." + position, Toast.LENGTH_SHORT).show();
+                for (int i = 0; i < mGvCalendar.getChildCount(); i++){
+                    if (position == i) {
+                        mGvCalendar.getChildAt(i).setBackgroundColor(Color.parseColor("#FFE0AB"));
+                    }
+                    else{
+                        mGvCalendar.getChildAt(i).setBackgroundColor(Color.TRANSPARENT);
+                    }
+
+                }
+
+            }
+        });*/
+
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -99,13 +133,29 @@ public class MainActivity extends AppCompatActivity implements GestureDetector.O
     }
 
     @Override
-    protected void onResume() {
-        super.onResume();
+    protected void onStart() {
+        super.onStart();
 
         // 이번달 의 캘린더 인스턴스를 생성한다.
         mThisMonthCalendar = Calendar.getInstance();
         mThisMonthCalendar.set(Calendar.DAY_OF_MONTH, 1);
         getCalendar(mThisMonthCalendar);
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+
+
+        /*new Handler().post(new Runnable() {
+            @Override
+            public void run() {
+                mGvCalendar.performItemClick(mGvCalendar.getChildAt(10),
+                        10, mGvCalendar.getAdapter().getItemId(10));
+                mGvCalendar.getChildAt(10).setBackgroundColor(Color.parseColor("#FFE0AB"));
+            }
+        });*/
+
     }
 
     /**
@@ -152,41 +202,19 @@ public class MainActivity extends AppCompatActivity implements GestureDetector.O
         for (int i = 0; i < dayOfMonth - 1; i++) {
             int date = lastMonthStartDay + i;
             day = new DayInfo();
-
-            //mThisMonthCalendar.get(Calendar.YEAR);
-            //if (mThisMonthCalendar.get(Calendar.MONTH) > 10) fixmonth = "0" + mThisMonthCalendar.get(Calendar.MONTH);
-            //if (date > 10) fixday = "0" + date;
-
-            //String ful = Integer.toString(mThisMonthCalendar.get(Calendar.YEAR)).concat(Integer.toString(mThisMonthCalendar.get(Calendar.MONTH)).concat(String.valueOf(date)));
-            //Log.d("형식을 보자1", ful);
-
             day.setDay(Integer.toString(date));
-            //day.setDay(ful);
-
             day.setInMonth(false);
-
             mDayList.add(day);
         }
         for (int i = 1; i <= thisMonthLastDay; i++) {
             day = new DayInfo();
-            //String ful = Integer.toString(mThisMonthCalendar.get(Calendar.YEAR)).concat(Integer.toString(mThisMonthCalendar.get(Calendar.MONTH)+1).concat(String.valueOf(i)));
-
-            //day.setDay(ful);
             day.setDay(Integer.toString(i));
-
-            //Log.d("형식을 보자2", ful);
             day.setInMonth(true);
-
             mDayList.add(day);
         }
         for (int i = 1; i < 42 - (thisMonthLastDay + dayOfMonth - 1) + 1; i++) {
             day = new DayInfo();
-            //String ful = Integer.toString(mThisMonthCalendar.get(Calendar.YEAR)).concat(Integer.toString(mThisMonthCalendar.get(Calendar.MONTH)+2).concat(String.valueOf(i)));
-            //Log.d("형식을 보자3", ful);
-
-            //day.setDay(ful);
             day.setDay(Integer.toString(i));
-
             day.setInMonth(false);
             mDayList.add(day);
         }
@@ -199,9 +227,12 @@ public class MainActivity extends AppCompatActivity implements GestureDetector.O
         memo_Adapter = new memo_Recycler_Adapter(memo_items_List);
         memo_Adapter.notifyDataSetChanged();
         memo_list.setAdapter(memo_Adapter);
-        memo_Adapter.notifyDataSetChanged();
+        for (int i = 0; i < memo_items_List.size(); i++){
+            Log.d("메모 리스트",memo_items_List.get(i).getTitle() + ",i =" + i);
+            memo_items_List.get(i).getTitle();
+        }
 
-        memo_list.addItemDecoration(new RecyclerViewDecoration(15));
+
     }
     void sql_select(){
         String sql = "select * from " + "contents" + ";";
@@ -212,6 +243,7 @@ public class MainActivity extends AppCompatActivity implements GestureDetector.O
         //memo_item list = new memo_item();
 
         //results.moveToFirst();
+        memo_items_List.clear();
         while (results.moveToNext()){
             int i = 1;
             memo_item list = new memo_item();
@@ -245,8 +277,6 @@ public class MainActivity extends AppCompatActivity implements GestureDetector.O
             Log.d("셀렉트 시작날", s_date);
             Log.d("셀렉트 끝날", e_date);
             Log.d("셀렉트 라벨", label);
-
-
 
             //title text, description text, main_Img text, img text, s_date text, e_date text, label text
             memo_items_List.add(list);
@@ -287,8 +317,26 @@ public class MainActivity extends AppCompatActivity implements GestureDetector.O
 
 
     private void initCalendarAdapter() {
-        mCalendarAdapter = new CalendarAdapter(this, R.layout.day, mDayList);
-        mGvCalendar.setAdapter(mCalendarAdapter);
+        mCalendar_Gv.getViewTreeObserver().addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
+            @Override
+            public void onGlobalLayout() {
+                int height = mCalendar_Gv.getHeight() / 6;
+                mTestRecyclerAdapter.setLength(height);
+                mTestRecyclerAdapter.notifyDataSetChanged();
+                mCalendar_Gv.getViewTreeObserver().removeOnGlobalLayoutListener(this);
+
+
+            }
+        });
+        //mCalendarAdapter = new CalendarAdapter(this, R.layout.day, mDayList);
+        mTestRecyclerAdapter = new testRecyclerGrid(this, R.layout.day, mDayList);
+        GridLayoutManager mgmr = new GridLayoutManager(this, 7);
+        mCalendar_Gv.setLayoutManager(mgmr);
+
+        mCalendar_Gv.setAdapter(mTestRecyclerAdapter);
+
+        //mGvCalendar.setAdapter(mCalendarAdapter);
+
     }
 
     @Override
@@ -318,13 +366,12 @@ public class MainActivity extends AppCompatActivity implements GestureDetector.O
 
     @Override
     public boolean onFling(MotionEvent e1, MotionEvent e2, float velocityX, float velocityY) {
-        Log.d("onFling", "여긴옴");
+
         if (e1.getX() - e2.getX() < DISTANCE && Math.abs(velocityX) > VELOCITY) {
-            Toast.makeText(MainActivity.this, "좌 -> 우", Toast.LENGTH_SHORT).show();
             getCalendar(getLastMonth(mThisMonthCalendar));
+
         }
         if (e2.getX() - e1.getX() < DISTANCE && Math.abs(velocityX) > VELOCITY) {
-            Toast.makeText(MainActivity.this, "우 -> 좌", Toast.LENGTH_SHORT).show();
             getCalendar(getNextMonth(mThisMonthCalendar));
         }
         return true;
