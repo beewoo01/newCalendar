@@ -1,5 +1,6 @@
 package cookmap.cookandroid.hw.newcalendar;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.view.GestureDetectorCompat;
 import androidx.recyclerview.widget.GridLayoutManager;
@@ -47,6 +48,8 @@ public class MainActivity extends AppCompatActivity implements GestureDetector.O
     private RecyclerView memo_list;
     private FloatingActionButton fab;
 
+    private String TAG = "메인클래스";
+
     private ArrayList<DayInfo> mDayList;
     private ArrayList<memo_item> memo_items_List = new ArrayList<memo_item>();
     private CalendarAdapter mCalendarAdapter;
@@ -86,43 +89,28 @@ public class MainActivity extends AppCompatActivity implements GestureDetector.O
 
         //그리드뷰 swipe시 필요
         detector = new GestureDetectorCompat(this, this);
-        mCalendar_Gv.setOnTouchListener(new View.OnTouchListener() {
+        /*mCalendar_Gv.setOnTouchListener(new View.OnTouchListener() {
             @Override
             public boolean onTouch(View v, MotionEvent event) {
                 return detector.onTouchEvent(event);
             }
 
-        });
+        });*/
         mDayList = new ArrayList<DayInfo>();
         LinearLayoutManager mLayoutManager = new LinearLayoutManager(this);
         memo_list.setLayoutManager(mLayoutManager);
         memo_list.addItemDecoration(new RecyclerViewDecoration(15));
 
-        mCalendar_Gv.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Toast.makeText(MainActivity.this, mCalendar_Gv.getAdapter().getItemCount()
-                        ,Toast.LENGTH_SHORT).show();
+        mCalendar_Gv.addOnItemTouchListener(new RecyclerItemClickListener(getApplicationContext(), mCalendar_Gv,
+                new RecyclerItemClickListener.OnItemClickListener() {
 
-            }
-        });
+                    @Override
+                    public void OnItemClick(View view, int position) {
+                        Log.d(TAG, String.valueOf(position));
 
-        /*mGvCalendar.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                Toast.makeText(MainActivity.this, "No." + position, Toast.LENGTH_SHORT).show();
-                for (int i = 0; i < mGvCalendar.getChildCount(); i++){
-                    if (position == i) {
-                        mGvCalendar.getChildAt(i).setBackgroundColor(Color.parseColor("#FFE0AB"));
-                    }
-                    else{
-                        mGvCalendar.getChildAt(i).setBackgroundColor(Color.TRANSPARENT);
                     }
 
-                }
-
-            }
-        });*/
+                }));
 
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -145,16 +133,6 @@ public class MainActivity extends AppCompatActivity implements GestureDetector.O
     @Override
     protected void onResume() {
         super.onResume();
-
-
-        /*new Handler().post(new Runnable() {
-            @Override
-            public void run() {
-                mGvCalendar.performItemClick(mGvCalendar.getChildAt(10),
-                        10, mGvCalendar.getAdapter().getItemId(10));
-                mGvCalendar.getChildAt(10).setBackgroundColor(Color.parseColor("#FFE0AB"));
-            }
-        });*/
 
     }
 
@@ -195,7 +173,6 @@ public class MainActivity extends AppCompatActivity implements GestureDetector.O
                 + (mThisMonthCalendar.get(Calendar.MONTH) + 1) + "월");
 
         DayInfo day;
-        String fixmonth = null, fixday = null;
 
         Log.e("DayOfMOnth", dayOfMonth + "");
 
@@ -367,13 +344,13 @@ public class MainActivity extends AppCompatActivity implements GestureDetector.O
     @Override
     public boolean onFling(MotionEvent e1, MotionEvent e2, float velocityX, float velocityY) {
 
-        if (e1.getX() - e2.getX() < DISTANCE && Math.abs(velocityX) > VELOCITY) {
+        /*if (e1.getX() - e2.getX() < DISTANCE && Math.abs(velocityX) > VELOCITY) {
             getCalendar(getLastMonth(mThisMonthCalendar));
 
         }
         if (e2.getX() - e1.getX() < DISTANCE && Math.abs(velocityX) > VELOCITY) {
             getCalendar(getNextMonth(mThisMonthCalendar));
-        }
+        }*/
         return true;
     }
 }
