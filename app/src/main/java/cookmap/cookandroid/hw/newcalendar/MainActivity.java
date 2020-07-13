@@ -11,6 +11,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
+import android.database.sqlite.SQLiteException;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.os.Handler;
@@ -28,8 +29,11 @@ import android.widget.Toast;
 
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Date;
 
 
 public class MainActivity extends AppCompatActivity implements GestureDetector.OnGestureListener {
@@ -52,11 +56,13 @@ public class MainActivity extends AppCompatActivity implements GestureDetector.O
 
     private ArrayList<DayInfo> mDayList;
     private ArrayList<memo_item> memo_items_List = new ArrayList<memo_item>();
-    private CalendarAdapter mCalendarAdapter;
+    //private CalendarAdapter mCalendarAdapter;
     private testRecyclerGrid mTestRecyclerAdapter;
     private memo_Recycler_Adapter memo_Adapter = null;
 
     private SQLiteDatabase db;
+    private SQLiteOpenHelper helper;
+    int dbVersion = 1;
 
     //private CalendarListBinding binding;
 
@@ -68,46 +74,67 @@ public class MainActivity extends AppCompatActivity implements GestureDetector.O
     Calendar mLastMonthCalendar;
     Calendar mThisMonthCalendar;
     Calendar mNextMonthCalendar;
+    int height = 0;
+    String cu_time = "01";
+    String selectQuery = null;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        //binding = DataBindingUtil.setContentView(this, R.layout.activity_main);
-        //mode = ;
-        //binding.setModel();
-        //binding.setLifecycleOwner(this);
-        //observe();
-        //obsetve 함수 만들어 주셈
-
 
         mTvCalendarTitle = (TextView) findViewById(R.id.Month_Text);
         //mGvCalendar = (GridView) findViewById(R.id.Calendar_Grid);
         mCalendar_Gv = findViewById(R.id.Calendar_Grid);
         memo_list = findViewById(R.id.Memo_List);
         fab = findViewById(R.id.fab_button);
+        init();
 
-        //그리드뷰 swipe시 필요
-        detector = new GestureDetectorCompat(this, this);
-        /*mCalendar_Gv.setOnTouchListener(new View.OnTouchListener() {
+
+        mCalendar_Gv.setOnTouchListener(new View.OnTouchListener() {
             @Override
             public boolean onTouch(View v, MotionEvent event) {
                 return detector.onTouchEvent(event);
             }
 
-        });*/
-        mDayList = new ArrayList<DayInfo>();
-        LinearLayoutManager mLayoutManager = new LinearLayoutManager(this);
-        memo_list.setLayoutManager(mLayoutManager);
-        memo_list.addItemDecoration(new RecyclerViewDecoration(15));
+        });
+        /*mCalendar_Gv.addOnItemTouchListener(new RecyclerItemClickListener(getApplicationContext(), mCalendar_Gv,
+                new RecyclerItemClickListener()));*/
 
-        mCalendar_Gv.addOnItemTouchListener(new RecyclerItemClickListener(getApplicationContext(), mCalendar_Gv,
+        mCalendar_Gv.addOnItemTouchListener(new RecyclerItemClickListener(MainActivity.this, mCalendar_Gv,
                 new RecyclerItemClickListener.OnItemClickListener() {
 
                     @Override
                     public void OnItemClick(View view, int position) {
-                        Log.d(TAG, String.valueOf(position));
+                        for (int i = 0; i < mCalendar_Gv.getChildCount(); i++) {
+                            if (position == i) {
+                                mCalendar_Gv.getChildAt(i).setBackgroundColor(Color.parseColor("#FFE0AB"));
+                                cu_time = mDayList.get(i).getDay();
+                                /*String f =
+                                        mThisMonthCalendar.get(Calendar.YEAR) + "/" + mThisMonthCalendar.get(Calendar.MONTH)+*/
 
+                                try {
+                                    SimpleDateFormat format = new SimpleDateFormat("yyyy/MM/dd");
+                                    Date date = format.parse(mThisMonthCalendar.get(Calendar.YEAR) + "/" + (mThisMonthCalendar.get(Calendar.MONTH)+1) + "/" + mDayList.get(i).getDay());
+                                    Calendar calendar = Calendar.getInstance();
+                                    calendar.setTime(date);
+                                    selectQuery = format.format(calendar.getTime());
+                                    Log.d("gv됨?", selectQuery);
+                                } catch (ParseException e) {
+                                    e.printStackTrace();
+                                }
+                                Calendar calendar = Calendar.getInstance();
+
+                                Log.d("gv됨?", mThisMonthCalendar.get(Calendar.YEAR) + "/" + (mThisMonthCalendar.get(Calendar.MONTH)+1) + "/" + mDayList.get(i).getDay());
+
+
+                                // 날짜 변경으로 리스트뷰 초기화 함수로 ㄱㄱ 해야함
+                            } else {
+                                mCalendar_Gv.getChildAt(i).setBackgroundColor(Color.TRANSPARENT);
+
+                            }
+
+                        }
                     }
 
                 }));
@@ -119,15 +146,33 @@ public class MainActivity extends AppCompatActivity implements GestureDetector.O
             }
         });
     }
+    private String change_num(int number){
+        return "";
+    }
+
+    private void init(){
+        //그리드뷰 swipe시 필요
+        detector = new GestureDetectorCompat(this, this);
+
+        mDayList = new ArrayList<DayInfo>();
+        LinearLayoutManager mLayoutManager = new LinearLayoutManager(this);
+        memo_list.setLayoutManager(mLayoutManager);
+        memo_list.addItemDecoration(new RecyclerViewDecoration(15));
+        // 이번달 의 캘린더 인스턴스를 생성한다.
+        mThisMonthCalendar = Calendar.getInstance();
+        mThisMonthCalendar.set(Calendar.DAY_OF_MONTH, 1);
+        getCalendar(mThisMonthCalendar);
+    }
+
 
     @Override
     protected void onStart() {
         super.onStart();
 
         // 이번달 의 캘린더 인스턴스를 생성한다.
-        mThisMonthCalendar = Calendar.getInstance();
+        /*mThisMonthCalendar = Calendar.getInstance();
         mThisMonthCalendar.set(Calendar.DAY_OF_MONTH, 1);
-        getCalendar(mThisMonthCalendar);
+        getCalendar(mThisMonthCalendar);*/
     }
 
     @Override
@@ -197,10 +242,12 @@ public class MainActivity extends AppCompatActivity implements GestureDetector.O
         }
 
         initCalendarAdapter();
-        sql_select();
+        if (checkTable()){ sql_select(); }
+
 
     }
     private void initMemoAdapter(){
+
         memo_Adapter = new memo_Recycler_Adapter(memo_items_List);
         memo_Adapter.notifyDataSetChanged();
         memo_list.setAdapter(memo_Adapter);
@@ -211,12 +258,36 @@ public class MainActivity extends AppCompatActivity implements GestureDetector.O
 
 
     }
+    boolean checkTable(){
+
+        db = openOrCreateDatabase("con_file.db", Context.MODE_PRIVATE,null);
+        Cursor cursor = db.rawQuery("SELECT name FROM sqlite_master WHERE type='table' AND name ='contents'" , null);
+        cursor.moveToNext();
+        if (cursor.getCount() > 0){
+            return true;
+        }else {
+            Log.d(TAG, "테이블이 없음");
+            helper = new SQLiteOpenHelper(this, "contents", null, dbVersion);
+            return false;
+        }
+        //db.rawQuery("SELECT '' FROM "+"contents"+" limit 1;" ,null);
+    }
     void sql_select(){
         String sql = "select * from " + "contents" + ";";
-        db = openOrCreateDatabase("con_file.db", Context.MODE_PRIVATE,null);
-        //Cursor results = db.rawQuery(sql,null);
-        Cursor results = db.query("contents",null, null, null, null,
-        null, null);
+        /*mThisMonthCalendar.get(Calendar.YEAR) + "년 "
+                + (mThisMonthCalendar.get(Calendar.MONTH) + 1) + "월";*/
+        sql = "SELECT * FROM contents WHERE s_date = ?";
+
+       /* Cursor results = (Cursor) db.rawQuery(sql, new String[]{mThisMonthCalendar.get(Calendar.YEAR)
+        *//*월*//*        +cu_time});*/
+
+        /*query("contents",null, null, null, null,
+        null, null);*/
+        //mThisMonthCalendar.get(Calendar.YEAR) + "/" + (mThisMonthCalendar.get(Calendar.MONTH)+1) + "/" + mThisMonthCalendar.get(Calendar.DATE);
+        Log.d("thismonth는?", mThisMonthCalendar.get(Calendar.YEAR) + "/" + (mThisMonthCalendar.get(Calendar.MONTH)+1) + "/" + mThisMonthCalendar.get(Calendar.DATE));
+        Cursor results = db.rawQuery(sql, new String[]{mThisMonthCalendar.get(Calendar.YEAR) + "/" + (mThisMonthCalendar.get(Calendar.MONTH)+1) + "/" + mThisMonthCalendar.get(Calendar.DATE)});
+        /*Cursor results = db.query("contents",null,null,null,null,
+                null, null);*/
         //memo_item list = new memo_item();
 
         //results.moveToFirst();
@@ -294,23 +365,30 @@ public class MainActivity extends AppCompatActivity implements GestureDetector.O
 
 
     private void initCalendarAdapter() {
-        mCalendar_Gv.getViewTreeObserver().addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
-            @Override
-            public void onGlobalLayout() {
-                int height = mCalendar_Gv.getHeight() / 6;
-                mTestRecyclerAdapter.setLength(height);
-                mTestRecyclerAdapter.notifyDataSetChanged();
-                mCalendar_Gv.getViewTreeObserver().removeOnGlobalLayoutListener(this);
+        if (height == 0){
+            mCalendar_Gv.getViewTreeObserver().addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
+                @Override
+                public void onGlobalLayout() {
+                    height = mCalendar_Gv.getHeight() /6/3;
+                    mCalendar_Gv.addItemDecoration(new RecyclerViewDecoration(height));
+                    //mTestRecyclerAdapter.setLength(height);
+                    mTestRecyclerAdapter.notifyDataSetChanged();
+                    mCalendar_Gv.getViewTreeObserver().removeOnGlobalLayoutListener(this);
 
 
-            }
-        });
+                }
+            });
+        }
+
         //mCalendarAdapter = new CalendarAdapter(this, R.layout.day, mDayList);
         mTestRecyclerAdapter = new testRecyclerGrid(this, R.layout.day, mDayList);
+
         GridLayoutManager mgmr = new GridLayoutManager(this, 7);
         mCalendar_Gv.setLayoutManager(mgmr);
-
         mCalendar_Gv.setAdapter(mTestRecyclerAdapter);
+        /*int height = mCalendar_Gv.getHeight() /6/3;
+        mCalendar_Gv.addItemDecoration(new RecyclerViewDecoration(height));
+        mTestRecyclerAdapter.notifyDataSetChanged();*/
 
         //mGvCalendar.setAdapter(mCalendarAdapter);
 
@@ -344,13 +422,15 @@ public class MainActivity extends AppCompatActivity implements GestureDetector.O
     @Override
     public boolean onFling(MotionEvent e1, MotionEvent e2, float velocityX, float velocityY) {
 
-        /*if (e1.getX() - e2.getX() < DISTANCE && Math.abs(velocityX) > VELOCITY) {
+        if (e1.getX() - e2.getX() < DISTANCE && Math.abs(velocityX) > VELOCITY) {
+            Log.d("계산", String.valueOf(e1.getX()-e2.getX()));
             getCalendar(getLastMonth(mThisMonthCalendar));
 
         }
         if (e2.getX() - e1.getX() < DISTANCE && Math.abs(velocityX) > VELOCITY) {
+            Log.d("계산", String.valueOf(e1.getX()-e2.getX()));
             getCalendar(getNextMonth(mThisMonthCalendar));
-        }*/
+        }
         return true;
     }
 }

@@ -26,7 +26,7 @@ public class writeActivity extends AppCompatActivity implements View.OnClickList
     FloatingActionButton fap;
     String stime, etime;
     String dbName = "con_file.db";
-    int dbVersion = 2;
+    int dbVersion = 1;
     private SQLiteOpenHelper helper;
     private SQLiteDatabase db;
     String tag = "SQLite";
