@@ -62,6 +62,7 @@ public class MainActivity extends AppCompatActivity implements GestureDetector.O
 
     private SQLiteDatabase db;
     private SQLiteOpenHelper helper;
+    private SimpleDateFormat format;
     int dbVersion = 1;
 
     //private CalendarListBinding binding;
@@ -88,6 +89,11 @@ public class MainActivity extends AppCompatActivity implements GestureDetector.O
         mCalendar_Gv = findViewById(R.id.Calendar_Grid);
         memo_list = findViewById(R.id.Memo_List);
         fab = findViewById(R.id.fab_button);
+        format = new SimpleDateFormat("yyyy/MM/dd");
+        long now = System.currentTimeMillis();
+        Date date = new Date(now);
+        selectQuery = format.format(date);
+
         init();
 
 
@@ -114,18 +120,20 @@ public class MainActivity extends AppCompatActivity implements GestureDetector.O
                                         mThisMonthCalendar.get(Calendar.YEAR) + "/" + mThisMonthCalendar.get(Calendar.MONTH)+*/
 
                                 try {
-                                    SimpleDateFormat format = new SimpleDateFormat("yyyy/MM/dd");
+                                    format = new SimpleDateFormat("yyyy/MM/dd");
                                     Date date = format.parse(mThisMonthCalendar.get(Calendar.YEAR) + "/" + (mThisMonthCalendar.get(Calendar.MONTH)+1) + "/" + mDayList.get(i).getDay());
                                     Calendar calendar = Calendar.getInstance();
                                     calendar.setTime(date);
                                     selectQuery = format.format(calendar.getTime());
                                     Log.d("gv됨?", selectQuery);
-                                } catch (ParseException e) {
+                                    if (checkTable()){ sql_select(); }
+                                    //여기로2
+                                    } catch (ParseException e) {
                                     e.printStackTrace();
                                 }
                                 Calendar calendar = Calendar.getInstance();
 
-                                Log.d("gv됨?", mThisMonthCalendar.get(Calendar.YEAR) + "/" + (mThisMonthCalendar.get(Calendar.MONTH)+1) + "/" + mDayList.get(i).getDay());
+                                Log.d("gv됨?32", mThisMonthCalendar.get(Calendar.YEAR) + "/" + (mThisMonthCalendar.get(Calendar.MONTH)+1) + "/" + mDayList.get(i).getDay());
 
 
                                 // 날짜 변경으로 리스트뷰 초기화 함수로 ㄱㄱ 해야함
@@ -153,6 +161,7 @@ public class MainActivity extends AppCompatActivity implements GestureDetector.O
     private void init(){
         //그리드뷰 swipe시 필요
         detector = new GestureDetectorCompat(this, this);
+
 
         mDayList = new ArrayList<DayInfo>();
         LinearLayoutManager mLayoutManager = new LinearLayoutManager(this);
@@ -270,29 +279,16 @@ public class MainActivity extends AppCompatActivity implements GestureDetector.O
             helper = new SQLiteOpenHelper(this, "contents", null, dbVersion);
             return false;
         }
-        //db.rawQuery("SELECT '' FROM "+"contents"+" limit 1;" ,null);
     }
     void sql_select(){
-        String sql = "select * from " + "contents" + ";";
-        /*mThisMonthCalendar.get(Calendar.YEAR) + "년 "
-                + (mThisMonthCalendar.get(Calendar.MONTH) + 1) + "월";*/
-        sql = "SELECT * FROM contents WHERE s_date = ?";
+        String sql = "SELECT * FROM contents WHERE s_date = ?";
 
-       /* Cursor results = (Cursor) db.rawQuery(sql, new String[]{mThisMonthCalendar.get(Calendar.YEAR)
-        *//*월*//*        +cu_time});*/
 
-        /*query("contents",null, null, null, null,
-        null, null);*/
-        //mThisMonthCalendar.get(Calendar.YEAR) + "/" + (mThisMonthCalendar.get(Calendar.MONTH)+1) + "/" + mThisMonthCalendar.get(Calendar.DATE);
-        Log.d("thismonth는?", mThisMonthCalendar.get(Calendar.YEAR) + "/" + (mThisMonthCalendar.get(Calendar.MONTH)+1) + "/" + mThisMonthCalendar.get(Calendar.DATE));
-        Cursor results = db.rawQuery(sql, new String[]{mThisMonthCalendar.get(Calendar.YEAR) + "/" + (mThisMonthCalendar.get(Calendar.MONTH)+1) + "/" + mThisMonthCalendar.get(Calendar.DATE)});
-        /*Cursor results = db.query("contents",null,null,null,null,
-                null, null);*/
-        //memo_item list = new memo_item();
+        Cursor results = db.rawQuery(sql, new String[]{selectQuery});
 
-        //results.moveToFirst();
         memo_items_List.clear();
         while (results.moveToNext()){
+            Log.d("while문","오나요?");
             int i = 1;
             memo_item list = new memo_item();
             int _id = results.getInt(0);
@@ -326,7 +322,6 @@ public class MainActivity extends AppCompatActivity implements GestureDetector.O
             Log.d("셀렉트 끝날", e_date);
             Log.d("셀렉트 라벨", label);
 
-            //title text, description text, main_Img text, img text, s_date text, e_date text, label text
             memo_items_List.add(list);
         }
 
