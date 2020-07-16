@@ -20,10 +20,13 @@ import android.util.Log;
 import android.view.GestureDetector;
 import android.view.MotionEvent;
 import android.view.View;
+import android.view.ViewGroup;
 import android.view.ViewTreeObserver;
 import android.widget.AdapterView;
 import android.widget.GridView;
+import android.widget.LinearLayout;
 import android.widget.ListView;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -51,6 +54,7 @@ public class MainActivity extends AppCompatActivity implements GestureDetector.O
     private RecyclerView mCalendar_Gv;
     private RecyclerView memo_list;
     private FloatingActionButton fab;
+    private LinearLayout empt_lay;
 
     private String TAG = "메인클래스";
 
@@ -89,6 +93,7 @@ public class MainActivity extends AppCompatActivity implements GestureDetector.O
         mCalendar_Gv = findViewById(R.id.Calendar_Grid);
         memo_list = findViewById(R.id.Memo_List);
         fab = findViewById(R.id.fab_button);
+        empt_lay = findViewById(R.id.empty_layout);
         format = new SimpleDateFormat("yyyy/MM/dd");
         long now = System.currentTimeMillis();
         Date date = new Date(now);
@@ -289,7 +294,6 @@ public class MainActivity extends AppCompatActivity implements GestureDetector.O
         memo_items_List.clear();
         while (results.moveToNext()){
             Log.d("while문","오나요?");
-            int i = 1;
             memo_item list = new memo_item();
             int _id = results.getInt(0);
             String title = results.getString(1);
@@ -312,7 +316,6 @@ public class MainActivity extends AppCompatActivity implements GestureDetector.O
             }
             list.setLabel(label);
 
-            Log.d("와일문 ", String.valueOf(i));
             Log.d("셀렉트 ID", String.valueOf(_id));
             Log.d("셀렉트 제목", title);
             Log.d("셀렉트 묘사", description);
@@ -326,8 +329,15 @@ public class MainActivity extends AppCompatActivity implements GestureDetector.O
         }
 
         results.close();
+        Log.d("메모사이즈", String.valueOf(memo_items_List.size()));
+        if (memo_items_List.size() <= 0){
+            empt_lay.setVisibility(View.VISIBLE);
+        }else{
+            Log.d("메모사이즈", "else");
+            empt_lay.setVisibility(View.GONE);
+            initMemoAdapter();
+        }
 
-        initMemoAdapter();
     }
 
     /**
@@ -364,7 +374,7 @@ public class MainActivity extends AppCompatActivity implements GestureDetector.O
             mCalendar_Gv.getViewTreeObserver().addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
                 @Override
                 public void onGlobalLayout() {
-                    height = mCalendar_Gv.getHeight() /6/3;
+                    height = mCalendar_Gv.getHeight() /6/4;
                     mCalendar_Gv.addItemDecoration(new RecyclerViewDecoration(height));
                     //mTestRecyclerAdapter.setLength(height);
                     mTestRecyclerAdapter.notifyDataSetChanged();
@@ -374,18 +384,11 @@ public class MainActivity extends AppCompatActivity implements GestureDetector.O
                 }
             });
         }
-
-        //mCalendarAdapter = new CalendarAdapter(this, R.layout.day, mDayList);
         mTestRecyclerAdapter = new testRecyclerGrid(this, R.layout.day, mDayList);
 
         GridLayoutManager mgmr = new GridLayoutManager(this, 7);
         mCalendar_Gv.setLayoutManager(mgmr);
         mCalendar_Gv.setAdapter(mTestRecyclerAdapter);
-        /*int height = mCalendar_Gv.getHeight() /6/3;
-        mCalendar_Gv.addItemDecoration(new RecyclerViewDecoration(height));
-        mTestRecyclerAdapter.notifyDataSetChanged();*/
-
-        //mGvCalendar.setAdapter(mCalendarAdapter);
 
     }
 

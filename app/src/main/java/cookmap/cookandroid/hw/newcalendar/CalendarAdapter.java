@@ -72,21 +72,7 @@ public class CalendarAdapter extends BaseAdapter {
         if(convertView == null)
         {
             convertView = mLiInflater.inflate(mResource, null);
-
-            if(position % 7 == 6)
-            {
-                convertView.setLayoutParams(new GridView.LayoutParams(getCellWidthDP()+getRestCellWidthDP(), getCellHeightDP()));
-                // 셀 높,낮이 조절 하는곳
-                /*convertView.setLayoutParams(new GridView.LayoutParams(getCellWidthDP()+getRestCellWidthDP(), getCellHeightDP()));*/
-            }
-            else
-            {
-                convertView.setLayoutParams(new GridView.LayoutParams(getCellWidthDP(), getCellHeightDP()));
-            }
-
-
             dayViewHolder = new DayViewHolde();
-
             dayViewHolder.llBackground = (LinearLayout)convertView.findViewById(R.id.day_cell_ll_background);
             dayViewHolder.tvDay = (TextView) convertView.findViewById(R.id.day_cell_tv_day);
 

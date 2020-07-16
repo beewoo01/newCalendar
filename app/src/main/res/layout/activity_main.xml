@@ -4,6 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_height="match_parent"
     android:layout_width="match_parent"
+    android:background="@color/colorWhite"
     tools:context=".MainActivity">
 
     <!--<data class="CalendarListBinding">
@@ -19,6 +20,7 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="35sp"
+            android:background="@color/colorWhite"
             android:orientation="horizontal">
 
             <TextView
@@ -48,6 +50,7 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="30dp"
+            android:background="@color/colorWhite"
             android:orientation="horizontal">
 
             <TextView
@@ -137,8 +140,9 @@
                 android:id="@+id/Calendar_Grid"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:layout_weight="1.4"
+                android:layout_weight="1.6"
                 android:overScrollMode="never"
+                android:background="@color/colorWhite"
                 app:layout_constrainedHeight="true"
                 ></androidx.recyclerview.widget.RecyclerView>
 
@@ -147,22 +151,56 @@
                 android:layout_height="1dp"
                 android:background="#928E8E" />
 
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_weight="1.8"
+                >
+
             <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/Memo_List"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
+                android:background="@color/colorWhite"
                 android:layout_weight="1.8"
                 android:overScrollMode="never"
                 ></androidx.recyclerview.widget.RecyclerView>
+                <LinearLayout
+                    android:id="@+id/empty_layout"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:layout_centerInParent="true"
+                    android:visibility="gone"
+                    >
+                    <ImageView
+                        android:layout_width="30dp"
+                        android:layout_height="30dp"
+                        android:src="@drawable/ic_mood_black_24dp"
+                        />
 
-            <com.google.android.material.floatingactionbutton.FloatingActionButton
-                android:id="@+id/fab_button"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="bottom|right"
-                android:layout_margin="20sp"
-                android:backgroundTint="#9500ff"
-                android:src="@drawable/ic_add_white_24dp" />
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:textColor="@color/colorBlack"
+                        android:layout_marginLeft="10sp"
+                        android:text="항목을 추가해 주세요"
+                        android:textSize="20sp"
+                        />
+                </LinearLayout>
+
+                <com.google.android.material.floatingactionbutton.FloatingActionButton
+                    android:id="@+id/fab_button"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentRight="true"
+                    android:layout_alignParentBottom="true"
+                    android:layout_margin="20sp"
+                    android:backgroundTint="#9500ff"
+                    android:src="@drawable/ic_add_white_24dp" />
+            </RelativeLayout>
+
+
 
         </LinearLayout>
     </LinearLayout>
