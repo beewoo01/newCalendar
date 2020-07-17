@@ -48,7 +48,7 @@ public class MainActivity extends AppCompatActivity implements GestureDetector.O
     public static int THURSDAY = 5;
     public static int FRIDAY = 6;
     public static int SATURDAY = 7;
-
+    
     private TextView mTvCalendarTitle;
     private GridView mGvCalendar;
     private RecyclerView mCalendar_Gv;
