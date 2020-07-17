@@ -19,6 +19,11 @@ public class SQLiteOpenHelper extends android.database.sqlite.SQLiteOpenHelper {
         super(context, name, factory, version);
     }
 
+    public SQLiteOpenHelper(Context context){
+        super(context, "contents", null, 1);
+
+    }
+
     @Override
     public void onCreate(SQLiteDatabase db) {
         String sql = "create table contents" +

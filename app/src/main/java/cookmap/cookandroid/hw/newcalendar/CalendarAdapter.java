@@ -8,6 +8,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.GridView;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
@@ -75,6 +76,7 @@ public class CalendarAdapter extends BaseAdapter {
             dayViewHolder = new DayViewHolde();
             dayViewHolder.llBackground = (LinearLayout)convertView.findViewById(R.id.day_cell_ll_background);
             dayViewHolder.tvDay = (TextView) convertView.findViewById(R.id.day_cell_tv_day);
+            dayViewHolder.dot_img = (ImageView) convertView.findViewById(R.id.img_item_dot);
 
             convertView.setTag(dayViewHolder);
         }
@@ -135,6 +137,7 @@ public class CalendarAdapter extends BaseAdapter {
     {
         public LinearLayout llBackground;
         public TextView tvDay;
+        public ImageView dot_img;
 
     }
 

@@ -94,6 +94,7 @@ public class MainActivity extends AppCompatActivity implements GestureDetector.O
         memo_list = findViewById(R.id.Memo_List);
         fab = findViewById(R.id.fab_button);
         empt_lay = findViewById(R.id.empty_layout);
+        helper = new SQLiteOpenHelper(this);
         format = new SimpleDateFormat("yyyy/MM/dd");
         long now = System.currentTimeMillis();
         Date date = new Date(now);
@@ -109,45 +110,14 @@ public class MainActivity extends AppCompatActivity implements GestureDetector.O
             }
 
         });
-        /*mCalendar_Gv.addOnItemTouchListener(new RecyclerItemClickListener(getApplicationContext(), mCalendar_Gv,
-                new RecyclerItemClickListener()));*/
 
         mCalendar_Gv.addOnItemTouchListener(new RecyclerItemClickListener(MainActivity.this, mCalendar_Gv,
                 new RecyclerItemClickListener.OnItemClickListener() {
 
                     @Override
                     public void OnItemClick(View view, int position) {
-                        for (int i = 0; i < mCalendar_Gv.getChildCount(); i++) {
-                            if (position == i) {
-                                mCalendar_Gv.getChildAt(i).setBackgroundColor(Color.parseColor("#FFE0AB"));
-                                cu_time = mDayList.get(i).getDay();
-                                /*String f =
-                                        mThisMonthCalendar.get(Calendar.YEAR) + "/" + mThisMonthCalendar.get(Calendar.MONTH)+*/
+                        day_touch(view, position);
 
-                                try {
-                                    format = new SimpleDateFormat("yyyy/MM/dd");
-                                    Date date = format.parse(mThisMonthCalendar.get(Calendar.YEAR) + "/" + (mThisMonthCalendar.get(Calendar.MONTH)+1) + "/" + mDayList.get(i).getDay());
-                                    Calendar calendar = Calendar.getInstance();
-                                    calendar.setTime(date);
-                                    selectQuery = format.format(calendar.getTime());
-                                    Log.d("gv됨?", selectQuery);
-                                    if (checkTable()){ sql_select(); }
-                                    //여기로2
-                                    } catch (ParseException e) {
-                                    e.printStackTrace();
-                                }
-                                Calendar calendar = Calendar.getInstance();
-
-                                Log.d("gv됨?32", mThisMonthCalendar.get(Calendar.YEAR) + "/" + (mThisMonthCalendar.get(Calendar.MONTH)+1) + "/" + mDayList.get(i).getDay());
-
-
-                                // 날짜 변경으로 리스트뷰 초기화 함수로 ㄱㄱ 해야함
-                            } else {
-                                mCalendar_Gv.getChildAt(i).setBackgroundColor(Color.TRANSPARENT);
-
-                            }
-
-                        }
                     }
 
                 }));
@@ -159,8 +129,36 @@ public class MainActivity extends AppCompatActivity implements GestureDetector.O
             }
         });
     }
-    private String change_num(int number){
-        return "";
+
+    private void day_touch(View view, int position){
+        for (int i = 0; i < mCalendar_Gv.getChildCount(); i++) {
+            if (position == i) {
+                mCalendar_Gv.getChildAt(i).setBackgroundColor(Color.parseColor("#FFE0AB"));
+                cu_time = mDayList.get(i).getDay();
+
+                try {
+                    format = new SimpleDateFormat("yyyy/MM/dd");
+                    Date date = format.parse(mThisMonthCalendar.get(Calendar.YEAR) + "/" + (mThisMonthCalendar.get(Calendar.MONTH)+1) + "/" + mDayList.get(i).getDay());
+                    Calendar calendar = Calendar.getInstance();
+                    calendar.setTime(date);
+                    selectQuery = format.format(calendar.getTime());
+                    Log.d("gv됨?", selectQuery);
+                    if (checkTable()){ sql_select(); }
+                    //여기로2
+                } catch (ParseException e) {
+                    e.printStackTrace();
+                }
+
+                Log.d("gv됨?32", mThisMonthCalendar.get(Calendar.YEAR) + "/" + (mThisMonthCalendar.get(Calendar.MONTH)+1) + "/" + mDayList.get(i).getDay());
+
+
+                // 날짜 변경으로 리스트뷰 초기화 함수로 ㄱㄱ 해야함
+            } else {
+                mCalendar_Gv.getChildAt(i).setBackgroundColor(Color.TRANSPARENT);
+
+            }
+
+        }
     }
 
     private void init(){
@@ -182,11 +180,6 @@ public class MainActivity extends AppCompatActivity implements GestureDetector.O
     @Override
     protected void onStart() {
         super.onStart();
-
-        // 이번달 의 캘린더 인스턴스를 생성한다.
-        /*mThisMonthCalendar = Calendar.getInstance();
-        mThisMonthCalendar.set(Calendar.DAY_OF_MONTH, 1);
-        getCalendar(mThisMonthCalendar);*/
     }
 
     @Override
@@ -204,6 +197,10 @@ public class MainActivity extends AppCompatActivity implements GestureDetector.O
         int lastMonthStartDay;
         int dayOfMonth;
         int thisMonthLastDay;
+        String MonthChar;
+        String dayChar;
+        String parm= null;
+        db = openOrCreateDatabase("con_file.db", Context.MODE_PRIVATE,null);
 
         mDayList.clear();
 
@@ -226,6 +223,13 @@ public class MainActivity extends AppCompatActivity implements GestureDetector.O
 
         lastMonthStartDay -= (dayOfMonth - 1) - 1;
 
+        MonthChar = String.valueOf(mThisMonthCalendar.get(Calendar.MONTH) + 1);
+        if (Integer.parseInt(MonthChar) < 10){
+            Log.d("10보다", "작음"+ MonthChar);
+            MonthChar = String.valueOf(changh(Integer.parseInt(MonthChar)));
+            Log.d("바뀐", "MonthChar: "+ MonthChar);
+        }Log.d("10보다", "큼"+ MonthChar);
+
 
         // 캘린더 타이틀(년월 표시)을 세팅한다.
         mTvCalendarTitle.setText(mThisMonthCalendar.get(Calendar.YEAR) + "년 "
@@ -240,12 +244,60 @@ public class MainActivity extends AppCompatActivity implements GestureDetector.O
             day = new DayInfo();
             day.setDay(Integer.toString(date));
             day.setInMonth(false);
+
             mDayList.add(day);
         }
         for (int i = 1; i <= thisMonthLastDay; i++) {
+            dayChar = String.valueOf(i);
             day = new DayInfo();
             day.setDay(Integer.toString(i));
             day.setInMonth(true);
+            //String sql = "SELECT * FROM contents WHERE s_date = ?";
+            try {
+                helper = new SQLiteOpenHelper(this, "contents", null, dbVersion);
+                db = helper.getWritableDatabase();
+                Cursor c = db.query("contents", null, null, null, null, null, null);
+
+                while (c.moveToNext()){
+                    Log.d("while옴니다!", ";;;");
+                }
+                if (Integer.parseInt(dayChar) < 10){
+                    dayChar = changh(Integer.parseInt(dayChar));
+                }
+                /*String sql = "SELECT * FROM contents";
+                Log.d("쿼리가 잘못? ",mThisMonthCalendar.get(Calendar.YEAR) + "/" +
+                        MonthChar + "/" + dayChar);
+                Cursor results = db.rawQuery(sql, null);
+                *//*Cursor results = db.rawQuery(sql, new String[]{mThisMonthCalendar.get(Calendar.YEAR) + "/" +
+                        MonthChar + "/" + dayChar});*//*
+                while (results.moveToNext()){
+
+                }
+                Log.d("함 보자",mThisMonthCalendar.get(Calendar.YEAR) + "/" +
+                        MonthChar + "/" + dayChar);
+                Log.d("함 보자", String.valueOf(results.getCount()));
+                Log.d("함 보자", String.valueOf(results.getCount()));
+                Log.d("함 보자", String.valueOf(results.getCount()));
+                Log.d("함 보자", String.valueOf(results.getCount()));*/
+                //results.close();
+                /*if (results.getCount() >= 5){
+                    //빨강
+                    Log.d("색별추출","빨강");
+                }else if (results.getCount() >= 3 || results.getCount() > 2) Log.d("색별추출","노랑");
+                else if (results.getCount() == 0){
+                    Log.d("카운트@@", i + ": 0이라네");
+                }
+                else Log.d("색별추출","초록");
+                if (results.getCount() == 2){
+                    Log.d("카운트@@","2개이상 14일?");
+                }*/
+            } catch (Exception e) {
+                e.printStackTrace();
+                Log.d("잘못됨", "데이터베이스를못염");
+            }
+
+
+
             mDayList.add(day);
         }
         for (int i = 1; i < 42 - (thisMonthLastDay + dayOfMonth - 1) + 1; i++) {
@@ -260,6 +312,15 @@ public class MainActivity extends AppCompatActivity implements GestureDetector.O
 
 
     }
+
+    private String changh(int num){
+        String charter;
+        if (num <= 10) charter = "0" + num;
+        else charter = String.valueOf(num);
+        Log.d("chang", charter);
+
+        return charter;
+    }
     private void initMemoAdapter(){
 
         memo_Adapter = new memo_Recycler_Adapter(memo_items_List);
@@ -272,7 +333,7 @@ public class MainActivity extends AppCompatActivity implements GestureDetector.O
 
 
     }
-    boolean checkTable(){
+    private boolean checkTable(){
 
         db = openOrCreateDatabase("con_file.db", Context.MODE_PRIVATE,null);
         Cursor cursor = db.rawQuery("SELECT name FROM sqlite_master WHERE type='table' AND name ='contents'" , null);
@@ -285,10 +346,9 @@ public class MainActivity extends AppCompatActivity implements GestureDetector.O
             return false;
         }
     }
-    void sql_select(){
+    private void sql_select(){
         String sql = "SELECT * FROM contents WHERE s_date = ?";
-
-
+        Log.d("여기데이는?", selectQuery);
         Cursor results = db.rawQuery(sql, new String[]{selectQuery});
 
         memo_items_List.clear();

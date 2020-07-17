@@ -3,6 +3,15 @@ package cookmap.cookandroid.hw.newcalendar;
 public class DayInfo {
     private String day;
     private boolean inMonth;
+    private boolean isMemo;
+
+    public boolean isMemo() {
+        return isMemo;
+    }
+
+    public void setMemo(boolean memo) {
+        isMemo = memo;
+    }
 
     public String getDay() {
         return day;
