@@ -17,6 +17,7 @@ import android.view.GestureDetector;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewTreeObserver;
+import android.widget.ImageButton;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
@@ -36,7 +37,7 @@ public class MainActivity extends AppCompatActivity implements GestureDetector.O
     private TextView mTvCalendarTitle;
     private RecyclerView mCalendar_Gv;
     private RecyclerView memo_list;
-    private FloatingActionButton fab;
+    private ImageButton fab;
     private LinearLayout empt_lay;
 
     private String TAG = "메인클래스";

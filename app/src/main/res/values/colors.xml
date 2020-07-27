@@ -1,12 +1,34 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <color name="colorPrimary">#008577</color>
-    <color name="colorPrimaryDark">#000000</color>
-    <color name="colorAccent">#D81B60</color>
+    <color name="colorPrimary">#2196F3</color>
+    <color name="colorPrimaryDark">#FFFFFF</color>
+    <color name="colorAccent">#D001FF</color>
     <color name="colorWhite">#FFFFFF</color>
     <color name="colorBlack">#000000</color>
     <color name="colorGray">#BCC7C7C7</color>
     <color name="colorRed">#FF0000</color>
     <color name="colorGreen">#31B432</color>
     <color name="colorYellow">#FFEB3B</color>
+
+
+
+    <color name="my_app_primary_variant_color">#FFFFFF</color>
+    <!--모르겟음-->
+    <color name="my_app_secondary_variant_color">#FFFFFF</color>
+    <!--모르겟음-->
+    <color name="my_app_surface_color">#FFFFFF</color>
+    <!--Main 배경 색상-->
+    <color name="my_app_color_on_primary">#000000</color>
+    <!--상위 : 글자,아이콘--> <!--하위 : 요일, 년월-->
+    <color name="my_app_color_on_secondary">#FFFFFF</color>
+    <!--fap 아이콘 색상이 바뀜-->
+    <color name="my_app_color_on_background">#FF9A92</color>
+
+    <color name="my_app_color_on_error">#FF1100</color>
+
+    <color name="my_app_color_on_surface">#000000</color>
+    <!--선택날짜색상-->
+    <color name="mtrl_scrim_color">#FFEB3B</color>
+
+
 </resources>

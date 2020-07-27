@@ -1,6 +1,7 @@
 package cookmap.cookandroid.hw.newcalendar;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.util.Pair;
 import androidx.fragment.app.DialogFragment;
 
 import android.app.DatePickerDialog;
@@ -13,6 +14,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.DatePicker;
 import android.widget.EditText;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -30,7 +32,7 @@ public class writeActivity extends AppCompatActivity implements View.OnClickList
     EditText titleEdit, desEdit;
     TextView s_date, e_date, s_txt, e_txt;
     LinearLayout start_pick, end_pick;
-    FloatingActionButton fap;
+    ImageButton fap;
     String stime, etime;
     String dbName = "con_file.db";
     int dbVersion = 1;
@@ -108,8 +110,9 @@ public class writeActivity extends AppCompatActivity implements View.OnClickList
     }
 
     public void showDatePickerDialog(View view){
-        MaterialDatePicker.Builder builder = MaterialDatePicker.Builder.datePicker();
-        builder.setTitleText("SELECT A DATE");
+        //MaterialDatePicker.Builder builder = MaterialDatePicker.Builder.datePicker();
+        MaterialDatePicker.Builder<Pair<Long, Long>> builder = MaterialDatePicker.Builder.dateRangePicker();
+        builder.setTitleText("날짜를 선택하세요");
         MaterialDatePicker materialDatePicker = builder.build();
         materialDatePicker.show(getSupportFragmentManager(), "태그");
 

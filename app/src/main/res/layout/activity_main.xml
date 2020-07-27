@@ -189,15 +189,17 @@
                         />
                 </LinearLayout>
 
-                <com.google.android.material.floatingactionbutton.FloatingActionButton
+                <ImageButton
                     android:id="@+id/fab_button"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_alignParentRight="true"
+                    android:layout_width="60sp"
+                    android:layout_height="60sp"
+                    android:background="@drawable/button_state"
+                    android:src="@drawable/ic_add_white_24dp"
                     android:layout_alignParentBottom="true"
+                    android:layout_alignParentRight="true"
                     android:layout_margin="20sp"
-                    android:backgroundTint="#9500ff"
-                    android:src="@drawable/ic_add_white_24dp" />
+                    android:elevation="5dp"
+                    />
             </RelativeLayout>
 
 

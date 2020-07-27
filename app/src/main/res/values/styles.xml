@@ -1,11 +1,19 @@
 <resources>
 
     <!-- Base application theme. -->
-    <style name="AppTheme" parent="Theme.AppCompat">
+    <style name="AppTheme" parent="Theme.MaterialComponents.DayNight.NoActionBar">
+        <!--Theme.MaterialComponents.DayNight.NoActionBar-->
         <!-- Customize your theme here. -->
         <item name="colorPrimary">@color/colorPrimary</item>
         <item name="colorPrimaryDark">@color/colorBlack</item>
         <item name="colorAccent">@color/colorAccent</item>
+        <item name="buttonStyle">@style/AppTheme.Button</item>
+
+        <!-- New MaterialComponents attributes. -->
+        <item name="scrimBackground">@color/mtrl_scrim_color</item>
+
+        <item name="colorControlActivated">#33691e</item>
+        <item name="colorControlHighlight">#d50000</item>
 
         <item name="textAppearanceHeadline1">@style/TextAppearance.MaterialComponents.Headline1</item>
         <item name="textAppearanceHeadline2">@style/TextAppearance.MaterialComponents.Headline2</item>
@@ -22,14 +30,14 @@
         <item name="textAppearanceOverline">@style/TextAppearance.MaterialComponents.Overline</item>
 
     </style>
-<!--
-    <style name="AppTheme.NoActionBar">
-        <item name="windowActionBar">false</item>
-        <item name="windowNoTitle">true</item>
+
+    <style name="AppTheme.PreviewFix" parent="AppTheme">
+        <item name="buttonStyle">@style/AppTheme.Button.PreviewFix</item>
     </style>
 
-    <style name="AppTheme.appBarOverlay" parent="ThemeOverlay.MaterialComponents.Dark.ActionBar"/>
-    <style name="AppTheme.PopupOverlay" parent="Theme.MaterialComponents.Light"/>-->
+    <style name="AppTheme.Button" parent="Widget.MaterialComponents.Button"/>
+
+    <style name="AppTheme.Button.PreviewFix" parent="Widget.MaterialComponents.Button.UnelevatedButton"/>
 
 
 
