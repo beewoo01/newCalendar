@@ -2,39 +2,37 @@ package cookmap.cookandroid.hw.newcalendar;
 
 import android.content.Context;
 import android.graphics.Color;
-import android.graphics.Rect;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import java.util.ArrayList;
 
-public class memo_Recycler_Adapter extends RecyclerView.Adapter<memo_Recycler_Adapter.ViewHolder> {
-    private ArrayList<memo_item> items = null;
+public class Memo_Adapter extends RecyclerView.Adapter<Memo_Adapter.ViewHolder> {
+    private ArrayList<memo_item> items;
 
-    memo_Recycler_Adapter(ArrayList<memo_item> list) {
+    Memo_Adapter(ArrayList<memo_item> list) {
         items = list;
     }
 
     @NonNull
     @Override
-    public memo_Recycler_Adapter.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+    public Memo_Adapter.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         Context context = parent.getContext();
         LayoutInflater inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         View view = inflater.inflate(R.layout.memo_list_contents, parent, false);
-        memo_Recycler_Adapter.ViewHolder vh = new memo_Recycler_Adapter.ViewHolder(view);
+        Memo_Adapter.ViewHolder vh = new Memo_Adapter.ViewHolder(view);
         return vh;
     }
 
     @Override
-    public void onBindViewHolder(@NonNull memo_Recycler_Adapter.ViewHolder holder, int position) {
+    public void onBindViewHolder(@NonNull Memo_Adapter.ViewHolder holder, int position) {
         memo_item item = items.get(position);
         holder.c_title.setText(item.getTitle());
         holder.c_desc.setText(item.getDesc());
