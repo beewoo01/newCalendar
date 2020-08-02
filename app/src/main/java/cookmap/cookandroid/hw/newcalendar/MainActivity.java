@@ -1,17 +1,23 @@
 package cookmap.cookandroid.hw.newcalendar;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.app.ActivityCompat;
+import androidx.core.content.ContextCompat;
 import androidx.core.view.GestureDetectorCompat;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.Manifest;
 import android.content.Context;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.graphics.Color;
 import android.os.Bundle;
+import android.text.TextUtils;
 import android.util.Log;
 import android.view.GestureDetector;
 import android.view.MotionEvent;
@@ -20,6 +26,7 @@ import android.view.ViewTreeObserver;
 import android.widget.ImageButton;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
@@ -108,9 +115,52 @@ public class MainActivity extends AppCompatActivity implements GestureDetector.O
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                checkSelfPermission();
                 startActivity(new Intent(MainActivity.this, writeActivity.class));
             }
         });
+    }
+
+    public void checkSelfPermission() {
+        String temp = "";
+
+        //파일 읽기 권한 확인
+        if (ContextCompat.checkSelfPermission(this, Manifest.permission.READ_EXTERNAL_STORAGE)
+                != PackageManager.PERMISSION_GRANTED) {
+            temp += Manifest.permission.READ_EXTERNAL_STORAGE + " ";
+
+        }
+
+        //파일 쓰기 권한 확인
+        /*if (ContextCompat.checkSelfPermission(this, Manifest.permission.WRITE_EXTERNAL_STORAGE)
+                != PackageManager.PERMISSION_GRANTED) {
+            temp += Manifest.permission.WRITE_EXTERNAL_STORAGE + " ";
+        }*/
+
+        if (TextUtils.isEmpty(temp) == false) {
+            //권한 요청
+            ActivityCompat.requestPermissions(this, temp.trim().split(" "),1);
+
+        }else {
+            // 모두 허용 상태
+            Toast.makeText(this, "권한을 모두 허용", Toast.LENGTH_SHORT).show();
+        }
+
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        Log.d(TAG,"PermissionsResult");
+        if (requestCode == 1) {
+            int length = permissions.length;
+            for (int i = 0; i < length; i++) {
+                if (grantResults[i] == PackageManager.PERMISSION_GRANTED) {
+
+                } else {
+                    Toast.makeText(this, "사진 업로드 기능이 제한 됩니다.", Toast.LENGTH_SHORT).show();
+                }
+            }
+        }
     }
 
     private void day_touch(int position) {
@@ -208,7 +258,6 @@ public class MainActivity extends AppCompatActivity implements GestureDetector.O
         lastMonthStartDay -= (dayOfMonth - 1) - 1;
 
 
-
         // 캘린더 타이틀(년월 표시)을 세팅한다.
         mTvCalendarTitle.setText(mThisMonthCalendar.get(Calendar.YEAR) + "년 "
                 + (mThisMonthCalendar.get(Calendar.MONTH) + 1) + "월");
@@ -220,30 +269,29 @@ public class MainActivity extends AppCompatActivity implements GestureDetector.O
             day = new DayInfo();
             day.setDay(Integer.toString(date));
             day.setInMonth(false);
-            day.setFull_Day(mThisMonthCalendar.get(Calendar.YEAR) + "/" + change((mThisMonthCalendar.get(Calendar.MONTH) )) + "/" +change(Integer.parseInt(day.getDay())));
+            day.setFull_Day(mThisMonthCalendar.get(Calendar.YEAR) + "/" + change((mThisMonthCalendar.get(Calendar.MONTH))) + "/" + change(Integer.parseInt(day.getDay())));
             mDayList.add(day);
         }
         for (int i = 1; i <= thisMonthLastDay; i++) {
             day = new DayInfo();
             day.setDay(Integer.toString(i));
             day.setInMonth(true);
-            day.setFull_Day(mThisMonthCalendar.get(Calendar.YEAR) + "/" + change((mThisMonthCalendar.get(Calendar.MONTH)+1 )) + "/" +change(Integer.parseInt(day.getDay())));
+            day.setFull_Day(mThisMonthCalendar.get(Calendar.YEAR) + "/" + change((mThisMonthCalendar.get(Calendar.MONTH) + 1)) + "/" + change(Integer.parseInt(day.getDay())));
             mDayList.add(day);
         }
         for (int i = 1; i < 42 - (thisMonthLastDay + dayOfMonth - 1) + 1; i++) {
             day = new DayInfo();
             day.setDay(Integer.toString(i));
             day.setInMonth(false);
-            day.setFull_Day(mThisMonthCalendar.get(Calendar.YEAR) + "/" + change((mThisMonthCalendar.get(Calendar.MONTH)+2 )) + "/" + change(Integer.parseInt(day.getDay())));
+            day.setFull_Day(mThisMonthCalendar.get(Calendar.YEAR) + "/" + change((mThisMonthCalendar.get(Calendar.MONTH) + 2)) + "/" + change(Integer.parseInt(day.getDay())));
             mDayList.add(day);
         }
 
 
-
-        for (int i = 0; i <= mDayList.size()-1; i++){
+        for (int i = 0; i <= mDayList.size() - 1; i++) {
             int z = 0;
-            for (int j = 0; j <= memo_items_List.size()-1; j++){
-                if (mDayList.get(i).getFull_Day().equals(memo_items_List.get(j).getS_date())){
+            for (int j = 0; j <= memo_items_List.size() - 1; j++) {
+                if (mDayList.get(i).getFull_Day().equals(memo_items_List.get(j).getS_date())) {
                     z++;
                 }
             }
@@ -256,12 +304,12 @@ public class MainActivity extends AppCompatActivity implements GestureDetector.O
         }
     }
 
-    private void select(){
+    private void select() {
         memo_items_List.clear();
         String sql = "select * from " + table_name + ";";
-        Cursor results = db.rawQuery(sql,null);
+        Cursor results = db.rawQuery(sql, null);
         int i = 0;
-        while (results.moveToNext()){
+        while (results.moveToNext()) {
             memo_item list = new memo_item();
             list.setS_date(results.getString(5));
             memo_items_List.add(list);
@@ -322,7 +370,9 @@ public class MainActivity extends AppCompatActivity implements GestureDetector.O
             list.setS_date(results.getString(5));
             list.setE_date(results.getString(6));
             String label = results.getString(7);
-            if (label == null) { label = "#000000"; }
+            if (label == null) {
+                label = "#000000";
+            }
             list.setLabel(label);
 
             memo_items_List.add(list);
@@ -353,9 +403,10 @@ public class MainActivity extends AppCompatActivity implements GestureDetector.O
 
     /**
      * 다음달의 Calendar 객체를 반환합니다.
-     * @
+     *
      * @param calendar
      * @return NextMonthCalendar
+     * @
      */
 
     private Calendar getNextMonth(Calendar calendar) {
@@ -420,14 +471,14 @@ public class MainActivity extends AppCompatActivity implements GestureDetector.O
         if (e1.getX() - e2.getX() < DISTANCE && Math.abs(velocityX) > VELOCITY) {
             Log.d("계산", String.valueOf(e1.getX() - e2.getX()));
             if (checkTable())
-            select();
+                select();
             getCalendar(getLastMonth(mThisMonthCalendar));
 
         }
         if (e2.getX() - e1.getX() < DISTANCE && Math.abs(velocityX) > VELOCITY) {
             Log.d("계산", String.valueOf(e1.getX() - e2.getX()));
             if (checkTable())
-            select();
+                select();
             getCalendar(getNextMonth(mThisMonthCalendar));
         }
         return true;

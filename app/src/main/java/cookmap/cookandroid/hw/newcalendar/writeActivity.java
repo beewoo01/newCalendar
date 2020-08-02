@@ -1,14 +1,25 @@
 package cookmap.cookandroid.hw.newcalendar;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.app.ActivityCompat;
+import androidx.core.content.ContextCompat;
 import androidx.core.util.Pair;
+import androidx.fragment.app.DialogFragment;
+import androidx.fragment.app.Fragment;
 
+import android.Manifest;
+import android.app.Dialog;
 import android.content.ContentValues;
+import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteException;
 import android.os.Bundle;
+import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ImageView;
@@ -100,8 +111,59 @@ public class writeActivity extends AppCompatActivity implements View.OnClickList
         //제목, 입력되어있는지 확인 (제목만 작성 되어 있어도 괜찮음)
         else if (v.getId() == R.id.select_Date ) showDatePickerDialog();
         // 달력으로
-        else if (v.getId() == R.id.fab_button); return;
+        else if (v.getId() == R.id.fab_button){
+            checkSelfPermission();
+            Log.d(TAG,"Fab_Button");
+            /*Fragment fragment = new GalleryDialog();
+            Bundle bundle = new Bundle();
+            getSupportFragmentManager().findFragmentById(R.id.gallery_frag);*/
+
+            //galleryDialog.callFunction();
+            /*Intent photoPickerIntent = new Intent(Intent.ACTION_PICK);
+            photoPickerIntent.setType("image/*");
+            startActivityForResult(photoPickerIntent, 1);*/
+            return;
+        }
         // 사진 선택창 띄워줘야함
+    }
+
+    public void checkSelfPermission() {
+        String temp = "";
+
+        //파일 읽기 권한 확인
+        if (ContextCompat.checkSelfPermission(this, Manifest.permission.READ_EXTERNAL_STORAGE)
+                != PackageManager.PERMISSION_GRANTED) {
+            temp += Manifest.permission.READ_EXTERNAL_STORAGE + " ";
+
+        }
+
+        if (TextUtils.isEmpty(temp) == false) {
+            //권한 요청
+            ActivityCompat.requestPermissions(this, temp.trim().split(" "),1);
+
+        }else {
+            // 모두 허용 상태
+            Toast.makeText(this, "권한을 모두 허용", Toast.LENGTH_SHORT).show();
+            GalleryDialog galleryDialog = new GalleryDialog();
+            galleryDialog.show(getSupportFragmentManager(), "tag");
+        }
+
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        Log.d(TAG,"PermissionsResult");
+        if (requestCode == 1) {
+            int length = permissions.length;
+            for (int i = 0; i < length; i++) {
+                if (grantResults[i] == PackageManager.PERMISSION_GRANTED) {
+                    GalleryDialog galleryDialog = new GalleryDialog();
+                    galleryDialog.show(getSupportFragmentManager(), "tag");
+                } else {
+                    Toast.makeText(this, "권한이 없어 접근할 수 없습니다.", Toast.LENGTH_SHORT).show();
+                }
+            }
+        }
     }
 
     public void showDatePickerDialog(){
@@ -120,6 +182,9 @@ public class writeActivity extends AppCompatActivity implements View.OnClickList
                 endDate = spd.format(new Date(selection.second + offsetFromUTC));
                 Log.d(TAG, "start: "+ startDate);
                 Log.d(TAG, "end: " + endDate);
+                s_date.setText(startDate);
+                e_date.setText(endDate);
+
             }
         });
 
