@@ -144,8 +144,14 @@ public class writeActivity extends AppCompatActivity implements View.OnClickList
         }else {
             // 모두 허용 상태
             Toast.makeText(this, "권한을 모두 허용", Toast.LENGTH_SHORT).show();
-            GalleryDialog galleryDialog = new GalleryDialog();
-            galleryDialog.show(getSupportFragmentManager(), "tag");
+
+            DialogFragment dialogFragment = new test_Gallery_Dialog();
+            dialogFragment.show(getSupportFragmentManager(), "test_Gallery_Dialog");
+
+
+
+            /*GalleryDialog galleryDialog = new GalleryDialog();
+            galleryDialog.show(getSupportFragmentManager(), "tag");*/
         }
 
     }

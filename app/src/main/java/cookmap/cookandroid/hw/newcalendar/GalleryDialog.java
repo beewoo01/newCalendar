@@ -139,7 +139,7 @@ public class GalleryDialog extends DialogFragment {
             thumbsDataList = new ArrayList<>();
             thumbsIDList = new ArrayList<>();
 
-            //getThumbInfo(thumbsIDList, thumbsDataList);
+            getThumbInfo(thumbsIDList, thumbsDataList);
 
 
             notifyDataSetChanged();
@@ -157,7 +157,7 @@ public class GalleryDialog extends DialogFragment {
                     proj , null, null, sortOrder);
 
 
-            /*if (imageCursor != null && imageCursor.moveToFirst()) {
+            if (imageCursor != null && imageCursor.moveToFirst()) {
                 String thumbsID;
                 String thumbsImageID;
                 String thumbsData;
@@ -178,7 +178,7 @@ public class GalleryDialog extends DialogFragment {
                         thumbsDatas.add(thumbsData);
                     }
                 } while (imageCursor.moveToNext());
-            }*/
+            }
             if (imageCursor != null && imageCursor.getCount() == 0 || imageCursor == null) {
                 Toast.makeText(getActivity(), "기기에 이미지 파일이 없습니다.", Toast.LENGTH_SHORT).show();
                 // 이미지 없으니 바로 이전 Mypage Fragment 로 결과값 없다고 전달
@@ -202,9 +202,9 @@ public class GalleryDialog extends DialogFragment {
 
         @Override
         public void onBindViewHolder(@NonNull GalleryDialog_RecyclerView_Adapter.CustomViewholder holder, int position) {
-            /*Glide.with(holder.imageView.getContext())
+            Glide.with(holder.imageView.getContext())
                     .load(thumbsDataList.get(position))
-                    .into(holder.imageView);*/
+                    .into(holder.imageView);
         }
 
         @Override
