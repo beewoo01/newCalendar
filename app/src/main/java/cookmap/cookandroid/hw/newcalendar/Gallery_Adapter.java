@@ -84,23 +84,34 @@ public class Gallery_Adapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
     public RecyclerView.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         if (viewType == VIEW_ITEM) {
 
-            /*int width = (int) (parent.getResources().getDisplayMetrics().widthPixels / 3.25);
+            int width = (int) (parent.getResources().getDisplayMetrics().widthPixels / 3.25);
             RelativeLayout relativeLayout = new RelativeLayout(parent.getContext());
-            relativeLayout.setLayoutParams(new LinearLayoutCompat.LayoutParams(width, width));
+
 
             ImageView imageView = new ImageView(parent.getContext());
             //imageView.setLayoutParams(new LinearLayoutCompat.LayoutParams(width, width));
             imageView.setAdjustViewBounds(false);
             imageView.setScaleType(ImageView.ScaleType.CENTER_CROP);
-            imageView.setPadding(2, 2, 2, 2);*/
+            imageView.setPadding(2, 2, 2, 2);
+
+            relativeLayout.addView(imageView);
+            //relativeLayout.setLayoutParams(new RelativeLayout.LayoutParams(width, width));
+            RelativeLayout.LayoutParams relativeParams = new RelativeLayout.LayoutParams(width, width);
+            relativeParams.addRule(RelativeLayout.CENTER_IN_PARENT);
+            imageView.setLayoutParams(relativeParams);
 
 
-            int width = (int) (parent.getResources().getDisplayMetrics().widthPixels / 3.25);
+
+
+
+
+
+            /*int width = (int) (parent.getResources().getDisplayMetrics().widthPixels / 3.25);
             ImageView imageView = new ImageView(parent.getContext());
             imageView.setLayoutParams(new LinearLayoutCompat.LayoutParams(width, width));
             imageView.setAdjustViewBounds(false);
             imageView.setScaleType(ImageView.ScaleType.CENTER_CROP);
-            imageView.setPadding(2, 2, 2, 2);
+            imageView.setPadding(2, 2, 2, 2);*/
 
             return new CustomViewHolder(imageView);
         } else {
@@ -159,10 +170,13 @@ public class Gallery_Adapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
     }
 
     static class CustomViewHolder extends RecyclerView.ViewHolder{
+        //RelativeLayout relativeLayout;
         ImageView imageView;
+
 
         public CustomViewHolder(@NonNull View itemView) {
             super(itemView);
+            //relativeLayout = (RelativeLayout) itemView;
             imageView = (ImageView) itemView;
 
         }
