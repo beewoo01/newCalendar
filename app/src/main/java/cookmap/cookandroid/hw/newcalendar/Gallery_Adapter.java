@@ -2,6 +2,7 @@ package cookmap.cookandroid.hw.newcalendar;
 
 import android.content.Context;
 import android.graphics.Color;
+import android.graphics.PorterDuff;
 import android.os.Handler;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -19,8 +20,11 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.bumptech.glide.Glide;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Map;
 
 public class Gallery_Adapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
@@ -36,9 +40,19 @@ public class Gallery_Adapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
     private int visibleThreshold = 1;
     int firstVisibleItem, visibleItemCount, totalItemCount, lastVisibleItem;
 
-    static List selecedPosition = new ArrayList<>(10);
+    private List selecedPosition = new ArrayList<>(10);
+    LinkedHashMap<Integer, String> map = new LinkedHashMap();
 
-    static private OnItemClickListener onItemClickListener = null;
+    private OnItemClickListener onItemClickListener = null;
+
+    public void setItemImage(getImgListner getImgListner) {
+        getImgListner.onImg(selecedPosition);
+    }
+
+    public interface getImgListner{
+        void onImg(List list);
+        //void getImg(List<Integer> );
+    }
 
     public interface OnItemClickListener {
         void onItemClick(View v, int position);
@@ -136,7 +150,7 @@ public class Gallery_Adapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
     }
 
     @Override
-    public void onBindViewHolder(@NonNull final RecyclerView.ViewHolder holder, final int position) {
+    public void onBindViewHolder(@NonNull final RecyclerView.ViewHolder holder, int position) {
         if (holder instanceof CustomViewHolder) {
            // Log.d("Ga_A_onBind", "if 옴");
 
@@ -145,76 +159,44 @@ public class Gallery_Adapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
                     ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT));
             ((CustomViewHolder) holder).dot_layout.setVisibility(View.INVISIBLE);
             ((CustomViewHolder) holder).Picked_number_TextView.setVisibility(View.INVISIBLE);
-
-            //RelativeLayout.LayoutParams ld = new RelativeLayout.LayoutParams(50,50);
-            //ld.setMargins(5,5,5,5);
-            //ld.addRule(RelativeLayout.ALIGN_PARENT_RIGHT);
-            //((CustomViewHolder) holder).dot_layout.setLayoutParams(ld);
-            //RelativeLayout.LayoutParams ld = (RelativeLayout.LayoutParams) ((CustomViewHolder) holder).bg_main.getLayoutParams();
-            //ld.addRule(RelativeLayout.ALIGN_PARENT_RIGHT);
-            //((CustomViewHolder) holder).dot_layout.setLayoutParams(ld);
-            //((RelativeLayout.LayoutParams) ((CustomViewHolder) holder).bg_main.getLayoutParams()).addRule();
-            ((CustomViewHolder) holder).bg_main.setPadding(2,2,2,2);
-
-
+            ((CustomViewHolder) holder).bg_main.setPadding(4,4,4,4);
             ((CustomViewHolder) holder).Picked_number_TextView.setLayoutParams(new RelativeLayout.LayoutParams(
                     ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT
             ));
-            //((CustomViewHolder) holder).bg_main.
+            RelativeLayout.LayoutParams midd = new RelativeLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT,
+                    ViewGroup.LayoutParams.WRAP_CONTENT);
+            ((CustomViewHolder) holder).Picked_number_TextView.setLayoutParams(midd);
+            midd.addRule(RelativeLayout.CENTER_IN_PARENT);
 
-            Log.d("사이즈머고", String.valueOf(selecedPosition.size()));
+            //Log.d("사이즈머고", String.valueOf(selecedPosition.size()));
 
-            if (selecedPosition.size() > 0){
-                for (int i = 0; i < selecedPosition.size(); i++){
-                    if (position == (Integer)selecedPosition.get(i) ){
-                        ((CustomViewHolder) holder).dot_layout.setVisibility(View.VISIBLE);
-                        ((CustomViewHolder) holder).Picked_number_TextView.setVisibility(View.VISIBLE);
-                        ((CustomViewHolder) holder).Picked_number_TextView.setText(String.valueOf(i+1));
-                        ((CustomViewHolder) holder).Picked_number_TextView.setTextColor(Color.parseColor("#FFFFFF"));
-                    }
+            if (selecedPosition.size() > 0 && holder.getAdapterPosition() != RecyclerView.NO_POSITION){
+                if (selecedPosition.contains(holder.getAdapterPosition())){
+                    //int value = (new ArrayList<>(Collections.singleton(map))).indexOf(holder.getAdapterPosition());
+                    //Log.d("VALUES봅시다", String.valueOf(value));
+
+                    ((CustomViewHolder) holder).dot_layout.setVisibility(View.VISIBLE);
+                    ((CustomViewHolder) holder).Picked_number_TextView.setVisibility(View.VISIBLE);
+                    ((CustomViewHolder) holder).Picked_number_TextView.setText(String.valueOf(selecedPosition.indexOf(holder.getAdapterPosition())+1));
+                    //((CustomViewHolder) holder).Picked_number_TextView.setText(String.valueOf(ar.indexOf(map.get(holder.getAdapterPosition()))));
+                    ((CustomViewHolder) holder).Picked_number_TextView.setTextColor(Color.parseColor("#FFFFFF"));
+                    ((CustomViewHolder) holder).imageView.setColorFilter(Color.parseColor("#7F000000"));
+                }else {
+                    ((CustomViewHolder) holder).imageView.setColorFilter(Color.parseColor("#7F000000"), PorterDuff.Mode.DST);
                 }
+
             }
 
-            holder.itemView.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
+            //Log.d(TAG, "IMG_ "+ thumbsDataList.get(position));
 
-                    if (selecedPosition.size() <= 0){
-                        //처음 선택, 다 제거 후 선택
-                        selecedPosition.add(position);
-                        ((CustomViewHolder) holder).dot_layout.setVisibility(View.VISIBLE);
-                        ((CustomViewHolder) holder).Picked_number_TextView.setVisibility(View.VISIBLE);
-                        ((CustomViewHolder) holder).Picked_number_TextView.setText(String.valueOf(selecedPosition.size()));
-                        ((CustomViewHolder) holder).Picked_number_TextView.setTextColor(Color.parseColor("#FFFFFF"));
-                    }else {
-                        // 선택한 항목이 있는경우
-                        for (int i = 0; i < selecedPosition.size(); i++ ){
-                            Log.d(TAG, "i: "+ i +"sele size: "+ selecedPosition.size());
-                            if (position == (Integer) selecedPosition.get(i)){
-                                selecedPosition.remove(i);
-                                ((CustomViewHolder) holder).dot_layout.setVisibility(View.INVISIBLE);
-                                ((CustomViewHolder) holder).Picked_number_TextView.setVisibility(View.INVISIBLE);
 
-                                break;
-
-                            }else if (i == selecedPosition.size()-1 && selecedPosition.size() < 10){
-                                Log.d(TAG, "i는?" + i);
-                                selecedPosition.add(position);
-                                ((CustomViewHolder) holder).dot_layout.setVisibility(View.VISIBLE);
-                                ((CustomViewHolder) holder).Picked_number_TextView.setVisibility(View.VISIBLE);
-                                ((CustomViewHolder) holder).Picked_number_TextView.setText(String.valueOf(selecedPosition.size()));
-                                ((CustomViewHolder) holder).Picked_number_TextView.setTextColor(Color.parseColor("#FFFFFF"));;
-                                break;
-                            }
-                        }
-                    }
-                   notifyDataSetChanged();
-                }
-            });
 
             Glide.with(((CustomViewHolder) holder).imageView.getContext())
                     .load(thumbsDataList.get(position))
                     .into(((CustomViewHolder) holder).imageView);
+
+            //((CustomViewHolder) holder).imageView.setColorFilter(Color.parseColor("#7F000000"));
+
 
         } else {
             Log.d("Ga_A_onBind", "else 옴");
@@ -247,7 +229,7 @@ public class Gallery_Adapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
         }
     }
 
-    static class CustomViewHolder extends RecyclerView.ViewHolder {
+    class CustomViewHolder extends RecyclerView.ViewHolder {
         //RelativeLayout relativeLayout;
         ImageView imageView;
         RelativeLayout dot_layout, bg_main;
@@ -257,24 +239,81 @@ public class Gallery_Adapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
         public CustomViewHolder(@NonNull final View itemView) {
             super(itemView);
             //relativeLayout = (RelativeLayout) itemView;
-            bg_main = (RelativeLayout) itemView.findViewById(R.id.item_bgd);
-            imageView = (ImageView) itemView.findViewById(R.id.picture_item);
-            dot_layout = (RelativeLayout) itemView.findViewById(R.id.number_dot_item);
-            Picked_number_TextView = (TextView) itemView.findViewById(R.id.picked_number_txt);
+            bg_main =  itemView.findViewById(R.id.item_bgd);
+            imageView =  itemView.findViewById(R.id.picture_item);
+            dot_layout = itemView.findViewById(R.id.number_dot_item);
+            Picked_number_TextView = itemView.findViewById(R.id.picked_number_txt);
+
             itemView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
                     int position = getAdapterPosition();
+                    Log.d("포지션보자", String.valueOf(selecedPosition.size()));
                     if (position != RecyclerView.NO_POSITION) {
-                        /*selecedPosition++;
-                        Log.d(TAG, "onClick_onClick: "+ selecedPosition);*/
-                        /*dot_layout.setVisibility(View.VISIBLE);
-                        Picked_number_TextView.setVisibility(View.VISIBLE);
-                        Picked_number_TextView.setText(String.valueOf(1));*/
-                        /*if (onItemClickListener != null) {
-                            onItemClickListener.onItemClick(v, position);
-                        }*/
+                        if (selecedPosition.size() <= 0){
+                            //처음 선택, 다 제거 후 선택
+
+                            //map.put(position, thumbsDataList.get(position));
+
+                            selecedPosition.add(position);
+
+                           // Log.d("맴에 잘 contains", String.valueOf(map.containsKey(position)));
+                            //Log.d("맴에 잘 get", String.valueOf(map.get(position)));
+                            /*dot_layout.setVisibility(View.VISIBLE);
+                            Picked_number_TextView.setVisibility(View.VISIBLE);
+                            Picked_number_TextView.setText(String.valueOf(map.size()+1));
+                            Picked_number_TextView.setTextColor(Color.parseColor("#FFFFFF"));
+                            imageView.setColorFilter(Color.parseColor("#7F000000"));*/
+
+
+                        }else {
+                            // 선택한 항목이 있는경우
+                                //Log.d(TAG, "i: "+ i +"sele size: "+ selecedPosition.size());
+                                //for (Integer key : map.keySet()){
+                                    if (selecedPosition.contains(position)){
+                                        //map.remove(position);
+                                        selecedPosition.remove(selecedPosition.indexOf(position));
+                                        dot_layout.setVisibility(View.INVISIBLE);
+                                        Picked_number_TextView.setVisibility(View.INVISIBLE);
+                                        imageView.setColorFilter(Color.parseColor("#7F000000"), PorterDuff.Mode.DST);
+                                  //      break;
+                                    } else if ( selecedPosition.size() < 10){
+                                        Log.d(TAG, "2번째?");
+                                        //map.put(position, thumbsDataList.get(position));
+                                        selecedPosition.add(position);
+                                        /*dot_layout.setVisibility(View.VISIBLE);
+                                        Picked_number_TextView.setVisibility(View.VISIBLE);
+                                        Picked_number_TextView.setText(String.valueOf(map.size()+1));
+                                        Picked_number_TextView.setTextColor(Color.parseColor("#FFFFFF"));
+                                        imageView.setColorFilter(Color.parseColor("#7F000000"));*/
+                                    //    break;
+                                    }
+                                //}
+                                /*if (position == (Integer) selecedPosition.get(i)){
+                                    map.remove(i);
+                                    selecedPosition.remove(i);
+                                    dot_layout.setVisibility(View.INVISIBLE);
+                                    Picked_number_TextView.setVisibility(View.INVISIBLE);
+                                    imageView.setColorFilter(Color.parseColor("#7F000000"), PorterDuff.Mode.DST);
+                                    break;
+
+                                }else if (i == selecedPosition.size()-1 && selecedPosition.size() < 10){
+                                    Log.d(TAG, "i는?" + i);
+                                    map.put(position, thumbsDataList.get(position));
+                                    selecedPosition.add(map);
+                                    dot_layout.setVisibility(View.VISIBLE);
+                                    Picked_number_TextView.setVisibility(View.VISIBLE);
+                                    Picked_number_TextView.setText(String.valueOf(selecedPosition.size()));
+                                    Picked_number_TextView.setTextColor(Color.parseColor("#FFFFFF"));
+                                    imageView.setColorFilter(Color.parseColor("#7F000000"));
+                                    break;
+                                }*/
+
+                        }
+
+                        notifyDataSetChanged();
                     }
+
                 }
             });
             /*imageView = (ImageView) itemView;*/
