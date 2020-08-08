@@ -38,7 +38,7 @@ public class test_Gallery_Dialog extends DialogFragment implements Gallery_Adapt
     private PassDataInterface passDataInterface;
 
     public interface PassDataInterface{
-        void onDataReceived(ArrayList<String> imgAdress);
+        void onDataReceived(ArrayList<String> imgAddress);
     }
 
     public test_Gallery_Dialog(PassDataInterface passDataInterface){
@@ -181,40 +181,47 @@ public class test_Gallery_Dialog extends DialogFragment implements Gallery_Adapt
 
     private void getThumbInfo(ArrayList<String> thumbsIDs, ArrayList<String> thumbsDatas) {
         Log.d(TAG, "getThumbinfo");
-        String[] proj = {MediaStore.Images.Media._ID,
-                MediaStore.Images.Media.DATA,
-                MediaStore.Images.Media.DISPLAY_NAME,
-                MediaStore.Images.Media.SIZE};
-        ContentResolver contentResolver = getActivity().getContentResolver();
-        String sortOrder = String.format("%s limit 150 "+ "OFFSET " +(adapter.getItemCount()), MediaStore.Images.Media.DATE_TAKEN + " DESC");
+        try {
+            String[] proj = {MediaStore.Images.Media._ID,
+                    MediaStore.Images.Media.DATA,
+                    MediaStore.Images.Media.DISPLAY_NAME,
+                    MediaStore.Images.Media.SIZE};
+            ContentResolver contentResolver = getActivity().getContentResolver();
+            String sortOrder = String.format("%s limit 150 "+ "OFFSET " +(adapter.getItemCount()), MediaStore.Images.Media.DATE_TAKEN + " DESC");
 
-        Cursor imageCursor = contentResolver.query(MediaStore.Images.Media.EXTERNAL_CONTENT_URI,
-                proj , null, null, sortOrder);
+            Cursor imageCursor = contentResolver.query(MediaStore.Images.Media.EXTERNAL_CONTENT_URI,
+                    proj , null, null, sortOrder);
 
+            if (imageCursor != null && imageCursor.moveToFirst()) {
+                String thumbsID;
+                String thumbsImageID;
+                String thumbsData;
+                String imgSize;
 
-        if (imageCursor != null && imageCursor.moveToFirst()) {
-            String thumbsID;
-            String thumbsImageID;
-            String thumbsData;
-            String imgSize;
+                int thumbsIDCol = imageCursor.getColumnIndex(MediaStore.Images.Media._ID);
+                int thumbsDataCol = imageCursor.getColumnIndex(MediaStore.Images.Media.DATA);
+                int thumbsImageIDCol = imageCursor.getColumnIndex(MediaStore.Images.Media.DISPLAY_NAME);
+                int thumbsSizeCol = imageCursor.getColumnIndex(MediaStore.Images.Media.SIZE);
+                do {
+                    thumbsID = imageCursor.getString(thumbsIDCol);
+                    thumbsData = imageCursor.getString(thumbsDataCol);
+                    thumbsImageID = imageCursor.getString(thumbsImageIDCol);
+                    imgSize = imageCursor.getString(thumbsSizeCol);
+                    if (thumbsImageID != null) {
+                        thumbsIDs.add(thumbsID);
+                        thumbsDatas.add(thumbsData);
+                    }
+                } while (imageCursor.moveToNext());
+            }
 
-            int thumbsIDCol = imageCursor.getColumnIndex(MediaStore.Images.Media._ID);
-            int thumbsDataCol = imageCursor.getColumnIndex(MediaStore.Images.Media.DATA);
-            int thumbsImageIDCol = imageCursor.getColumnIndex(MediaStore.Images.Media.DISPLAY_NAME);
-            int thumbsSizeCol = imageCursor.getColumnIndex(MediaStore.Images.Media.SIZE);
-            do {
-                thumbsID = imageCursor.getString(thumbsIDCol);
-                thumbsData = imageCursor.getString(thumbsDataCol);
-                thumbsImageID = imageCursor.getString(thumbsImageIDCol);
-                imgSize = imageCursor.getString(thumbsSizeCol);
-                if (thumbsImageID != null) {
-                    thumbsIDs.add(thumbsID);
-                    thumbsDatas.add(thumbsData);
-                }
-            } while (imageCursor.moveToNext());
+            imageCursor.close();
+        }catch (Exception e){
+            e.printStackTrace();
         }
 
-        imageCursor.close();
+
+
+
     }
 
 

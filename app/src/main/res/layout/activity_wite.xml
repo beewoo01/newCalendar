@@ -62,8 +62,7 @@
             android:layout_marginTop="15dp"
             android:background="@android:color/transparent"
             android:hint="제목"
-            android:maxLines="2"
-
+            android:singleLine="true"
             android:textSize="20sp" />
 
         <View
@@ -145,15 +144,17 @@
                 android:id="@+id/description_Linear"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_weight="1">
+                android:layout_weight="8">
 
                 <EditText
                     android:id="@+id/description_Edit"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
+                    android:layout_height="match_parent"
                     android:layout_marginTop="15dp"
                     android:background="@android:color/transparent"
                     android:hint="내용"
+                    android:inputType="textMultiLine"
+                    android:maxLength="100"
                     android:maxLines="12"
                     android:textSize="20sp" />
             </LinearLayout>
@@ -164,17 +165,13 @@
                 android:background="@color/colorGray" />
 
 
-            <ScrollView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_alignParentBottom="true"
-                android:layout_weight="1"
-                >
             <LinearLayout
 
                 android:id="@+id/imageLine"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_alignParentBottom="true"
+                android:layout_weight="2"
                 android:layout_marginTop="10sp"
                 android:orientation="vertical">
 
@@ -189,7 +186,8 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_centerInParent="true"
-                        android:text="Add Img +" />
+                        android:text="Add Img +"
+                        />
                 </RelativeLayout>
 
                 <androidx.recyclerview.widget.RecyclerView
@@ -203,7 +201,6 @@
                     app:reverseLayout="true"
                     ></androidx.recyclerview.widget.RecyclerView>
             </LinearLayout>
-            </ScrollView>
 
         </LinearLayout>
 

@@ -2,20 +2,16 @@ package cookmap.cookandroid.hw.newcalendar;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.appcompat.view.menu.MenuView;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 import androidx.core.util.Pair;
 import androidx.fragment.app.DialogFragment;
-import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.Manifest;
-import android.app.Dialog;
 import android.content.ContentValues;
 import android.content.Context;
-import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteException;
@@ -26,8 +22,8 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
-import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
@@ -38,11 +34,16 @@ import com.bumptech.glide.Glide;
 import com.google.android.material.datepicker.MaterialDatePicker;
 import com.google.android.material.datepicker.MaterialPickerOnPositiveButtonClickListener;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.Collections;
 import java.util.Date;
+import java.util.HashMap;
+import java.util.LinkedHashMap;
+import java.util.LinkedHashSet;
 import java.util.TimeZone;
 
 public class writeActivity extends AppCompatActivity implements View.OnClickListener, test_Gallery_Dialog.PassDataInterface{
@@ -62,9 +63,10 @@ public class writeActivity extends AppCompatActivity implements View.OnClickList
     private String tableName = "contents";
     private String des = "", m_img = "" ,img= "", label= "";
 
+    private LinkedHashMap<Integer, String> imgAs_Map;
     private horizontal_Adapter horizontal_adapter;
 
-    private ArrayList<String> imgAdress;
+    private ArrayList<String> imgAddress;
 
     String TAG = "writeAct";
 
@@ -74,7 +76,7 @@ public class writeActivity extends AppCompatActivity implements View.OnClickList
         setContentView(R.layout.activity_wite);
 
         init();
-        imgAdress = new ArrayList<>(10);
+        imgAddress = new ArrayList<>(10);
         LinearLayoutManager mLayoutManager= new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, true);
         //mLayoutManager.setReverseLayout(true);
         //mLayoutManager.setStackFromEnd(true);
@@ -139,7 +141,11 @@ public class writeActivity extends AppCompatActivity implements View.OnClickList
             return;
         }
         // 사진 선택창 띄워줘야함
-        else if (v.getId() == R.id.description_Linear) desEdit.performClick(); // 내용 부분
+        else if (v.getId() == R.id.description_Linear) {
+            desEdit.requestFocus(); // 내용 부분
+            InputMethodManager im = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
+            im.toggleSoftInput(InputMethodManager.SHOW_FORCED, InputMethodManager.HIDE_IMPLICIT_ONLY);
+        }
 
     }
 
@@ -207,9 +213,35 @@ public class writeActivity extends AppCompatActivity implements View.OnClickList
 
     }
 
+    private void getImage() throws JSONException {
+        JSONObject jsonObject = new JSONObject();
+        if (imgAddress.size() > 0){
+            //imgAs_Map = new LinkedHashMap<>();
+            int jsonkey = 1;
+            for (int i = 0; i < imgAddress.size(); i++){
+
+                if (horizontal_adapter.coverNum == i){
+                    m_img = imgAddress.get(i);
+                    jsonObject.put(String.valueOf(0), m_img);
+                }else {
+                    img = imgAddress.get(i);
+                    jsonObject.put(String.valueOf(jsonkey), img);
+                    jsonkey++;
+
+                    //imgAs_Map.put("1", m_img);
+                }
+
+            }
+            String key = jsonObject.getString()
+
+
+        }
+
+    }
     private void insertDb(){
         helper = new SQLiteOpenHelper(this);
         String none = "NONE";
+        getImage();
 
 
         try {
@@ -217,12 +249,16 @@ public class writeActivity extends AppCompatActivity implements View.OnClickList
         }catch (SQLiteException e){
             e.printStackTrace();
             Log.d(tag, "데이터 베이스를 열수 없음");
+            Toast.makeText(this,"저장에 실패하였습니다.", Toast.LENGTH_SHORT).show();
             finish();
         }
 
         if (desEdit.getText().toString().trim().length() <= 0) des = none;
         else des = desEdit.getText().toString();
         if(img.trim().length() <= 0) img = none;
+        else {
+
+        }
         if (m_img.trim().length() <= 0) m_img = none;
         if (m_img.trim().length() <= 0 || img.trim().length() > 0) m_img = img;
 
@@ -230,32 +266,32 @@ public class writeActivity extends AppCompatActivity implements View.OnClickList
         values.put("title", titleEdit.getText().toString());
         values.put("description", des);
         values.put("main_Img", m_img);
+
         values.put("img", img);
         values.put("s_date", s_date.getText().toString());
         values.put("e_date", e_date.getText().toString());
         values.put("label", "#9500ff" );
         long result = db.insert(tableName, null, values);
         Log.d(tag, result + "번째 row insert 성공");
-
         db.close();
         helper.close();
         finish();
     }
 
     @Override
-    public void onDataReceived(ArrayList imgAdress) {
+    public void onDataReceived(ArrayList imgAddress) {
         Log.d("onDataReceived", "왓네");
-        Log.d("onDataReceived", String.valueOf(imgAdress.size()));
+        Log.d("onDataReceived", String.valueOf(imgAddress.size()));
 
-        if (!imgAdress.isEmpty()){
+        if (!imgAddress.isEmpty()){
             Log.d("onDataReceived", "if");
-            for (int i = 0; i < imgAdress.size(); i++){
-                Log.d("for", String.valueOf(imgAdress.get(i)));
-                this.imgAdress.add(String.valueOf(imgAdress.get(i)));
+            for (int i = 0; i < imgAddress.size(); i++){
+                Log.d("for", String.valueOf(imgAddress.get(i)));
+                this.imgAddress.add(String.valueOf(imgAddress.get(i)));
             }
-            Collections.reverse(this.imgAdress);
+            Collections.reverse(this.imgAddress);
 
-            horizontal_adapter = new horizontal_Adapter(this, this.imgAdress);
+            horizontal_adapter = new horizontal_Adapter(this, this.imgAddress);
             img_recycle.setAdapter(horizontal_adapter);
             horizontal_adapter.notifyDataSetChanged();
 
