@@ -2,52 +2,69 @@ package cookmap.cookandroid.hw.newcalendar;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.view.menu.MenuView;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 import androidx.core.util.Pair;
 import androidx.fragment.app.DialogFragment;
 import androidx.fragment.app.Fragment;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import android.Manifest;
 import android.app.Dialog;
 import android.content.ContentValues;
+import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteException;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.bumptech.glide.Glide;
 import com.google.android.material.datepicker.MaterialDatePicker;
 import com.google.android.material.datepicker.MaterialPickerOnPositiveButtonClickListener;
 
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
 import java.util.Date;
 import java.util.TimeZone;
 
-public class writeActivity extends AppCompatActivity implements View.OnClickListener {
+public class writeActivity extends AppCompatActivity implements View.OnClickListener, test_Gallery_Dialog.PassDataInterface{
 
-    ImageView backbtn;
-    EditText titleEdit, desEdit;
-    TextView s_date, e_date, s_txt, e_txt, checkbtn;
-    RelativeLayout select_date, fap;
-    String dbName = "con_file.db";
-    int dbVersion = 1;
+    private ImageView backbtn;
+    private EditText titleEdit, desEdit;
+    private TextView s_date, e_date, s_txt, e_txt, checkbtn;
+    private RelativeLayout select_date, fap;
+    private LinearLayout descr_Linear;
+    private RecyclerView img_recycle;
+    private String dbName = "con_file.db";
+    private int dbVersion = 1;
     private SQLiteOpenHelper helper;
     private SQLiteDatabase db;
-    String startDate, endDate;
-    String tag = "SQLite";
-    String tableName = "contents";
-    String des = "", m_img = "" ,img= "", label= "";
+    private String startDate, endDate;
+    private String tag = "SQLite";
+    private String tableName = "contents";
+    private String des = "", m_img = "" ,img= "", label= "";
+
+    private horizontal_Adapter horizontal_adapter;
+
+    private ArrayList<String> imgAdress;
 
     String TAG = "writeAct";
 
@@ -57,11 +74,13 @@ public class writeActivity extends AppCompatActivity implements View.OnClickList
         setContentView(R.layout.activity_wite);
 
         init();
+        imgAdress = new ArrayList<>(10);
+        LinearLayoutManager mLayoutManager= new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, true);
+        //mLayoutManager.setReverseLayout(true);
+        //mLayoutManager.setStackFromEnd(true);
+        img_recycle.setLayoutManager(mLayoutManager);
+
         // findViewById 처리 함수
-
-
-
-
     }
 
     public void init(){
@@ -73,7 +92,10 @@ public class writeActivity extends AppCompatActivity implements View.OnClickList
         s_date = findViewById(R.id.start_date);
         e_date = findViewById(R.id.end_date);
         fap = findViewById(R.id.fab_button);
+        descr_Linear = findViewById(R.id.description_Linear);
+        img_recycle = findViewById(R.id.setImg_recycler);
 
+        descr_Linear.setOnClickListener(this);
         backbtn.setOnClickListener(this);
         checkbtn.setOnClickListener(this);
         fap.setOnClickListener(this);
@@ -114,17 +136,11 @@ public class writeActivity extends AppCompatActivity implements View.OnClickList
         else if (v.getId() == R.id.fab_button){
             checkSelfPermission();
             Log.d(TAG,"Fab_Button");
-            /*Fragment fragment = new GalleryDialog();
-            Bundle bundle = new Bundle();
-            getSupportFragmentManager().findFragmentById(R.id.gallery_frag);*/
-
-            //galleryDialog.callFunction();
-            /*Intent photoPickerIntent = new Intent(Intent.ACTION_PICK);
-            photoPickerIntent.setType("image/*");
-            startActivityForResult(photoPickerIntent, 1);*/
             return;
         }
         // 사진 선택창 띄워줘야함
+        else if (v.getId() == R.id.description_Linear) desEdit.performClick(); // 내용 부분
+
     }
 
     public void checkSelfPermission() {
@@ -143,15 +159,10 @@ public class writeActivity extends AppCompatActivity implements View.OnClickList
 
         }else {
             // 모두 허용 상태
-            Toast.makeText(this, "권한을 모두 허용", Toast.LENGTH_SHORT).show();
+            //Toast.makeText(this, "권한을 모두 허용", Toast.LENGTH_SHORT).show();
 
-            DialogFragment dialogFragment = new test_Gallery_Dialog();
-            dialogFragment.show(getSupportFragmentManager(), "test_Gallery_Dialog");
-
-
-
-            /*GalleryDialog galleryDialog = new GalleryDialog();
-            galleryDialog.show(getSupportFragmentManager(), "tag");*/
+            DialogFragment dialogFragment = new test_Gallery_Dialog(this);
+            dialogFragment.show(getSupportFragmentManager(), "Gallery_Dialog");
         }
 
     }
@@ -229,5 +240,123 @@ public class writeActivity extends AppCompatActivity implements View.OnClickList
         db.close();
         helper.close();
         finish();
+    }
+
+    @Override
+    public void onDataReceived(ArrayList imgAdress) {
+        Log.d("onDataReceived", "왓네");
+        Log.d("onDataReceived", String.valueOf(imgAdress.size()));
+
+        if (!imgAdress.isEmpty()){
+            Log.d("onDataReceived", "if");
+            for (int i = 0; i < imgAdress.size(); i++){
+                Log.d("for", String.valueOf(imgAdress.get(i)));
+                this.imgAdress.add(String.valueOf(imgAdress.get(i)));
+            }
+            Collections.reverse(this.imgAdress);
+
+            horizontal_adapter = new horizontal_Adapter(this, this.imgAdress);
+            img_recycle.setAdapter(horizontal_adapter);
+            horizontal_adapter.notifyDataSetChanged();
+
+
+        }else {
+
+            Log.d("onDataReceived", "else");
+        }
+
+    }
+
+    class horizontal_Adapter extends RecyclerView.Adapter<horizontal_Adapter.CustomViewHolder>{
+        private Context context;
+        private ArrayList list;
+        private int coverNum;
+
+        public horizontal_Adapter(Context context, ArrayList list){
+            this.context = context;
+            this.list = list;
+            coverNum = list.size()-1;
+        }
+
+        @NonNull
+        @Override
+        public horizontal_Adapter.CustomViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+            LayoutInflater inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+            View view = inflater.inflate(R.layout.last_img_item, parent, false);
+            CustomViewHolder viewHolder = new CustomViewHolder(view);
+
+            return viewHolder;
+        }
+
+        @Override
+        public void onBindViewHolder(@NonNull CustomViewHolder holder, int position) {
+            Glide.with(context).load(list.get(position)).into(holder.picture);
+            if (coverNum == position){
+                holder.background.setBackgroundColor(Color.parseColor("#000000"));
+            }else {
+                holder.background.setBackgroundColor(0x00000000);
+            }
+
+        }
+
+        @Override
+        public int getItemCount() {
+            return list.size();
+        }
+
+        private class CustomViewHolder extends RecyclerView.ViewHolder {
+            private ImageView picture, x_img;
+            private RelativeLayout background ,closeImg;
+
+            private CustomViewHolder(View itemView){
+                super(itemView);
+                this.picture = itemView.findViewById(R.id.last_img);
+                this.background = itemView.findViewById(R.id.last_img_bg);
+                this.closeImg = itemView.findViewById(R.id.last_close_img);
+                this.x_img = itemView.findViewById(R.id.last_x_img);
+
+                x_img.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        removeItem(getAdapterPosition());
+                    }
+                });
+
+                closeImg.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        // 삭제
+                        removeItem(getAdapterPosition());
+                    }
+                });
+
+                picture.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+
+                        background.setBackgroundColor(Color.parseColor("#000000"));
+                        Log.d("picpostion: ", String.valueOf(getAdapterPosition()));
+                        //notifyDataSetChanged();
+                        coverNum = getAdapterPosition();
+                        notifyDataSetChanged();
+                    }
+                });
+
+            }
+
+            private void removeItem(int position){
+                list.remove(position);
+                if (coverNum == position && list.size() > 0){
+                    coverNum = list.size()-1;
+                    notifyItemRemoved(position);
+                    notifyItemChanged(coverNum);
+                }else if (list.size() <= 0){
+                    coverNum = -1;
+                    notifyItemRemoved(position);
+                }else {
+                    notifyItemRemoved(position);
+                }
+            }
+        }
     }
 }

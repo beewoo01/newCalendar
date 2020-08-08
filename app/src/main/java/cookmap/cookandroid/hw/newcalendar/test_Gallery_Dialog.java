@@ -17,6 +17,7 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.DialogFragment;
+import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.recyclerview.widget.SimpleItemAnimator;
@@ -34,6 +35,16 @@ public class test_Gallery_Dialog extends DialogFragment implements Gallery_Adapt
     private String TAG = "TEXT_GD";
     private Gallery_Adapter adapter;
 
+    private PassDataInterface passDataInterface;
+
+    public interface PassDataInterface{
+        void onDataReceived(ArrayList<String> imgAdress);
+    }
+
+    public test_Gallery_Dialog(PassDataInterface passDataInterface){
+        this.passDataInterface = passDataInterface;
+    }
+
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
@@ -44,7 +55,7 @@ public class test_Gallery_Dialog extends DialogFragment implements Gallery_Adapt
         recyclerView = view.findViewById(R.id.gf_recycler);
         recyclerView.setLayoutManager(new GridLayoutManager(getActivity(),3));
 
-        imgArry = new ArrayList<>();
+        imgArry =new ArrayList<>(10);
 
         thumbsDataList = new ArrayList<>();
         thumbsIDList = new ArrayList<>();
@@ -54,6 +65,13 @@ public class test_Gallery_Dialog extends DialogFragment implements Gallery_Adapt
         adapter.setGridLayoutManager(new GridLayoutManager(getActivity(),3));
         adapter.setRecyclerView(recyclerView);
 
+        back_Image.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                dismissDialog();
+            }
+        });
+
         addPhoto.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -61,8 +79,19 @@ public class test_Gallery_Dialog extends DialogFragment implements Gallery_Adapt
                 adapter.setItemImage(new Gallery_Adapter.getImgListner(){
                     @Override
                     public void onImg(List list) {
-                        Log.d("list를 받아오려나", String.valueOf(list.get(0)));
-                        Log.d("list를 받아오려나", String.valueOf(list.get(1)));
+                        //Bundle args = new Bundle();
+                        if (list.size() > 0){
+                            for (int i = 0; i < list.size(); i++){
+                                Log.d("what is list i", String.valueOf(list.get(i)));
+                                imgArry.add(String.valueOf(list.get(i))) ;
+                                //imgArry[i] = String.valueOf(list.get(i));
+                            }
+                        }
+                        passDataInterface.onDataReceived(imgArry);
+                        //PassData(passDataInterface);
+                        dismissDialog();
+
+
                     }
                 });
             }
@@ -74,23 +103,20 @@ public class test_Gallery_Dialog extends DialogFragment implements Gallery_Adapt
             ((SimpleItemAnimator) animator).setSupportsChangeAnimations(false);
         }
 
-        adapter.setOnItemClickListener(new Gallery_Adapter.OnItemClickListener() {
-            @Override
-            public void onItemClick(View v, int position) {
-                //recyclerView.getChildAt(position).get
-                Log.d(TAG,"viewtype?"+ String.valueOf(recyclerView.getAdapter().getItemViewType(position)));
-
-            }
-        });
-
 
 
         recyclerView.setAdapter(adapter);
 
-        /*test_Grid_Adapter GV = new test_Grid_Adapter();
-        recyclerView.setAdapter(GV);*/
-
         return view;
+    }
+
+    private void dismissDialog(){
+        Fragment fragment = getActivity().getSupportFragmentManager().findFragmentByTag("Gallery_Dialog");
+
+        if (fragment != null){
+            DialogFragment dialogFragment = (DialogFragment) fragment;
+            dialogFragment.dismiss();
+        }
     }
 
     @Override

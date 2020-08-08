@@ -41,32 +41,30 @@ public class Gallery_Adapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
     int firstVisibleItem, visibleItemCount, totalItemCount, lastVisibleItem;
 
     private List selecedPosition = new ArrayList<>(10);
-    LinkedHashMap<Integer, String> map = new LinkedHashMap();
-
-    private OnItemClickListener onItemClickListener = null;
 
     public void setItemImage(getImgListner getImgListner) {
-        getImgListner.onImg(selecedPosition);
+        List<String> result = new ArrayList();
+        if (selecedPosition.size() > 0){
+            for (int i = 0 ; i < selecedPosition.size(); i++ ){
+                Log.d("SET_ITEM_IMG", String.valueOf(selecedPosition.get(i)));
+                result.add(thumbsDataList.get((Integer) selecedPosition.get(i)));
+                Log.d("SET_ITEM_IMG", thumbsDataList.get((Integer) selecedPosition.get(i)));
+            }
+        }
+
+        getImgListner.onImg(result);
     }
 
     public interface getImgListner{
         void onImg(List list);
-        //void getImg(List<Integer> );
     }
 
-    public interface OnItemClickListener {
-        void onItemClick(View v, int position);
-    }
 
-    static String TAG = "GALL_ADAPTER";
 
     public interface OnLoadMoreListener {
         void onLoadMore();
     }
 
-    public void setOnItemClickListener(OnItemClickListener listener) {
-        this.onItemClickListener = listener;
-    }
 
     public Gallery_Adapter(OnLoadMoreListener onLoadMoreListener, Context context) {
         this.context = context;
@@ -87,11 +85,6 @@ public class Gallery_Adapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
                 totalItemCount = mGridLayoutManager.getItemCount();
                 firstVisibleItem = mGridLayoutManager.findFirstVisibleItemPosition();
                 lastVisibleItem = mGridLayoutManager.findLastVisibleItemPosition();
-                /*Log.d("total", totalItemCount + "");
-                Log.d("visible", visibleItemCount + "");
-
-                Log.d("first", firstVisibleItem + "");
-                Log.d("last", lastVisibleItem + "");*/
 
 
                 if (!isMoreLoading && (totalItemCount - visibleItemCount) <= (firstVisibleItem + visibleThreshold)) {
@@ -122,16 +115,7 @@ public class Gallery_Adapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
             view.setLayoutParams(lp);
             Gallery_Adapter.CustomViewHolder viewHolder = new Gallery_Adapter.CustomViewHolder(view);
 
-
-            /*int width = (int) (parent.getResources().getDisplayMetrics().widthPixels / 3.25);
-            ImageView imageView = new ImageView(parent.getContext());
-            imageView.setLayoutParams(new LinearLayoutCompat.LayoutParams(width, width));
-            imageView.setAdjustViewBounds(false);
-            imageView.setScaleType(ImageView.ScaleType.CENTER_CROP);
-            imageView.setPadding(2, 2, 2, 2);*/
-
             return viewHolder;
-            //return new CustomViewHolder(imageView);
         } else {
 
             return new ProgressViewHolder(new ProgressBar(context, null, android.R.attr.progressBarStyleSmall));
@@ -152,7 +136,6 @@ public class Gallery_Adapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
     @Override
     public void onBindViewHolder(@NonNull final RecyclerView.ViewHolder holder, int position) {
         if (holder instanceof CustomViewHolder) {
-           // Log.d("Ga_A_onBind", "if 옴");
 
 
             ((CustomViewHolder) holder).imageView.setLayoutParams(new RelativeLayout.LayoutParams(
@@ -168,17 +151,16 @@ public class Gallery_Adapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
             ((CustomViewHolder) holder).Picked_number_TextView.setLayoutParams(midd);
             midd.addRule(RelativeLayout.CENTER_IN_PARENT);
 
-            //Log.d("사이즈머고", String.valueOf(selecedPosition.size()));
 
-            if (selecedPosition.size() > 0 && holder.getAdapterPosition() != RecyclerView.NO_POSITION){
+            if (selecedPosition.size() > 0 && holder.getAdapterPosition() != RecyclerView.NO_POSITION){ ;
+
                 if (selecedPosition.contains(holder.getAdapterPosition())){
-                    //int value = (new ArrayList<>(Collections.singleton(map))).indexOf(holder.getAdapterPosition());
-                    //Log.d("VALUES봅시다", String.valueOf(value));
+                    selecedPosition.indexOf(holder.getAdapterPosition());
+                    selecedPosition.get(selecedPosition.indexOf(holder.getAdapterPosition()));
 
                     ((CustomViewHolder) holder).dot_layout.setVisibility(View.VISIBLE);
                     ((CustomViewHolder) holder).Picked_number_TextView.setVisibility(View.VISIBLE);
                     ((CustomViewHolder) holder).Picked_number_TextView.setText(String.valueOf(selecedPosition.indexOf(holder.getAdapterPosition())+1));
-                    //((CustomViewHolder) holder).Picked_number_TextView.setText(String.valueOf(ar.indexOf(map.get(holder.getAdapterPosition()))));
                     ((CustomViewHolder) holder).Picked_number_TextView.setTextColor(Color.parseColor("#FFFFFF"));
                     ((CustomViewHolder) holder).imageView.setColorFilter(Color.parseColor("#7F000000"));
                 }else {
@@ -187,19 +169,10 @@ public class Gallery_Adapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
 
             }
 
-            //Log.d(TAG, "IMG_ "+ thumbsDataList.get(position));
-
-
-
             Glide.with(((CustomViewHolder) holder).imageView.getContext())
                     .load(thumbsDataList.get(position))
                     .into(((CustomViewHolder) holder).imageView);
 
-            //((CustomViewHolder) holder).imageView.setColorFilter(Color.parseColor("#7F000000"));
-
-
-        } else {
-            Log.d("Ga_A_onBind", "else 옴");
         }
 
     }
@@ -248,67 +221,24 @@ public class Gallery_Adapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
                 @Override
                 public void onClick(View v) {
                     int position = getAdapterPosition();
-                    Log.d("포지션보자", String.valueOf(selecedPosition.size()));
+
                     if (position != RecyclerView.NO_POSITION) {
                         if (selecedPosition.size() <= 0){
                             //처음 선택, 다 제거 후 선택
-
-                            //map.put(position, thumbsDataList.get(position));
-
                             selecedPosition.add(position);
-
-                           // Log.d("맴에 잘 contains", String.valueOf(map.containsKey(position)));
-                            //Log.d("맴에 잘 get", String.valueOf(map.get(position)));
-                            /*dot_layout.setVisibility(View.VISIBLE);
-                            Picked_number_TextView.setVisibility(View.VISIBLE);
-                            Picked_number_TextView.setText(String.valueOf(map.size()+1));
-                            Picked_number_TextView.setTextColor(Color.parseColor("#FFFFFF"));
-                            imageView.setColorFilter(Color.parseColor("#7F000000"));*/
-
 
                         }else {
                             // 선택한 항목이 있는경우
-                                //Log.d(TAG, "i: "+ i +"sele size: "+ selecedPosition.size());
-                                //for (Integer key : map.keySet()){
                                     if (selecedPosition.contains(position)){
-                                        //map.remove(position);
+
                                         selecedPosition.remove(selecedPosition.indexOf(position));
                                         dot_layout.setVisibility(View.INVISIBLE);
                                         Picked_number_TextView.setVisibility(View.INVISIBLE);
                                         imageView.setColorFilter(Color.parseColor("#7F000000"), PorterDuff.Mode.DST);
-                                  //      break;
                                     } else if ( selecedPosition.size() < 10){
-                                        Log.d(TAG, "2번째?");
-                                        //map.put(position, thumbsDataList.get(position));
                                         selecedPosition.add(position);
-                                        /*dot_layout.setVisibility(View.VISIBLE);
-                                        Picked_number_TextView.setVisibility(View.VISIBLE);
-                                        Picked_number_TextView.setText(String.valueOf(map.size()+1));
-                                        Picked_number_TextView.setTextColor(Color.parseColor("#FFFFFF"));
-                                        imageView.setColorFilter(Color.parseColor("#7F000000"));*/
-                                    //    break;
+
                                     }
-                                //}
-                                /*if (position == (Integer) selecedPosition.get(i)){
-                                    map.remove(i);
-                                    selecedPosition.remove(i);
-                                    dot_layout.setVisibility(View.INVISIBLE);
-                                    Picked_number_TextView.setVisibility(View.INVISIBLE);
-                                    imageView.setColorFilter(Color.parseColor("#7F000000"), PorterDuff.Mode.DST);
-                                    break;
-
-                                }else if (i == selecedPosition.size()-1 && selecedPosition.size() < 10){
-                                    Log.d(TAG, "i는?" + i);
-                                    map.put(position, thumbsDataList.get(position));
-                                    selecedPosition.add(map);
-                                    dot_layout.setVisibility(View.VISIBLE);
-                                    Picked_number_TextView.setVisibility(View.VISIBLE);
-                                    Picked_number_TextView.setText(String.valueOf(selecedPosition.size()));
-                                    Picked_number_TextView.setTextColor(Color.parseColor("#FFFFFF"));
-                                    imageView.setColorFilter(Color.parseColor("#7F000000"));
-                                    break;
-                                }*/
-
                         }
 
                         notifyDataSetChanged();
@@ -316,17 +246,6 @@ public class Gallery_Adapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
 
                 }
             });
-            /*imageView = (ImageView) itemView;*/
-/*
-            itemView.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    int position = getAdapterPosition();
-                    Log.d(TAG, "포지션: " + position+ ", getID?:"+ v.getId());
-
-
-                }
-            });*/
 
         }
     }
