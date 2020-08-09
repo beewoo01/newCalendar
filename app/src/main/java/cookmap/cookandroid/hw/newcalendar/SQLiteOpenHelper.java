@@ -9,10 +9,35 @@ import androidx.annotation.Nullable;
 
 public class SQLiteOpenHelper extends android.database.sqlite.SQLiteOpenHelper {
 
+    private static final String DATABASE_NAME = "calendar.db";
+    private final int DataBase_Version = 1;
+    public static SQLiteDatabase mDB;
+
+    private Context context;
     private static final String TAG = "sqlite";
     public static final String table_Name = "contents";
     public static final String ID = "id";
     //SQLite (id, 제목, 내용, 그림 , 날짜) 순으로 생성 바람
+
+   /* private class DatabaseHelper extends SQLiteOpenHelper{
+
+        public DatabaseHelper(@Nullable Context context, @Nullable String name, @Nullable SQLiteDatabase.CursorFactory factory, int version) {
+            super(context, name, factory, version);
+        }
+
+        @Override
+        public void onCreate(SQLiteDatabase db) {
+            super.onCreate(db);
+
+        }
+
+        @Override
+        public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
+            db.execSQL("DROP TABLE IF EXISTS "+DataBases.CreateDB._TABLENAME0);
+            onCreate(db);
+        }
+
+    }*/
 
 
     public SQLiteOpenHelper(@Nullable Context context, @Nullable String name, @Nullable SQLiteDatabase.CursorFactory factory, int version) {
@@ -35,10 +60,12 @@ public class SQLiteOpenHelper extends android.database.sqlite.SQLiteOpenHelper {
     @Override
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
         Log.d(TAG, "Upgrading from version " + oldVersion + " to " + newVersion);
+
         if (oldVersion < 2){
             try {
                 db.beginTransaction();
-                db.execSQL("ALTER TABLE " + table_Name + " ADD COLUMN "+ "label text");
+
+                //db.execSQL("ALTER TABLE " + table_Name + " ADD COLUMN "+ "label text");
                 db.setTransactionSuccessful();
             }catch (IllegalStateException e){
                 e.printStackTrace();

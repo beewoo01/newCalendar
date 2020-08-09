@@ -54,16 +54,15 @@ public class writeActivity extends AppCompatActivity implements View.OnClickList
     private RelativeLayout select_date, fap;
     private LinearLayout descr_Linear;
     private RecyclerView img_recycle;
-    private String dbName = "con_file.db";
-    private int dbVersion = 1;
-    private SQLiteOpenHelper helper;
-    private SQLiteDatabase db;
+    //private int dbVersion = 2;
+    //private SQLiteOpenHelper helper;
+    //private SQLiteDatabase db;
     private String startDate, endDate;
     private String tag = "SQLite";
     private String tableName = "contents";
     private String des = "", m_img = "" ,img= "", label= "";
+    private String none = "NONE";
 
-    private LinkedHashMap<Integer, String> imgAs_Map;
     private horizontal_Adapter horizontal_adapter;
 
     private ArrayList<String> imgAddress;
@@ -126,7 +125,12 @@ public class writeActivity extends AppCompatActivity implements View.OnClickList
 
         if (v.getId() == R.id.back_btn) finish();
         else if (v.getId() == R.id.check_btn) {
-            if (titleEdit.getText().toString().length() > 0 ) insertDb();
+            if (titleEdit.getText().toString().length() > 0 ) {
+                try { getImage(); }
+                catch (JSONException e) { e.printStackTrace();
+                Toast.makeText(this, "이미지 저장에 실패하였습니다.", Toast.LENGTH_SHORT).show(); }
+                insertDb();
+            }
             else {
                 Toast.makeText(writeActivity.this, "제목을 입력하여 주세요", Toast.LENGTH_SHORT).show();
                 return;
@@ -216,7 +220,6 @@ public class writeActivity extends AppCompatActivity implements View.OnClickList
     private void getImage() throws JSONException {
         JSONObject jsonObject = new JSONObject();
         if (imgAddress.size() > 0){
-            //imgAs_Map = new LinkedHashMap<>();
             int jsonkey = 1;
             for (int i = 0; i < imgAddress.size(); i++){
 
@@ -224,45 +227,45 @@ public class writeActivity extends AppCompatActivity implements View.OnClickList
                     m_img = imgAddress.get(i);
                     jsonObject.put(String.valueOf(0), m_img);
                 }else {
-                    img = imgAddress.get(i);
-                    jsonObject.put(String.valueOf(jsonkey), img);
+                    jsonObject.put(String.valueOf(jsonkey), imgAddress.get(i));
                     jsonkey++;
-
-                    //imgAs_Map.put("1", m_img);
                 }
 
             }
-            String key = jsonObject.getString()
+            /*for (int i = 0; i < imgAddress.size(); i++){
+                String key = (String) jsonObject.getString(String.valueOf(i));
+                Log.d("Json??", key);
+            }*/ // SELECT시 이런식으로 가져오면 됨!!
+            img = jsonObject.toString();
+            Log.d("Jsonstring??", img);
 
-
+        }else {
+            m_img = none;
+            img = none;
         }
 
     }
     private void insertDb(){
-        helper = new SQLiteOpenHelper(this);
-        String none = "NONE";
-        getImage();
+        //helper = new SQLiteOpenHelper(this);
 
 
-        try {
-            db = helper.getWritableDatabase();
+
+
+        /*try {
+            db = openOrCreateDatabase("con_file.db", Context.MODE_PRIVATE, null);
+            //db = helper.getWritableDatabase();
         }catch (SQLiteException e){
             e.printStackTrace();
             Log.d(tag, "데이터 베이스를 열수 없음");
             Toast.makeText(this,"저장에 실패하였습니다.", Toast.LENGTH_SHORT).show();
             finish();
-        }
+        }*/
 
         if (desEdit.getText().toString().trim().length() <= 0) des = none;
         else des = desEdit.getText().toString();
-        if(img.trim().length() <= 0) img = none;
-        else {
 
-        }
-        if (m_img.trim().length() <= 0) m_img = none;
-        if (m_img.trim().length() <= 0 || img.trim().length() > 0) m_img = img;
 
-        ContentValues values = new ContentValues();
+        /*ContentValues values = new ContentValues();
         values.put("title", titleEdit.getText().toString());
         values.put("description", des);
         values.put("main_Img", m_img);
@@ -270,11 +273,21 @@ public class writeActivity extends AppCompatActivity implements View.OnClickList
         values.put("img", img);
         values.put("s_date", s_date.getText().toString());
         values.put("e_date", e_date.getText().toString());
-        values.put("label", "#9500ff" );
-        long result = db.insert(tableName, null, values);
+        values.put("label", "#9500ff" );*/
+        ContentDatabase_Room.getInstance(this).getContentDao().insert(new Content_Room(
+                titleEdit.getText().toString(),
+                des,
+                m_img,
+                img,
+                s_date.getText().toString(),
+                e_date.getText().toString(),
+                "#9500ff"
+        ));
+
+        /*long result = db.insert(tableName, null, values);
         Log.d(tag, result + "번째 row insert 성공");
         db.close();
-        helper.close();
+        helper.close();*/
         finish();
     }
 

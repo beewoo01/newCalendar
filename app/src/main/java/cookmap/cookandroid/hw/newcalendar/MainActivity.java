@@ -8,13 +8,13 @@ import androidx.core.view.GestureDetectorCompat;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+import androidx.room.Room;
 
 import android.Manifest;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.database.Cursor;
-import android.database.sqlite.SQLiteDatabase;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.text.TextUtils;
@@ -28,13 +28,12 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.google.android.material.floatingactionbutton.FloatingActionButton;
-
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.List;
 
 
 public class MainActivity extends AppCompatActivity implements GestureDetector.OnGestureListener {
@@ -50,15 +49,16 @@ public class MainActivity extends AppCompatActivity implements GestureDetector.O
     private String TAG = "메인클래스";
 
     private ArrayList<DayInfo> mDayList;
-    private ArrayList<memo_item> memo_items_List = new ArrayList<>();
+    private List<Content_Room> memo_items_List = new ArrayList<>();
+    private ArrayList<Content_Room> testArray = new ArrayList<>();
     private CalendarAdapter mCalendarAdapter;
     private Memo_Adapter memo_Adapter = null;
 
-    private SQLiteDatabase db;
+    /*private SQLiteDatabase db;
     private SQLiteOpenHelper helper;
-    private String table_name = "contents";
+    private String table_name = "contents";*/
     private SimpleDateFormat format;
-    int dbVersion = 1;
+    int dbVersion = 2;
 
     //private CalendarListBinding binding;
 
@@ -88,7 +88,7 @@ public class MainActivity extends AppCompatActivity implements GestureDetector.O
         long now = System.currentTimeMillis();
         Date date = new Date(now);
         selectQuery = format.format(date);
-        helper = new SQLiteOpenHelper(this, table_name, null, dbVersion);
+        //helper = new SQLiteOpenHelper(this, table_name, null, dbVersion);
 
         init();
 
@@ -178,7 +178,6 @@ public class MainActivity extends AppCompatActivity implements GestureDetector.O
                     if (checkTable()) {
                         sql_select();
                     }
-                    //여기로2
                 } catch (ParseException e) {
                     e.printStackTrace();
                 }
@@ -233,7 +232,7 @@ public class MainActivity extends AppCompatActivity implements GestureDetector.O
         int dayOfMonth;
         int thisMonthLastDay;
         //db = openOrCreateDatabase("con_file.db", Context.MODE_PRIVATE, null);
-        db = helper.getReadableDatabase();
+        //db = helper.getReadableDatabase();
 
         mDayList.clear();
 
@@ -291,7 +290,7 @@ public class MainActivity extends AppCompatActivity implements GestureDetector.O
         for (int i = 0; i <= mDayList.size() - 1; i++) {
             int z = 0;
             for (int j = 0; j <= memo_items_List.size() - 1; j++) {
-                if (mDayList.get(i).getFull_Day().equals(memo_items_List.get(j).getS_date())) {
+                if (mDayList.get(i).getFull_Day().equals(memo_items_List.get(j).getStart_date())) {
                     z++;
                 }
             }
@@ -306,16 +305,29 @@ public class MainActivity extends AppCompatActivity implements GestureDetector.O
 
     private void select() {
         memo_items_List.clear();
-        String sql = "select * from " + table_name + ";";
+        //memo_item list = new memo_item();
+
+        memo_items_List = ContentDatabase_Room.getInstance(MainActivity.this)
+                .getContentDao()
+                .getAllContents();
+
+        /*String sql = "select * from " + table_name + ";";
         Cursor results = db.rawQuery(sql, null);
         int i = 0;
         while (results.moveToNext()) {
             memo_item list = new memo_item();
             list.setS_date(results.getString(5));
+            Log.d("id",results.getString(0));
+            Log.d("id",results.getString(1));
+            Log.d("id",results.getString(2));
+            Log.d("id",results.getString(3));
+            Log.d("id",results.getString(4));
+            Log.d("id",results.getString(5));
+            Log.d("id",results.getString(6));
             memo_items_List.add(list);
             i++;
         }
-        results.close();
+        results.close();*/
 
     }
 
@@ -341,7 +353,7 @@ public class MainActivity extends AppCompatActivity implements GestureDetector.O
 
     private boolean checkTable() {
 
-        db = openOrCreateDatabase("con_file.db", Context.MODE_PRIVATE, null);
+        /*db = openOrCreateDatabase("con_file.db", Context.MODE_PRIVATE, null);
         Cursor cursor = db.rawQuery("SELECT name FROM sqlite_master WHERE type='table' AND name ='contents'", null);
         cursor.moveToNext();
         if (cursor.getCount() > 0) {
@@ -350,11 +362,22 @@ public class MainActivity extends AppCompatActivity implements GestureDetector.O
             Log.d(TAG, "테이블이 없음");
             helper = new SQLiteOpenHelper(this, table_name, null, dbVersion);
             return false;
-        }
+        }*/
+        return true;
     }
 
     private void sql_select() {
-        String sql = "SELECT * FROM contents WHERE s_date = ?";
+        memo_items_List.clear();
+        memo_items_List = ContentDatabase_Room.getInstance(this).getContentDao().getAllContents();
+        Log.d("room memoSize:", String.valueOf(memo_items_List.size()));
+        if (memo_items_List.size() <= 0) {
+            empt_lay.setVisibility(View.VISIBLE);
+        } else {
+            empt_lay.setVisibility(View.GONE);
+            initMemoAdapter();
+        }
+
+        /*String sql = "SELECT * FROM contents WHERE s_date = ?";
         Cursor results = db.rawQuery(sql, new String[]{selectQuery});
 
         memo_items_List.clear();
@@ -374,6 +397,13 @@ public class MainActivity extends AppCompatActivity implements GestureDetector.O
                 label = "#000000";
             }
             list.setLabel(label);
+            Log.d("id",list.getId());
+            Log.d("title",list.getTitle());
+            Log.d("DESC",list.getDesc());
+            Log.d("imgMain",list.getImg_main());
+            Log.d("Imgs",list.getImgs());
+            Log.d("S_Date",list.getS_date());
+            Log.d("E_Date",list.getE_date());
 
             memo_items_List.add(list);
         }
@@ -383,7 +413,7 @@ public class MainActivity extends AppCompatActivity implements GestureDetector.O
         } else {
             empt_lay.setVisibility(View.GONE);
             initMemoAdapter();
-        }
+        }*/
 
     }
 

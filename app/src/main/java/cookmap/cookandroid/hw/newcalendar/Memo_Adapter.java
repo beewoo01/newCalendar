@@ -13,11 +13,12 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import java.util.ArrayList;
+import java.util.List;
 
 public class Memo_Adapter extends RecyclerView.Adapter<Memo_Adapter.ViewHolder> {
-    private ArrayList<memo_item> items;
+    private List<Content_Room> items;
 
-    Memo_Adapter(ArrayList<memo_item> list) {
+    Memo_Adapter(List<Content_Room> list) {
         items = list;
     }
 
@@ -33,12 +34,12 @@ public class Memo_Adapter extends RecyclerView.Adapter<Memo_Adapter.ViewHolder> 
 
     @Override
     public void onBindViewHolder(@NonNull Memo_Adapter.ViewHolder holder, int position) {
-        memo_item item = items.get(position);
+        Content_Room item = items.get(position);
         holder.c_title.setText(item.getTitle());
-        holder.c_desc.setText(item.getDesc());
+        holder.c_desc.setText(item.getDescription());
         holder.label.setBackgroundColor(Color.parseColor(item.getLabel()));
 
-        if (item.img_main.equals("NONE")) {
+        if (item.getMain_Img().equals("NONE")) {
             //holder.c_img_main.setVisibility(View.INVISIBLE);
             holder.c_img_main.setBackgroundColor(Color.parseColor("#489201"));
         } else {
