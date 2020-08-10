@@ -12,11 +12,14 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.bumptech.glide.Glide;
+
 import java.util.ArrayList;
 import java.util.List;
 
 public class Memo_Adapter extends RecyclerView.Adapter<Memo_Adapter.ViewHolder> {
     private List<Content_Room> items;
+    private Context context;
 
     Memo_Adapter(List<Content_Room> list) {
         items = list;
@@ -25,7 +28,7 @@ public class Memo_Adapter extends RecyclerView.Adapter<Memo_Adapter.ViewHolder> 
     @NonNull
     @Override
     public Memo_Adapter.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        Context context = parent.getContext();
+        context = parent.getContext();
         LayoutInflater inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         View view = inflater.inflate(R.layout.memo_list_contents, parent, false);
         Memo_Adapter.ViewHolder vh = new Memo_Adapter.ViewHolder(view);
@@ -44,6 +47,7 @@ public class Memo_Adapter extends RecyclerView.Adapter<Memo_Adapter.ViewHolder> 
             holder.c_img_main.setBackgroundColor(Color.parseColor("#489201"));
         } else {
             Log.d("Recy_Adapter", "glide로 구현하세요");
+            Glide.with(context).load(item.getMain_Img()).into(holder.c_img_main);
             // glide 라이브러리 써서 main_img 구현 하세요 holder
         }
 

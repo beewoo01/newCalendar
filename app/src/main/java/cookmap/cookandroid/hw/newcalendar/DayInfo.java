@@ -39,9 +39,4 @@ public class DayInfo {
         this.inMonth = inMonth;
     }
 
-    public String fixNumber(String orNum){
-        if (Integer.parseInt(orNum) < 10) orNum = "0" + orNum;
-        return null;
-    }
-
 }

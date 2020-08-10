@@ -5,7 +5,7 @@ import androidx.room.PrimaryKey;
 
 @Entity
 public class Content_Room {
-    @PrimaryKey
+    @PrimaryKey(autoGenerate = true)
     private int id;
 
     private String title;

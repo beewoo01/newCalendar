@@ -8,6 +8,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -93,7 +94,7 @@ public class CalendarAdapter extends RecyclerView.Adapter<CalendarAdapter.ViewHo
 
     public class ViewHolder extends RecyclerView.ViewHolder {
 
-        public LinearLayout llBackground;
+        public RelativeLayout llBackground;
         public TextView tvDay;
         public ImageView imgMemo;
 
@@ -102,7 +103,6 @@ public class CalendarAdapter extends RecyclerView.Adapter<CalendarAdapter.ViewHo
             llBackground = itemView.findViewById(R.id.day_cell_ll_background);
             tvDay = itemView.findViewById(R.id.day_cell_tv_day);
             imgMemo = itemView.findViewById(R.id.img_item_dot);
-
         }
     }
 

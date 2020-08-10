@@ -15,6 +15,9 @@ public interface ContentDao_Room {
     @Query("SELECT * FROM Content_Room")
     List<Content_Room> getAllContents();
 
+    @Query("SELECT * FROM Content_Room WHERE start_date = :startdate" +" OR end_date = :enddate ")
+    List<Content_Room> getMemo(String startdate, String enddate);
+
     @Insert
     void insert(Content_Room content_room);
 

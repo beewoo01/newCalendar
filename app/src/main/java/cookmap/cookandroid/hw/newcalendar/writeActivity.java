@@ -184,8 +184,8 @@ public class writeActivity extends AppCompatActivity implements View.OnClickList
             int length = permissions.length;
             for (int i = 0; i < length; i++) {
                 if (grantResults[i] == PackageManager.PERMISSION_GRANTED) {
-                    GalleryDialog galleryDialog = new GalleryDialog();
-                    galleryDialog.show(getSupportFragmentManager(), "tag");
+                    DialogFragment dialogFragment = new test_Gallery_Dialog(this);
+                    dialogFragment.show(getSupportFragmentManager(), "Gallery_Dialog");
                 } else {
                     Toast.makeText(this, "권한이 없어 접근할 수 없습니다.", Toast.LENGTH_SHORT).show();
                 }
@@ -246,34 +246,11 @@ public class writeActivity extends AppCompatActivity implements View.OnClickList
 
     }
     private void insertDb(){
-        //helper = new SQLiteOpenHelper(this);
-
-
-
-
-        /*try {
-            db = openOrCreateDatabase("con_file.db", Context.MODE_PRIVATE, null);
-            //db = helper.getWritableDatabase();
-        }catch (SQLiteException e){
-            e.printStackTrace();
-            Log.d(tag, "데이터 베이스를 열수 없음");
-            Toast.makeText(this,"저장에 실패하였습니다.", Toast.LENGTH_SHORT).show();
-            finish();
-        }*/
 
         if (desEdit.getText().toString().trim().length() <= 0) des = none;
         else des = desEdit.getText().toString();
 
 
-        /*ContentValues values = new ContentValues();
-        values.put("title", titleEdit.getText().toString());
-        values.put("description", des);
-        values.put("main_Img", m_img);
-
-        values.put("img", img);
-        values.put("s_date", s_date.getText().toString());
-        values.put("e_date", e_date.getText().toString());
-        values.put("label", "#9500ff" );*/
         ContentDatabase_Room.getInstance(this).getContentDao().insert(new Content_Room(
                 titleEdit.getText().toString(),
                 des,

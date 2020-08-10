@@ -17,6 +17,7 @@ import android.content.pm.PackageManager;
 import android.database.Cursor;
 import android.graphics.Color;
 import android.os.Bundle;
+import android.os.Handler;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.GestureDetector;
@@ -50,28 +51,22 @@ public class MainActivity extends AppCompatActivity implements GestureDetector.O
 
     private ArrayList<DayInfo> mDayList;
     private List<Content_Room> memo_items_List = new ArrayList<>();
-    private ArrayList<Content_Room> testArray = new ArrayList<>();
     private CalendarAdapter mCalendarAdapter;
     private Memo_Adapter memo_Adapter = null;
 
-    /*private SQLiteDatabase db;
-    private SQLiteOpenHelper helper;
-    private String table_name = "contents";*/
-    private SimpleDateFormat format;
-    int dbVersion = 2;
+    private int today_Position = 0;
 
-    //private CalendarListBinding binding;
+
+    private SimpleDateFormat format;
+
 
     final static int DISTANCE = 200;
     final static int VELOCITY = 350;
 
     private GestureDetectorCompat detector;
 
-    Calendar mLastMonthCalendar;
     Calendar mThisMonthCalendar;
-    Calendar mNextMonthCalendar;
-    int height = 0;
-    String cu_time = "01";
+    private int height = 0;
     String selectQuery = null;
 
     @Override
@@ -106,7 +101,9 @@ public class MainActivity extends AppCompatActivity implements GestureDetector.O
 
                     @Override
                     public void OnItemClick(View view, int position) {
+                        Log.d("OnItemClick", String.valueOf(position));
                         day_touch(position);
+                        today_Position = position;
 
                     }
 
@@ -131,13 +128,7 @@ public class MainActivity extends AppCompatActivity implements GestureDetector.O
 
         }
 
-        //파일 쓰기 권한 확인
-        /*if (ContextCompat.checkSelfPermission(this, Manifest.permission.WRITE_EXTERNAL_STORAGE)
-                != PackageManager.PERMISSION_GRANTED) {
-            temp += Manifest.permission.WRITE_EXTERNAL_STORAGE + " ";
-        }*/
-
-        if (TextUtils.isEmpty(temp) == false) {
+        if (!TextUtils.isEmpty(temp)) {
             //권한 요청
             ActivityCompat.requestPermissions(this, temp.trim().split(" "),1);
 
@@ -164,10 +155,12 @@ public class MainActivity extends AppCompatActivity implements GestureDetector.O
     }
 
     private void day_touch(int position) {
+
+        Log.d("day_touch", String.valueOf(position));
         for (int i = 0; i < mCalendar_Gv.getChildCount(); i++) {
             if (position == i) {
                 mCalendar_Gv.getChildAt(i).setBackgroundColor(Color.parseColor("#FFE0AB"));
-                cu_time = mDayList.get(i).getDay();
+                //cu_time = mDayList.get(i).getDay();
 
                 try {
                     format = new SimpleDateFormat("yyyy/MM/dd");
@@ -175,13 +168,11 @@ public class MainActivity extends AppCompatActivity implements GestureDetector.O
                     Calendar calendar = Calendar.getInstance();
                     calendar.setTime(date);
                     selectQuery = format.format(calendar.getTime());
-                    if (checkTable()) {
-                        sql_select();
-                    }
+
                 } catch (ParseException e) {
                     e.printStackTrace();
                 }
-
+                sql_select();
 
                 // 날짜 변경으로 리스트뷰 초기화 함수로 ㄱㄱ 해야함
             } else {
@@ -194,15 +185,14 @@ public class MainActivity extends AppCompatActivity implements GestureDetector.O
 
     private void init() {
         //그리드뷰 swipe시 필요
+        Log.d(TAG, "init");
         detector = new GestureDetectorCompat(this, this);
 
         mDayList = new ArrayList<DayInfo>();
         LinearLayoutManager mLayoutManager = new LinearLayoutManager(this);
         memo_list.setLayoutManager(mLayoutManager);
         memo_list.addItemDecoration(new RecyclerViewDecoration(15));
-        if (checkTable()) {
-            select();
-        }
+        select();
         // 이번달 의 캘린더 인스턴스를 생성한다.
         mThisMonthCalendar = Calendar.getInstance();
         mThisMonthCalendar.set(Calendar.DAY_OF_MONTH, 1);
@@ -214,12 +204,35 @@ public class MainActivity extends AppCompatActivity implements GestureDetector.O
     @Override
     protected void onStart() {
         super.onStart();
+        Log.d(TAG,"onStart");
+
+        //day_touch(today_Position);
     }
 
     @Override
     protected void onResume() {
         super.onResume();
+        DayperformClick();
+        Log.d(TAG,"onResume");
 
+    }
+
+    @Override
+    protected void onRestart() {
+        super.onRestart();
+        mCalendarAdapter.notifyDataSetChanged();
+        memo_Adapter.notifyDataSetChanged();
+        Log.d(TAG,"onRestart");
+    }
+
+    private void DayperformClick(){
+        new Handler().postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                day_touch(today_Position);
+                //mCalendar_Gv.findViewHolderForAdapterPosition(today_Position).itemView.performClick();
+            }
+        },100);
     }
 
     /**
@@ -231,8 +244,6 @@ public class MainActivity extends AppCompatActivity implements GestureDetector.O
         int lastMonthStartDay;
         int dayOfMonth;
         int thisMonthLastDay;
-        //db = openOrCreateDatabase("con_file.db", Context.MODE_PRIVATE, null);
-        //db = helper.getReadableDatabase();
 
         mDayList.clear();
 
@@ -295,45 +306,30 @@ public class MainActivity extends AppCompatActivity implements GestureDetector.O
                 }
             }
             mDayList.get(i).setIsMemo(z);
+            if (mDayList.get(i).getFull_Day().equals(selectQuery)){
+                today_Position = i;
+                Log.d("today_Position", String.valueOf(today_Position));
+                //요기요
+            }
 
         }
         initCalendarAdapter();
-        if (checkTable()) {
-            sql_select();
-        }
+        sql_select();
+
+
     }
 
     private void select() {
         memo_items_List.clear();
-        //memo_item list = new memo_item();
-
         memo_items_List = ContentDatabase_Room.getInstance(MainActivity.this)
                 .getContentDao()
                 .getAllContents();
-
-        /*String sql = "select * from " + table_name + ";";
-        Cursor results = db.rawQuery(sql, null);
-        int i = 0;
-        while (results.moveToNext()) {
-            memo_item list = new memo_item();
-            list.setS_date(results.getString(5));
-            Log.d("id",results.getString(0));
-            Log.d("id",results.getString(1));
-            Log.d("id",results.getString(2));
-            Log.d("id",results.getString(3));
-            Log.d("id",results.getString(4));
-            Log.d("id",results.getString(5));
-            Log.d("id",results.getString(6));
-            memo_items_List.add(list);
-            i++;
-        }
-        results.close();*/
 
     }
 
     private String change(int num) {
         String charter;
-        if (num <= 10) charter = "0" + num;
+        if (num < 10) charter = "0" + num;
         else charter = String.valueOf(num);
 
         return charter;
@@ -351,24 +347,20 @@ public class MainActivity extends AppCompatActivity implements GestureDetector.O
 
     }
 
-    private boolean checkTable() {
-
-        /*db = openOrCreateDatabase("con_file.db", Context.MODE_PRIVATE, null);
-        Cursor cursor = db.rawQuery("SELECT name FROM sqlite_master WHERE type='table' AND name ='contents'", null);
-        cursor.moveToNext();
-        if (cursor.getCount() > 0) {
-            return true;
-        } else {
-            Log.d(TAG, "테이블이 없음");
-            helper = new SQLiteOpenHelper(this, table_name, null, dbVersion);
-            return false;
-        }*/
-        return true;
-    }
-
     private void sql_select() {
         memo_items_List.clear();
-        memo_items_List = ContentDatabase_Room.getInstance(this).getContentDao().getAllContents();
+        memo_items_List = ContentDatabase_Room.getInstance(this).getContentDao().getMemo(selectQuery, selectQuery);
+        for (int i = 0; i < memo_items_List.size(); i++){
+            Log.d("TAG", String.valueOf(memo_items_List.get(i).getId()));
+            Log.d("TAG", memo_items_List.get(i).getTitle());
+            Log.d("TAG", memo_items_List.get(i).getDescription());
+            Log.d("TAG", memo_items_List.get(i).getMain_Img());
+            Log.d("TAG", memo_items_List.get(i).getImg());
+            Log.d("TAG", memo_items_List.get(i).getStart_date());
+            Log.d("TAG", memo_items_List.get(i).getEnd_date());
+            Log.d("TAG", memo_items_List.get(i).getLabel());
+        }
+        //Log.d("getMemo", String.valueOf(memo_items_List.get(0)));
         Log.d("room memoSize:", String.valueOf(memo_items_List.size()));
         if (memo_items_List.size() <= 0) {
             empt_lay.setVisibility(View.VISIBLE);
@@ -376,44 +368,6 @@ public class MainActivity extends AppCompatActivity implements GestureDetector.O
             empt_lay.setVisibility(View.GONE);
             initMemoAdapter();
         }
-
-        /*String sql = "SELECT * FROM contents WHERE s_date = ?";
-        Cursor results = db.rawQuery(sql, new String[]{selectQuery});
-
-        memo_items_List.clear();
-
-        while (results.moveToNext()) {
-            memo_item list = new memo_item();
-
-            list.setId(String.valueOf(results.getInt(0)));
-            list.setTitle(results.getString(1));
-            list.setDesc(results.getString(2));
-            list.setImg_main(results.getString(3));
-            list.setImgs(results.getString(4));
-            list.setS_date(results.getString(5));
-            list.setE_date(results.getString(6));
-            String label = results.getString(7);
-            if (label == null) {
-                label = "#000000";
-            }
-            list.setLabel(label);
-            Log.d("id",list.getId());
-            Log.d("title",list.getTitle());
-            Log.d("DESC",list.getDesc());
-            Log.d("imgMain",list.getImg_main());
-            Log.d("Imgs",list.getImgs());
-            Log.d("S_Date",list.getS_date());
-            Log.d("E_Date",list.getE_date());
-
-            memo_items_List.add(list);
-        }
-        results.close();
-        if (memo_items_List.size() <= 0) {
-            empt_lay.setVisibility(View.VISIBLE);
-        } else {
-            empt_lay.setVisibility(View.GONE);
-            initMemoAdapter();
-        }*/
 
     }
 
@@ -424,10 +378,23 @@ public class MainActivity extends AppCompatActivity implements GestureDetector.O
      * @return LastMonthCalendar
      */
     private Calendar getLastMonth(Calendar calendar) {
+        //today_Position = 이 아이는 포지션입니다.
         calendar.set(calendar.get(Calendar.YEAR), calendar.get(Calendar.MONTH), 1);
         calendar.add(Calendar.MONTH, -1);
         mTvCalendarTitle.setText(mThisMonthCalendar.get(Calendar.YEAR) + "년 "
                 + (mThisMonthCalendar.get(Calendar.MONTH) + 1) + "월");
+
+        try {
+            Date date = format.parse(mThisMonthCalendar.get(Calendar.YEAR) + "/" + (mThisMonthCalendar.get(Calendar.MONTH) + 1) + "/" + "01");
+            calendar = Calendar.getInstance();
+            calendar.setTime(date);
+            selectQuery = format.format(calendar.getTime());
+
+        }catch (ParseException e){
+            e.getErrorOffset();
+        }
+
+
         return calendar;
     }
 
@@ -444,6 +411,16 @@ public class MainActivity extends AppCompatActivity implements GestureDetector.O
         calendar.add(Calendar.MONTH, +1);
         mTvCalendarTitle.setText(mThisMonthCalendar.get(Calendar.YEAR) + "년 "
                 + (mThisMonthCalendar.get(Calendar.MONTH) + 1) + "월");
+
+        try {
+            Date date = format.parse(mThisMonthCalendar.get(Calendar.YEAR) + "/" + (mThisMonthCalendar.get(Calendar.MONTH) + 1) + "/" + "01");
+            calendar = Calendar.getInstance();
+            calendar.setTime(date);
+            selectQuery = format.format(calendar.getTime());
+
+        }catch (ParseException e){
+            e.getErrorOffset();
+        }
         return calendar;
     }
 
@@ -467,6 +444,7 @@ public class MainActivity extends AppCompatActivity implements GestureDetector.O
         GridLayoutManager mgmr = new GridLayoutManager(this, 7);
         mCalendar_Gv.setLayoutManager(mgmr);
         mCalendar_Gv.setAdapter(mCalendarAdapter);
+        //mDayList.;
 
     }
 
@@ -500,16 +478,16 @@ public class MainActivity extends AppCompatActivity implements GestureDetector.O
 
         if (e1.getX() - e2.getX() < DISTANCE && Math.abs(velocityX) > VELOCITY) {
             Log.d("계산", String.valueOf(e1.getX() - e2.getX()));
-            if (checkTable())
-                select();
+            select();
             getCalendar(getLastMonth(mThisMonthCalendar));
+            DayperformClick();
 
         }
         if (e2.getX() - e1.getX() < DISTANCE && Math.abs(velocityX) > VELOCITY) {
             Log.d("계산", String.valueOf(e1.getX() - e2.getX()));
-            if (checkTable())
-                select();
+            select();
             getCalendar(getNextMonth(mThisMonthCalendar));
+            DayperformClick();
         }
         return true;
     }
