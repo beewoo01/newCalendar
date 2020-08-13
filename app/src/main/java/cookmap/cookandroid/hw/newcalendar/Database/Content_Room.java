@@ -1,6 +1,7 @@
-package cookmap.cookandroid.hw.newcalendar;
+package cookmap.cookandroid.hw.newcalendar.Database;
 
 import androidx.room.Entity;
+import androidx.room.Ignore;
 import androidx.room.PrimaryKey;
 
 @Entity
@@ -12,17 +13,13 @@ public class Content_Room {
     private String description;
     private String main_Img;
     private String img;
-    private String start_date;
-    private String end_date;
     private String label;
 
-    public Content_Room(String title, String description, String main_Img, String img, String start_date, String end_date, String label) {
+    public Content_Room(String title, String description, String main_Img, String img, String label) {
         this.title = title;
         this.description = description;
         this.main_Img = main_Img;
         this.img = img;
-        this.start_date = start_date;
-        this.end_date = end_date;
         this.label = label;
     }
 
@@ -64,22 +61,6 @@ public class Content_Room {
 
     public void setImg(String img) {
         this.img = img;
-    }
-
-    public String getStart_date() {
-        return start_date;
-    }
-
-    public void setStart_date(String start_date) {
-        this.start_date = start_date;
-    }
-
-    public String getEnd_date() {
-        return end_date;
-    }
-
-    public void setEnd_date(String end_date) {
-        this.end_date = end_date;
     }
 
     public String getLabel() {

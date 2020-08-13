@@ -10,11 +10,8 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.Manifest;
-import android.content.ContentValues;
 import android.content.Context;
 import android.content.pm.PackageManager;
-import android.database.sqlite.SQLiteDatabase;
-import android.database.sqlite.SQLiteException;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.text.TextUtils;
@@ -37,16 +34,21 @@ import com.google.android.material.datepicker.MaterialPickerOnPositiveButtonClic
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Collections;
 import java.util.Date;
-import java.util.HashMap;
-import java.util.LinkedHashMap;
-import java.util.LinkedHashSet;
+import java.util.GregorianCalendar;
+import java.util.List;
 import java.util.TimeZone;
 
-public class writeActivity extends AppCompatActivity implements View.OnClickListener, test_Gallery_Dialog.PassDataInterface{
+import cookmap.cookandroid.hw.newcalendar.Database.Database_Room;
+import cookmap.cookandroid.hw.newcalendar.Database.Content_Room;
+import cookmap.cookandroid.hw.newcalendar.Database.Memo_Room;
+
+public class writeActivity extends AppCompatActivity implements View.OnClickListener, test_Gallery_Dialog.PassDataInterface {
 
     private ImageView backbtn;
     private EditText titleEdit, desEdit;
@@ -60,14 +62,17 @@ public class writeActivity extends AppCompatActivity implements View.OnClickList
     private String startDate, endDate;
     private String tag = "SQLite";
     private String tableName = "contents";
-    private String des = "", m_img = "" ,img= "", label= "";
+    private String des = "", m_img = "", img = "", label = "";
     private String none = "NONE";
+    private SimpleDateFormat sp;
+    private long now;
 
     private horizontal_Adapter horizontal_adapter;
 
     private ArrayList<String> imgAddress;
 
     String TAG = "writeAct";
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -76,7 +81,7 @@ public class writeActivity extends AppCompatActivity implements View.OnClickList
 
         init();
         imgAddress = new ArrayList<>(10);
-        LinearLayoutManager mLayoutManager= new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, true);
+        LinearLayoutManager mLayoutManager = new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, true);
         //mLayoutManager.setReverseLayout(true);
         //mLayoutManager.setStackFromEnd(true);
         img_recycle.setLayoutManager(mLayoutManager);
@@ -84,7 +89,7 @@ public class writeActivity extends AppCompatActivity implements View.OnClickList
         // findViewById 처리 함수
     }
 
-    public void init(){
+    public void init() {
         backbtn = findViewById(R.id.back_btn);
         checkbtn = findViewById(R.id.check_btn);
         titleEdit = findViewById(R.id.title_Edit);
@@ -108,9 +113,9 @@ public class writeActivity extends AppCompatActivity implements View.OnClickList
     protected void onStart() {
         super.onStart();
         //현재날짜 가져와 s_txt,e_txt에 띄워 줄거임
-        long now = System.currentTimeMillis();
+        now = System.currentTimeMillis();
         Date date = new Date(now);
-        SimpleDateFormat sp = new SimpleDateFormat("yyyy/MM/dd");
+        sp = new SimpleDateFormat("yyyy/MM/dd");
         startDate = sp.format(date);
         endDate = startDate;
         s_date.setText(startDate);
@@ -125,23 +130,25 @@ public class writeActivity extends AppCompatActivity implements View.OnClickList
 
         if (v.getId() == R.id.back_btn) finish();
         else if (v.getId() == R.id.check_btn) {
-            if (titleEdit.getText().toString().length() > 0 ) {
-                try { getImage(); }
-                catch (JSONException e) { e.printStackTrace();
-                Toast.makeText(this, "이미지 저장에 실패하였습니다.", Toast.LENGTH_SHORT).show(); }
+            if (titleEdit.getText().toString().length() > 0) {
+                try {
+                    getImage();
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                    Toast.makeText(this, "이미지 저장에 실패하였습니다.", Toast.LENGTH_SHORT).show();
+                }
                 insertDb();
-            }
-            else {
+            } else {
                 Toast.makeText(writeActivity.this, "제목을 입력하여 주세요", Toast.LENGTH_SHORT).show();
                 return;
             }
         }
         //제목, 입력되어있는지 확인 (제목만 작성 되어 있어도 괜찮음)
-        else if (v.getId() == R.id.select_Date ) showDatePickerDialog();
-        // 달력으로
-        else if (v.getId() == R.id.fab_button){
+        else if (v.getId() == R.id.select_Date) showDatePickerDialog();
+            // 달력으로
+        else if (v.getId() == R.id.fab_button) {
             checkSelfPermission();
-            Log.d(TAG,"Fab_Button");
+            Log.d(TAG, "Fab_Button");
             return;
         }
         // 사진 선택창 띄워줘야함
@@ -165,9 +172,9 @@ public class writeActivity extends AppCompatActivity implements View.OnClickList
 
         if (TextUtils.isEmpty(temp) == false) {
             //권한 요청
-            ActivityCompat.requestPermissions(this, temp.trim().split(" "),1);
+            ActivityCompat.requestPermissions(this, temp.trim().split(" "), 1);
 
-        }else {
+        } else {
             // 모두 허용 상태
             //Toast.makeText(this, "권한을 모두 허용", Toast.LENGTH_SHORT).show();
 
@@ -179,7 +186,7 @@ public class writeActivity extends AppCompatActivity implements View.OnClickList
 
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
-        Log.d(TAG,"PermissionsResult");
+        Log.d(TAG, "PermissionsResult");
         if (requestCode == 1) {
             int length = permissions.length;
             for (int i = 0; i < length; i++) {
@@ -193,13 +200,16 @@ public class writeActivity extends AppCompatActivity implements View.OnClickList
         }
     }
 
-    public void showDatePickerDialog(){
+    public void showDatePickerDialog() {
+        Pair<Long, Long> pair = Pair.create(now, now);
         MaterialDatePicker.Builder<Pair<Long, Long>> builder = MaterialDatePicker.Builder.dateRangePicker();
         builder.setTitleText("날짜를 선택하세요");
-        final MaterialDatePicker materialDatePicker = builder.build();
+        builder.setSelection(pair);
+        MaterialDatePicker materialDatePicker = builder.build();
+
         materialDatePicker.show(getSupportFragmentManager(), "태그");
 
-        materialDatePicker.addOnPositiveButtonClickListener(new MaterialPickerOnPositiveButtonClickListener<Pair<Long,Long>>() {
+        materialDatePicker.addOnPositiveButtonClickListener(new MaterialPickerOnPositiveButtonClickListener<Pair<Long, Long>>() {
             @Override
             public void onPositiveButtonClick(Pair<Long, Long> selection) {
                 TimeZone timeZone = TimeZone.getDefault();
@@ -207,7 +217,7 @@ public class writeActivity extends AppCompatActivity implements View.OnClickList
                 SimpleDateFormat spd = new SimpleDateFormat("yyyy/MM/dd");
                 startDate = spd.format(new Date(selection.first + offsetFromUTC));
                 endDate = spd.format(new Date(selection.second + offsetFromUTC));
-                Log.d(TAG, "start: "+ startDate);
+                Log.d(TAG, "start: " + startDate);
                 Log.d(TAG, "end: " + endDate);
                 s_date.setText(startDate);
                 e_date.setText(endDate);
@@ -219,14 +229,14 @@ public class writeActivity extends AppCompatActivity implements View.OnClickList
 
     private void getImage() throws JSONException {
         JSONObject jsonObject = new JSONObject();
-        if (imgAddress.size() > 0){
+        if (imgAddress.size() > 0) {
             int jsonkey = 1;
-            for (int i = 0; i < imgAddress.size(); i++){
+            for (int i = 0; i < imgAddress.size(); i++) {
 
-                if (horizontal_adapter.coverNum == i){
+                if (horizontal_adapter.coverNum == i) {
                     m_img = imgAddress.get(i);
                     jsonObject.put(String.valueOf(0), m_img);
-                }else {
+                } else {
                     jsonObject.put(String.valueOf(jsonkey), imgAddress.get(i));
                     jsonkey++;
                 }
@@ -239,32 +249,57 @@ public class writeActivity extends AppCompatActivity implements View.OnClickList
             img = jsonObject.toString();
             Log.d("Jsonstring??", img);
 
-        }else {
+        } else {
             m_img = none;
             img = none;
         }
 
     }
-    private void insertDb(){
+
+    private void insertDb() {
 
         if (desEdit.getText().toString().trim().length() <= 0) des = none;
         else des = desEdit.getText().toString();
 
-
-        ContentDatabase_Room.getInstance(this).getContentDao().insert(new Content_Room(
+        List<Long> getid = Database_Room.getInstance(this).getDao().content_insert(new Content_Room(
                 titleEdit.getText().toString(),
                 des,
                 m_img,
                 img,
-                s_date.getText().toString(),
-                e_date.getText().toString(),
                 "#9500ff"
         ));
 
-        /*long result = db.insert(tableName, null, values);
-        Log.d(tag, result + "번째 row insert 성공");
-        db.close();
-        helper.close();*/
+        if (!s_date.getText().equals(e_date.getText())) {
+            try {
+
+                Calendar start_Cal = new GregorianCalendar();
+                Calendar end_Cal = new GregorianCalendar();
+
+                Date start_date = sp.parse(startDate);
+                Date end_date = sp.parse(endDate);
+
+                start_Cal.setTime(start_date);
+                end_Cal.setTime(end_date);
+
+                long diffSec = (end_Cal.getTimeInMillis() - start_Cal.getTimeInMillis()) / 1000;
+                long diffDays = diffSec / (24 * 60 * 60);
+                Log.d("두 날짜간 일수 차 : ", diffDays + " 일");
+                Calendar calendar = Calendar.getInstance();
+
+                for (int i = 0; i <= diffDays; i++) {
+                    calendar.setTime(start_date);
+                    calendar.add(Calendar.DATE, i);
+                    Log.d("Add i ", i + "," + sp.format(calendar.getTime()));
+                    Database_Room.getInstance(this).getDao().memo_Insert(new Memo_Room(Integer.parseInt(String.valueOf(getid.get(0))),sp.format(calendar.getTime())));
+                }
+            } catch (ParseException e) {
+                e.printStackTrace();
+            }
+        }else {
+            Database_Room.getInstance(this).getDao().memo_Insert(new Memo_Room(Integer.parseInt(String.valueOf(getid.get(0))),startDate));
+        }
+
+
         finish();
     }
 
@@ -273,9 +308,9 @@ public class writeActivity extends AppCompatActivity implements View.OnClickList
         Log.d("onDataReceived", "왓네");
         Log.d("onDataReceived", String.valueOf(imgAddress.size()));
 
-        if (!imgAddress.isEmpty()){
+        if (!imgAddress.isEmpty()) {
             Log.d("onDataReceived", "if");
-            for (int i = 0; i < imgAddress.size(); i++){
+            for (int i = 0; i < imgAddress.size(); i++) {
                 Log.d("for", String.valueOf(imgAddress.get(i)));
                 this.imgAddress.add(String.valueOf(imgAddress.get(i)));
             }
@@ -286,22 +321,22 @@ public class writeActivity extends AppCompatActivity implements View.OnClickList
             horizontal_adapter.notifyDataSetChanged();
 
 
-        }else {
+        } else {
 
             Log.d("onDataReceived", "else");
         }
 
     }
 
-    class horizontal_Adapter extends RecyclerView.Adapter<horizontal_Adapter.CustomViewHolder>{
+    class horizontal_Adapter extends RecyclerView.Adapter<horizontal_Adapter.CustomViewHolder> {
         private Context context;
         private ArrayList list;
         private int coverNum;
 
-        public horizontal_Adapter(Context context, ArrayList list){
+        public horizontal_Adapter(Context context, ArrayList list) {
             this.context = context;
             this.list = list;
-            coverNum = list.size()-1;
+            coverNum = list.size() - 1;
         }
 
         @NonNull
@@ -317,9 +352,9 @@ public class writeActivity extends AppCompatActivity implements View.OnClickList
         @Override
         public void onBindViewHolder(@NonNull CustomViewHolder holder, int position) {
             Glide.with(context).load(list.get(position)).into(holder.picture);
-            if (coverNum == position){
+            if (coverNum == position) {
                 holder.background.setBackgroundColor(Color.parseColor("#000000"));
-            }else {
+            } else {
                 holder.background.setBackgroundColor(0x00000000);
             }
 
@@ -332,9 +367,9 @@ public class writeActivity extends AppCompatActivity implements View.OnClickList
 
         private class CustomViewHolder extends RecyclerView.ViewHolder {
             private ImageView picture, x_img;
-            private RelativeLayout background ,closeImg;
+            private RelativeLayout background, closeImg;
 
-            private CustomViewHolder(View itemView){
+            private CustomViewHolder(View itemView) {
                 super(itemView);
                 this.picture = itemView.findViewById(R.id.last_img);
                 this.background = itemView.findViewById(R.id.last_img_bg);
@@ -370,16 +405,16 @@ public class writeActivity extends AppCompatActivity implements View.OnClickList
 
             }
 
-            private void removeItem(int position){
+            private void removeItem(int position) {
                 list.remove(position);
-                if (coverNum == position && list.size() > 0){
-                    coverNum = list.size()-1;
+                if (coverNum == position && list.size() > 0) {
+                    coverNum = list.size() - 1;
                     notifyItemRemoved(position);
                     notifyItemChanged(coverNum);
-                }else if (list.size() <= 0){
+                } else if (list.size() <= 0) {
                     coverNum = -1;
                     notifyItemRemoved(position);
-                }else {
+                } else {
                     notifyItemRemoved(position);
                 }
             }
