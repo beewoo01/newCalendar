@@ -5,6 +5,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 import androidx.core.view.GestureDetectorCompat;
+import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -15,6 +16,7 @@ import android.content.pm.PackageManager;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.os.Handler;
+import android.os.Parcelable;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.GestureDetector;
@@ -26,7 +28,6 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -36,17 +37,21 @@ import java.util.List;
 
 import cookmap.cookandroid.hw.newcalendar.Database.Database_Room;
 import cookmap.cookandroid.hw.newcalendar.Database.Content_Room;
+import cookmap.cookandroid.hw.newcalendar.adpater.CalendarAdapter;
+import cookmap.cookandroid.hw.newcalendar.adpater.Memo_Adapter;
+import cookmap.cookandroid.hw.newcalendar.utill.RecyclerItemClickListener;
+import cookmap.cookandroid.hw.newcalendar.utill.RecyclerViewDecoration;
 
 
 public class MainActivity extends AppCompatActivity implements GestureDetector.OnGestureListener {
 
-    public static int SUNDAY = 1;
+
 
     private TextView mTvCalendarTitle;
     private RecyclerView mCalendar_Gv;
     private RecyclerView memo_list;
     private ImageButton fab;
-    private LinearLayout empt_lay;
+    private LinearLayout empt_lay, main_lay;
 
     private String TAG = "메인클래스";
 
@@ -60,21 +65,24 @@ public class MainActivity extends AppCompatActivity implements GestureDetector.O
 
     private SimpleDateFormat format;
 
-
-    final static int DISTANCE = 200;
-    final static int VELOCITY = 350;
-
     private GestureDetectorCompat detector;
 
-    Calendar mThisMonthCalendar;
+    private Calendar mThisMonthCalendar;
     private int height = 0;
-    String selectQuery = null;
+    private String selectQuery = null;
+
+    public static int SUNDAY = 1;
+    private int DISTANCE = 200;
+    private int VELOCITY = 350;
+
+
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        main_lay = findViewById(R.id.main_layout);
         mTvCalendarTitle = (TextView) findViewById(R.id.Month_Text);
         mCalendar_Gv = findViewById(R.id.Calendar_Grid);
         memo_list = findViewById(R.id.Memo_List);
@@ -110,13 +118,30 @@ public class MainActivity extends AppCompatActivity implements GestureDetector.O
 
                 }));
 
+        memo_list.addOnItemTouchListener(new RecyclerItemClickListener(this, memo_list,
+                new RecyclerItemClickListener.OnItemClickListener() {
+            @Override
+            public void OnItemClick(View view, int position) {
+                start_memo_Activity(position, selectQuery);
+
+            }
+        }));
+
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 checkSelfPermission();
-                startActivity(new Intent(MainActivity.this, writeActivity.class));
+
             }
         });
+    }
+    private void start_memo_Activity(int position, String date){
+        Intent intent = new Intent(MainActivity.this, Memo_Click_Activity.class);
+        Bundle bundle = new Bundle();
+        bundle.putString("date", date);
+        bundle.putInt("position", position);
+        intent.putExtras(bundle);
+        startActivity(intent);
     }
 
     public void checkSelfPermission() {
@@ -135,7 +160,7 @@ public class MainActivity extends AppCompatActivity implements GestureDetector.O
 
         } else {
             // 모두 허용 상태
-            Toast.makeText(this, "권한을 모두 허용", Toast.LENGTH_SHORT).show();
+            startActivity(new Intent(MainActivity.this, writeActivity.class));
         }
 
     }
@@ -147,9 +172,10 @@ public class MainActivity extends AppCompatActivity implements GestureDetector.O
             int length = permissions.length;
             for (int i = 0; i < length; i++) {
                 if (grantResults[i] == PackageManager.PERMISSION_GRANTED) {
-
+                    startActivity(new Intent(MainActivity.this, writeActivity.class));
                 } else {
                     Toast.makeText(this, "사진 업로드 기능이 제한 됩니다.", Toast.LENGTH_SHORT).show();
+                    startActivity(new Intent(MainActivity.this, writeActivity.class));
                 }
             }
         }
@@ -206,8 +232,6 @@ public class MainActivity extends AppCompatActivity implements GestureDetector.O
     protected void onStart() {
         super.onStart();
         Log.d(TAG, "onStart");
-
-        //day_touch(today_Position);
     }
 
     @Override
@@ -222,6 +246,7 @@ public class MainActivity extends AppCompatActivity implements GestureDetector.O
     protected void onRestart() {
         super.onRestart();
         mCalendarAdapter.notifyDataSetChanged();
+        getCalendar(mThisMonthCalendar);
         //memo_Adapter.notifyDataSetChanged();
         Log.d(TAG, "onRestart");
     }
@@ -231,7 +256,6 @@ public class MainActivity extends AppCompatActivity implements GestureDetector.O
             @Override
             public void run() {
                 day_touch(today_Position);
-                //mCalendar_Gv.findViewHolderForAdapterPosition(today_Position).itemView.performClick();
             }
         }, 100);
     }

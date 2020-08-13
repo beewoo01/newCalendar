@@ -1,4 +1,4 @@
-package cookmap.cookandroid.hw.newcalendar;
+package cookmap.cookandroid.hw.newcalendar.utill;
 
 import android.content.Context;
 import android.graphics.Color;
@@ -17,26 +17,6 @@ public class RecyclerItemClickListener implements RecyclerView.OnItemTouchListen
     final static int DISTANCE = 200;
     final static int VELOCITY = 350;
     private String TAG = "RvClLis";
-
-    /*public RecyclerItemClickListener(final Context context, final RecyclerView recyclerView, final OnItemClickListener listener){
-        detector = new GestureDetector(context, new GestureDetector.SimpleOnGestureListener(){
-
-            @Override
-            public boolean onSingleTapUp(MotionEvent e) {
-                *//*for (int i = 0; i < recyclerView.getChildCount(); i++){
-                    if (recyclerView.getChildAdapterPosition(child) == i) {
-                        recyclerView.getChildAt(i).setBackgroundColor(Color.parseColor("#FFE0AB"));
-                    }
-                    else{
-                        recyclerView.getChildAt(i).setBackgroundColor(Color.TRANSPARENT);
-                    }
-
-                }*//*
-                return true;
-            }
-        });
-
-    }*/
 
     public interface OnItemClickListener{
         void OnItemClick(View view, int position);

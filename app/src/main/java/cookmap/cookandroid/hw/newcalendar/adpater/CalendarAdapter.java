@@ -1,4 +1,4 @@
-package cookmap.cookandroid.hw.newcalendar;
+package cookmap.cookandroid.hw.newcalendar.adpater;
 
 import android.content.Context;
 import android.graphics.Color;
@@ -7,7 +7,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
@@ -15,6 +14,9 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import java.util.ArrayList;
+
+import cookmap.cookandroid.hw.newcalendar.DayInfo;
+import cookmap.cookandroid.hw.newcalendar.R;
 
 public class CalendarAdapter extends RecyclerView.Adapter<CalendarAdapter.ViewHolder> {
     private ArrayList<DayInfo> mDayList;

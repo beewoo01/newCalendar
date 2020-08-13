@@ -25,7 +25,9 @@ import androidx.recyclerview.widget.SimpleItemAnimator;
 import java.util.ArrayList;
 import java.util.List;
 
-public class test_Gallery_Dialog extends DialogFragment implements Gallery_Adapter.OnLoadMoreListener{
+import cookmap.cookandroid.hw.newcalendar.adpater.Gallery_Adapter;
+
+public class Gallery_Dialog extends DialogFragment implements Gallery_Adapter.OnLoadMoreListener{
     RecyclerView recyclerView;
     private ImageView back_Image;
     private TextView addPhoto;
@@ -41,7 +43,7 @@ public class test_Gallery_Dialog extends DialogFragment implements Gallery_Adapt
         void onDataReceived(ArrayList<String> imgAddress);
     }
 
-    public test_Gallery_Dialog(PassDataInterface passDataInterface){
+    public Gallery_Dialog(PassDataInterface passDataInterface){
         this.passDataInterface = passDataInterface;
     }
 

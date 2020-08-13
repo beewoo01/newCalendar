@@ -48,7 +48,7 @@ import cookmap.cookandroid.hw.newcalendar.Database.Database_Room;
 import cookmap.cookandroid.hw.newcalendar.Database.Content_Room;
 import cookmap.cookandroid.hw.newcalendar.Database.Memo_Room;
 
-public class writeActivity extends AppCompatActivity implements View.OnClickListener, test_Gallery_Dialog.PassDataInterface {
+public class writeActivity extends AppCompatActivity implements View.OnClickListener, Gallery_Dialog.PassDataInterface {
 
     private ImageView backbtn;
     private EditText titleEdit, desEdit;
@@ -178,7 +178,7 @@ public class writeActivity extends AppCompatActivity implements View.OnClickList
             // 모두 허용 상태
             //Toast.makeText(this, "권한을 모두 허용", Toast.LENGTH_SHORT).show();
 
-            DialogFragment dialogFragment = new test_Gallery_Dialog(this);
+            DialogFragment dialogFragment = new Gallery_Dialog(this);
             dialogFragment.show(getSupportFragmentManager(), "Gallery_Dialog");
         }
 
@@ -191,7 +191,7 @@ public class writeActivity extends AppCompatActivity implements View.OnClickList
             int length = permissions.length;
             for (int i = 0; i < length; i++) {
                 if (grantResults[i] == PackageManager.PERMISSION_GRANTED) {
-                    DialogFragment dialogFragment = new test_Gallery_Dialog(this);
+                    DialogFragment dialogFragment = new Gallery_Dialog(this);
                     dialogFragment.show(getSupportFragmentManager(), "Gallery_Dialog");
                 } else {
                     Toast.makeText(this, "권한이 없어 접근할 수 없습니다.", Toast.LENGTH_SHORT).show();

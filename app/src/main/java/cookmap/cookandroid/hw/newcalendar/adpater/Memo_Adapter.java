@@ -1,4 +1,4 @@
-package cookmap.cookandroid.hw.newcalendar;
+package cookmap.cookandroid.hw.newcalendar.adpater;
 
 import android.content.Context;
 import android.graphics.Color;
@@ -17,12 +17,13 @@ import com.bumptech.glide.Glide;
 import java.util.List;
 
 import cookmap.cookandroid.hw.newcalendar.Database.Content_Room;
+import cookmap.cookandroid.hw.newcalendar.R;
 
 public class Memo_Adapter extends RecyclerView.Adapter<Memo_Adapter.ViewHolder> {
     private List<Content_Room> items;
     private Context context;
 
-    Memo_Adapter(List<Content_Room> list) {
+    public Memo_Adapter(List<Content_Room> list) {
         items = list;
     }
 
@@ -59,7 +60,7 @@ public class Memo_Adapter extends RecyclerView.Adapter<Memo_Adapter.ViewHolder> 
         return items.size();
     }
 
-    public class ViewHolder extends RecyclerView.ViewHolder {
+    public class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener{
 
         private View label;
         private TextView c_title, c_desc;
@@ -71,6 +72,13 @@ public class Memo_Adapter extends RecyclerView.Adapter<Memo_Adapter.ViewHolder> 
             c_title = itemView.findViewById(R.id.con_title);
             c_desc = itemView.findViewById(R.id.con_desc);
             c_img_main = itemView.findViewById(R.id.con_img);
+
+            itemView.setOnClickListener(this);
+        }
+
+        @Override
+        public void onClick(View v) {
+
         }
     }
 }

@@ -1,4 +1,4 @@
-package cookmap.cookandroid.hw.newcalendar;
+package cookmap.cookandroid.hw.newcalendar.adpater;
 
 import android.content.Context;
 import android.graphics.Color;
@@ -20,11 +20,9 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.bumptech.glide.Glide;
 
 import java.util.ArrayList;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.LinkedHashMap;
 import java.util.List;
-import java.util.Map;
+
+import cookmap.cookandroid.hw.newcalendar.R;
 
 public class Gallery_Adapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
