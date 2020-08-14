@@ -2,11 +2,13 @@ package cookmap.cookandroid.hw.newcalendar;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.LinearSmoothScroller;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
+import android.widget.LinearLayout;
 
 import java.util.List;
 
@@ -31,9 +33,28 @@ public class Memo_Click_Activity extends AppCompatActivity {
 
         View backBtn = findViewById(R.id.back_in_mfrag);
         RecyclerView recyclerView = findViewById(R.id.memo_recycler_mfrag);
-        recyclerView.setLayoutManager(new LinearLayoutManager(this));
+
+        LinearLayoutManager linearLayoutManager = new LinearLayoutManager(this);
+
+        recyclerView.setLayoutManager(linearLayoutManager);
         recyclerView.setAdapter(new Memo_List_Adapter(this, list));
+
+
+
+        scrollFunction(linearLayoutManager, position);
+
         backBtn.setOnClickListener(onClickListener);
+    }
+
+    private void scrollFunction(LinearLayoutManager linearLayoutManager, int position){
+        RecyclerView.SmoothScroller smoothScroller = new LinearSmoothScroller(this){
+            @Override
+            protected int getVerticalSnapPreference() {
+                return LinearSmoothScroller.SNAP_TO_START;
+            }
+        };
+        smoothScroller.setTargetPosition(position);
+        linearLayoutManager.startSmoothScroll(smoothScroller);
     }
 
     private View.OnClickListener onClickListener = new View.OnClickListener() {
