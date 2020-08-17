@@ -6,11 +6,6 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:orientation="vertical">
 
-    <View
-        android:layout_width="match_parent"
-        android:layout_height="0.5sp"
-        android:background="@color/colorGray_No2" />
-
     <RelativeLayout
         android:id="@+id/top_layout_mfrag"
         android:layout_width="match_parent"
@@ -57,18 +52,12 @@
 
     </RelativeLayout>
 
-    <View
-        android:id="@+id/lineabove"
-        android:layout_width="match_parent"
-        android:layout_height="0.5sp"
-        android:layout_below="@+id/top_layout_mfrag"
-        android:background="@color/colorGray_No2" />
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_marginTop="3sp"
-        android:layout_below="@+id/lineabove"
+        android:layout_below="@+id/top_layout_mfrag"
         android:orientation="vertical">
 
         <RelativeLayout
