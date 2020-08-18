@@ -50,6 +50,11 @@
         <item name="buttonStyle">@style/AppTheme.Button.PreviewFix</item>
     </style>
 
+    <style name="DialogTheme">
+        <item name="android:windowEnterAnimation">@anim/slide_left</item>
+        <item name="android:windowExitAnimation">@anim/slide_right</item>
+    </style>
+
     <style name="AppTheme.Button" parent="Widget.MaterialComponents.Button"/>
 
     <style name="AppTheme.Button.PreviewFix" parent="Widget.MaterialComponents.Button.UnelevatedButton"/>

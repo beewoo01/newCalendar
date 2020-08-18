@@ -39,7 +39,10 @@
 
     <style name="AppTheme.Button.PreviewFix" parent="Widget.MaterialComponents.Button.UnelevatedButton"/>
 
-
+    <style name="DialogTheme">
+        <item name="android:windowEnterAnimation">@anim/slide_left</item>
+        <item name="android:windowExitAnimation">@anim/slide_right</item>
+    </style>
 
     <style name="CustomDialog" parent="android:Theme.Holo.Dialog">
 

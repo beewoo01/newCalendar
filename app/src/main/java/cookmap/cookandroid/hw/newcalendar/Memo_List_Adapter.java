@@ -1,11 +1,15 @@
 package cookmap.cookandroid.hw.newcalendar;
 
+import android.app.AlertDialog;
 import android.content.Context;
 import android.graphics.Color;
+import android.util.DisplayMetrics;
 import android.util.Log;
+import android.view.Display;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.Window;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -22,6 +26,8 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 
 import cookmap.cookandroid.hw.newcalendar.Database.Content_Room;
@@ -99,6 +105,7 @@ public class Memo_List_Adapter extends RecyclerView.Adapter<Memo_List_Adapter.Vi
         private TextView title_mfrag, sub_txt_mfrag;
         private ViewPager2 viewPager;
         private TabLayout tabLayout;
+        private Custom_Dialog builder;
 
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
@@ -119,8 +126,46 @@ public class Memo_List_Adapter extends RecyclerView.Adapter<Memo_List_Adapter.Vi
         private View.OnClickListener onClickListener = new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                showDialog(1);
                 //수정 삭제 버튼 화면 중앙에
             }
         };
+
+        private void showDialog(int param){
+            Log.d("showDialog", String.valueOf(param));
+            ArrayList arrayList = new ArrayList();
+            final String[] prm = new String[1];
+            if (param == 1) {
+                arrayList.add("수정");
+                arrayList.add("삭제");
+            }else {
+                arrayList.add("확인");
+                arrayList.add("취소");
+            }
+            builder = new Custom_Dialog(context, new Custom_Dialog.Custom_Dialog_EventListener() {
+                @Override
+                public void customDialogEvent(String value) {
+                    if (value.equals("수정")){
+                        // 수정 페이지 ㄱ
+                        prm[0] = value;
+                        Log.d("prm",value);
+                    }else if (value.equals("삭제")){
+                        showDialog(2);
+                        Log.d("prm",value);
+                        prm[0] = value;
+                    }else if (value.equals("확인")){
+                        Log.d("prm",value);
+                        prm[0] = value;
+                    }
+                }
+            }, arrayList, param);
+
+            DisplayMetrics display = context.getResources().getDisplayMetrics();
+            Window window = builder.getWindow();
+            window.setLayout(Math.round(display.widthPixels * 0.8f),
+                    ViewGroup.LayoutParams.WRAP_CONTENT);
+            builder.getWindow().setWindowAnimations(R.style.DialogTheme);
+            builder.show();
+        }
     }
 }
