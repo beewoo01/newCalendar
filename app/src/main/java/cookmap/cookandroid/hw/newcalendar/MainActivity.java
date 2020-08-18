@@ -359,9 +359,9 @@ public class MainActivity extends AppCompatActivity implements GestureDetector.O
         memo_Adapter = new Memo_Adapter(memo_items_List);
         memo_Adapter.notifyDataSetChanged();
         memo_list.setAdapter(memo_Adapter);
-        for (int i = 0; i < memo_items_List.size(); i++) {
+        /*for (int i = 0; i < memo_items_List.size(); i++) {
             memo_items_List.get(i).getTitle();
-        }
+        }*/
 
 
     }

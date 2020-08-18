@@ -2,6 +2,7 @@ package cookmap.cookandroid.hw.newcalendar;
 
 import android.app.AlertDialog;
 import android.content.Context;
+import android.content.Intent;
 import android.graphics.Color;
 import android.util.DisplayMetrics;
 import android.util.Log;
@@ -148,6 +149,10 @@ public class Memo_List_Adapter extends RecyclerView.Adapter<Memo_List_Adapter.Vi
                     if (value.equals("수정")){
                         // 수정 페이지 ㄱ
                         prm[0] = value;
+                        Intent intent = new Intent(context, writeActivity.class);
+                        intent.putExtra("","");
+                        context.startActivity(new Intent(context, writeActivity.class));
+                        list.get(getAdapterPosition()).getId();
                         Log.d("prm",value);
                     }else if (value.equals("삭제")){
                         showDialog(2);
