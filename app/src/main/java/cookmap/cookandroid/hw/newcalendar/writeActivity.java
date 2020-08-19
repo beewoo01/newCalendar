@@ -11,7 +11,6 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import android.Manifest;
 import android.content.Context;
-import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Color;
 import android.os.Bundle;
@@ -48,6 +47,7 @@ import java.util.TimeZone;
 import cookmap.cookandroid.hw.newcalendar.Database.Database_Room;
 import cookmap.cookandroid.hw.newcalendar.Database.Content_Room;
 import cookmap.cookandroid.hw.newcalendar.Database.Memo_Room;
+import cookmap.cookandroid.hw.newcalendar.Database.Memo_Date;
 
 public class writeActivity extends AppCompatActivity implements View.OnClickListener, Gallery_Dialog.PassDataInterface {
 
@@ -61,6 +61,8 @@ public class writeActivity extends AppCompatActivity implements View.OnClickList
     private String des = "", m_img = "", img = "", label = "";
     private String none = "NONE";
     private SimpleDateFormat sp;
+    private Date s_day, e_day;
+    private Pair<Long, Long> pair;
     private long now;
 
     private horizontal_Adapter horizontal_adapter;
@@ -80,11 +82,45 @@ public class writeActivity extends AppCompatActivity implements View.OnClickList
         LinearLayoutManager mLayoutManager = new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, true);
         //mLayoutManager.setReverseLayout(true);
         //mLayoutManager.setStackFromEnd(true);
-        Intent intent = getIntent();
-        String id = intent.getStringExtra("id");
+
+
         img_recycle.setLayoutManager(mLayoutManager);
 
         // findViewById 처리 함수
+    }
+
+    private void Modified(int id) throws Exception {
+
+        Memo_Date SNE = Database_Room.getInstance(this).getDao().getXN(id);
+        Content_Room thisItem = Database_Room.getInstance(this).getDao().getOneItem(id);
+
+        s_date.setText(SNE.getStart_day());
+        e_date.setText(SNE.getEnd_day());
+        titleEdit.setText(thisItem.getTitle());
+        desEdit.setText(thisItem.getTitle());
+
+        s_day = sp.parse(SNE.getStart_day());
+        e_day = sp.parse(SNE.getEnd_day());
+        long S_time = s_day.getTime();
+        long E_time = e_day.getTime();
+        pair = Pair.create(S_time, E_time);
+
+        int i = 0;
+        JSONObject jsonObject = new JSONObject(thisItem.getImg());
+        while (i < 10) {
+            if (jsonObject.has(String.valueOf(i))) {
+                String key = jsonObject.getString(String.valueOf(i));
+                imgAddress.add(key);
+                i++;
+            } else break;
+        }
+        horizontal_adapter = new horizontal_Adapter(this, imgAddress);
+        img_recycle.setAdapter(horizontal_adapter);
+        horizontal_adapter.notifyDataSetChanged();
+
+        //imgAddress.add();
+
+
     }
 
     private void init() {
@@ -114,10 +150,18 @@ public class writeActivity extends AppCompatActivity implements View.OnClickList
         now = System.currentTimeMillis();
         Date date = new Date(now);
         sp = new SimpleDateFormat("yyyy/MM/dd");
-        startDate = sp.format(date);
-        endDate = startDate;
-        s_date.setText(startDate);
-        e_date.setText(endDate);
+        int id = getIntent().getIntExtra("id", 0);
+
+        if (id > 0) {
+            try { Modified(id); }
+            catch (Exception e) { e.printStackTrace(); }
+        }else{
+            startDate = sp.format(date);
+            endDate = startDate;
+            s_date.setText(startDate);
+            e_date.setText(endDate);
+            pair = Pair.create(now, now);
+        }
 
 
     }
@@ -199,7 +243,7 @@ public class writeActivity extends AppCompatActivity implements View.OnClickList
     }
 
     public void showDatePickerDialog() {
-        Pair<Long, Long> pair = Pair.create(now, now);
+
         MaterialDatePicker.Builder<Pair<Long, Long>> builder = MaterialDatePicker.Builder.dateRangePicker();
         builder.setTitleText("날짜를 선택하세요");
         builder.setSelection(pair);
@@ -288,13 +332,13 @@ public class writeActivity extends AppCompatActivity implements View.OnClickList
                     calendar.setTime(start_date);
                     calendar.add(Calendar.DATE, i);
                     Log.d("Add i ", i + "," + sp.format(calendar.getTime()));
-                    Database_Room.getInstance(this).getDao().memo_Insert(new Memo_Room(Integer.parseInt(String.valueOf(getid.get(0))),sp.format(calendar.getTime())));
+                    Database_Room.getInstance(this).getDao().memo_Insert(new Memo_Room(Integer.parseInt(String.valueOf(getid.get(0))), sp.format(calendar.getTime())));
                 }
             } catch (ParseException e) {
                 e.printStackTrace();
             }
-        }else {
-            Database_Room.getInstance(this).getDao().memo_Insert(new Memo_Room(Integer.parseInt(String.valueOf(getid.get(0))),startDate));
+        } else {
+            Database_Room.getInstance(this).getDao().memo_Insert(new Memo_Room(Integer.parseInt(String.valueOf(getid.get(0))), startDate));
         }
 
 

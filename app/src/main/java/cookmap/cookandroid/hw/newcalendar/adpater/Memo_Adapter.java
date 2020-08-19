@@ -16,14 +16,14 @@ import com.bumptech.glide.Glide;
 
 import java.util.List;
 
-import cookmap.cookandroid.hw.newcalendar.Database.CNM;
+import cookmap.cookandroid.hw.newcalendar.Database.Content_Room;
 import cookmap.cookandroid.hw.newcalendar.R;
 
 public class Memo_Adapter extends RecyclerView.Adapter<Memo_Adapter.ViewHolder> {
-    private List<CNM> items;
+    private List<Content_Room> items;
     private Context context;
 
-    public Memo_Adapter(List<CNM> list) {
+    public Memo_Adapter(List<Content_Room> list) {
         items = list;
     }
 
@@ -39,17 +39,17 @@ public class Memo_Adapter extends RecyclerView.Adapter<Memo_Adapter.ViewHolder> 
 
     @Override
     public void onBindViewHolder(@NonNull Memo_Adapter.ViewHolder holder, int position) {
-        CNM item = items.get(position);
-        holder.c_title.setText(item.getContent_room().getTitle());
-        holder.c_desc.setText(item.getContent_room().getDescription());
-        holder.label.setBackgroundColor(Color.parseColor(item.getContent_room().getLabel()));
+        Content_Room item = items.get(position);
+        holder.c_title.setText(item.getTitle());
+        holder.c_desc.setText(item.getDescription());
+        holder.label.setBackgroundColor(Color.parseColor(item.getLabel()));
 
-        if (item.getContent_room().getMain_Img().equals("NONE")) {
+        if (item.getMain_Img().equals("NONE")) {
             //holder.c_img_main.setVisibility(View.INVISIBLE);
             holder.c_img_main.setBackgroundColor(Color.parseColor("#489201"));
         } else {
             Log.d("Recy_Adapter", "glide로 구현하세요");
-            Glide.with(context).load(item.getContent_room().getMain_Img()).into(holder.c_img_main);
+            Glide.with(context).load(item.getMain_Img()).into(holder.c_img_main);
             // glide 라이브러리 써서 main_img 구현 하세요 holder
         }
 

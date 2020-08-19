@@ -8,16 +8,14 @@ import androidx.recyclerview.widget.RecyclerView;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
-import android.widget.LinearLayout;
 
 import java.util.List;
 
-import cookmap.cookandroid.hw.newcalendar.Database.CNM;
 import cookmap.cookandroid.hw.newcalendar.Database.Content_Room;
 import cookmap.cookandroid.hw.newcalendar.Database.Database_Room;
 
 public class Memo_Click_Activity extends AppCompatActivity {
-    private List<CNM> list;
+    private List<Content_Room> list;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -30,7 +28,7 @@ public class Memo_Click_Activity extends AppCompatActivity {
         int position = bundle.getInt("position");
         String date = bundle.getString("date");
 
-        list = Database_Room.getInstance(this).getDao().getCNM(date);
+        list = Database_Room.getInstance(this).getDao().getClickMemo(date);
 
         View backBtn = findViewById(R.id.back_in_mfrag);
         RecyclerView recyclerView = findViewById(R.id.memo_recycler_mfrag);

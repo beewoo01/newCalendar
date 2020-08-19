@@ -1,12 +1,10 @@
 package cookmap.cookandroid.hw.newcalendar;
 
-import android.app.AlertDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
 import android.util.DisplayMetrics;
 import android.util.Log;
-import android.view.Display;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -27,18 +25,15 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collections;
 import java.util.List;
 
-import cookmap.cookandroid.hw.newcalendar.Database.CNM;
 import cookmap.cookandroid.hw.newcalendar.Database.Content_Room;
 
 public class Memo_List_Adapter extends RecyclerView.Adapter<Memo_List_Adapter.ViewHolder> {
     private Context context;
-    private List<CNM> list;
+    private List<Content_Room> list;
 
-    public Memo_List_Adapter(Context context, List<CNM> list) {
+    public Memo_List_Adapter(Context context, List<Content_Room> list) {
         this.context = context;
         this.list = list;
     }
@@ -54,24 +49,24 @@ public class Memo_List_Adapter extends RecyclerView.Adapter<Memo_List_Adapter.Vi
 
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
-        holder.label_mfrag.setBackgroundColor(Color.parseColor(list.get(position).getContent_room().getLabel()));
-        holder.title_mfrag.setText(list.get(position).getContent_room().getTitle());
+        holder.label_mfrag.setBackgroundColor(Color.parseColor(list.get(position).getLabel()));
+        holder.title_mfrag.setText(list.get(position).getTitle());
 
-        if (!list.get(position).getContent_room().getDescription().equals("none")) {
-            holder.sub_txt_mfrag.setText(list.get(position).getContent_room().getDescription());
+        if (!list.get(position).getDescription().equals("none")) {
+            holder.sub_txt_mfrag.setText(list.get(position).getDescription());
         }
-        if (!list.get(position).getContent_room().getMain_Img().equals("none")) {
+        if (!list.get(position).getMain_Img().equals("none")) {
             //glide
-            Glide.with(context).load(list.get(position).getContent_room().getMain_Img()).apply(new RequestOptions().circleCrop()).into(holder.coverImg_mfrg);
+            Glide.with(context).load(list.get(position).getMain_Img()).apply(new RequestOptions().circleCrop()).into(holder.coverImg_mfrg);
         } else {
-            holder.coverImg_mfrg.setBackgroundColor(Color.parseColor(list.get(position).getContent_room().getLabel()));
+            holder.coverImg_mfrg.setBackgroundColor(Color.parseColor(list.get(position).getLabel()));
         }
-        if (!list.get(position).getContent_room().getImg().equals("none")) {
+        if (!list.get(position).getImg().equals("none")) {
 
-            Log.d("img는? json", list.get(position).getContent_room().getImg());
+            Log.d("img는? json", list.get(position).getImg());
             try {
                 int i = 0;
-                JSONObject jsonObject = new JSONObject(list.get(position).getContent_room().getImg());
+                JSONObject jsonObject = new JSONObject(list.get(position).getImg());
                 ArrayList<String> arrayList = new ArrayList<>();
                 while (i < 10) {
                     if (jsonObject.has(String.valueOf(i))) {
@@ -150,7 +145,7 @@ public class Memo_List_Adapter extends RecyclerView.Adapter<Memo_List_Adapter.Vi
                         // 수정 페이지 ㄱ
                         prm[0] = value;
                         Intent intent = new Intent(context, writeActivity.class);
-                        intent.putExtra("id", list.get(getAdapterPosition()).getContent_room().getId());
+                        intent.putExtra("id", list.get(getAdapterPosition()).getId());
                         context.startActivity(intent);
                         //context.startActivity(new Intent(context, writeActivity.class));
                         //list.get(getAdapterPosition()).getId();

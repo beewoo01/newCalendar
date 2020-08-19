@@ -33,7 +33,6 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
-import cookmap.cookandroid.hw.newcalendar.Database.CNM;
 import cookmap.cookandroid.hw.newcalendar.Database.Database_Room;
 import cookmap.cookandroid.hw.newcalendar.Database.Content_Room;
 import cookmap.cookandroid.hw.newcalendar.adpater.CalendarAdapter;
@@ -56,7 +55,7 @@ public class MainActivity extends AppCompatActivity implements GestureDetector.O
 
     private ArrayList<DayInfo> mDayList;
     private List<Content_Room> memo_items_List = new ArrayList<>();
-    private List<CNM> CNMList = new ArrayList<>();;
+    private List<Content_Room> memo_Click_List = new ArrayList<>();;
     private CalendarAdapter mCalendarAdapter;
     private Memo_Adapter memo_Adapter = null;
 
@@ -356,7 +355,7 @@ public class MainActivity extends AppCompatActivity implements GestureDetector.O
 
     private void initMemoAdapter() {
 
-        memo_Adapter = new Memo_Adapter(CNMList);
+        memo_Adapter = new Memo_Adapter(memo_Click_List);
         memo_Adapter.notifyDataSetChanged();
         memo_list.setAdapter(memo_Adapter);
         /*for (int i = 0; i < memo_items_List.size(); i++) {
@@ -367,38 +366,16 @@ public class MainActivity extends AppCompatActivity implements GestureDetector.O
     }
 
     private void sql_select() {
-        /*memo_items_List.clear();
-        memo_items_List = Database_Room.getInstance(this).getDao().getClickMemo(selectQuery);*/
-        CNMList.clear();
-        CNMList = Database_Room.getInstance(this).getDao().getCNM(selectQuery);
 
-        for(int i = 0; i < CNMList.size(); i++){
-            Log.d("content getId: ", String.valueOf(CNMList.get(i).getContent_room().getId()));
-            Log.d("content getTitle: ", String.valueOf(CNMList.get(i).getContent_room().getTitle()));
-            Log.d("getMemo_idx: ", String.valueOf(CNMList.get(i).getMemo_room().getMemo_idx()));
-            Log.d("getContents_id: ", String.valueOf(CNMList.get(i).getMemo_room().getContents_id()));
-            Log.d("getDate: ", String.valueOf(CNMList.get(i).getMemo_room().getDate()));
-        }
+        memo_Click_List.clear();
+        memo_Click_List = Database_Room.getInstance(this).getDao().getClickMemo(selectQuery);
 
-        if (CNMList.size() <= 0){
+        if (memo_Click_List.size() <= 0){
             empt_lay.setVisibility(View.VISIBLE);
         }else{
             empt_lay.setVisibility(View.GONE);
             initMemoAdapter();
         }
-
-        //욜로
-
-
-        //Log.d("getMemo", String.valueOf(memo_items_List.get(0)));
-        Log.d("room memoSize:", String.valueOf(memo_items_List.size()));
-
-        /*if (memo_items_List.size() <= 0) {
-            empt_lay.setVisibility(View.VISIBLE);
-        } else {
-            empt_lay.setVisibility(View.GONE);
-            initMemoAdapter();
-        }*/
 
     }
 

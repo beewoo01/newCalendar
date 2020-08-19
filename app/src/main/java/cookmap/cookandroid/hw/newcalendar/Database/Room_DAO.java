@@ -14,20 +14,16 @@ public interface Room_DAO {
     @Query("SELECT * FROM Content_Room")
     List<Content_Room> getAllContents();
 
-
-    /*@Query("SELECT c.title, c.description, c.main_Img, c.img, c.label FROM Content_Room AS c JOIN"+
-            " Memo_Room AS m ON m.contents_id = c.id")
-    List<Content_Room> getClickMemo(String date);*/
-
-    @Query("SELECT * FROM Content_Room " +
-            "INNER JOIN Memo_Room  ON Content_Room.id = Memo_Room.contents_id " +
-            "WHERE Memo_Room.date = :date")
+    @Query("SELECT C.id, C.title, C.description, C.main_Img, C.img, C.label FROM Content_Room as C " +
+            "INNER JOIN Memo_Room as M  ON C.id = M.contents_id " +
+            "WHERE M.date = :date")
     List<Content_Room> getClickMemo(String date);
 
-    @Query("SELECT * FROM Content_Room " +
-            "INNER JOIN Memo_Room  ON Content_Room.id = Memo_Room.contents_id " +
-            "WHERE Memo_Room.date = :date")
-    List<CNM> getCNM(String date);
+    @Query("SELECT MIN(Memo_Room.date) as start_day, MAX(Memo_Room.date) as end_day from  Memo_Room where Memo_Room.contents_id = :id")
+    Memo_Date getXN(int id);
+
+    @Query("SELECT * FROM Content_Room WHERE Content_Room.id = :id")
+    Content_Room getOneItem(int id);
 
     @Query("SELECT Memo_Room.date FROM Memo_Room JOIN Content_Room ON Memo_Room.contents_id = Content_Room.id")
     List<String> getMemo();
