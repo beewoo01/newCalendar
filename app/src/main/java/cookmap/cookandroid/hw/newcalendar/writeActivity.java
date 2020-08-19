@@ -11,6 +11,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import android.Manifest;
 import android.content.Context;
+import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Color;
 import android.os.Bundle;
@@ -52,16 +53,11 @@ public class writeActivity extends AppCompatActivity implements View.OnClickList
 
     private ImageView backbtn;
     private EditText titleEdit, desEdit;
-    private TextView s_date, e_date, s_txt, e_txt, checkbtn;
+    private TextView s_date, e_date, checkbtn;
     private RelativeLayout select_date, fap;
     private LinearLayout descr_Linear;
     private RecyclerView img_recycle;
-    //private int dbVersion = 2;
-    //private SQLiteOpenHelper helper;
-    //private SQLiteDatabase db;
     private String startDate, endDate;
-    private String tag = "SQLite";
-    private String tableName = "contents";
     private String des = "", m_img = "", img = "", label = "";
     private String none = "NONE";
     private SimpleDateFormat sp;
@@ -84,12 +80,14 @@ public class writeActivity extends AppCompatActivity implements View.OnClickList
         LinearLayoutManager mLayoutManager = new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, true);
         //mLayoutManager.setReverseLayout(true);
         //mLayoutManager.setStackFromEnd(true);
+        Intent intent = getIntent();
+        String id = intent.getStringExtra("id");
         img_recycle.setLayoutManager(mLayoutManager);
 
         // findViewById 처리 함수
     }
 
-    public void init() {
+    private void init() {
         backbtn = findViewById(R.id.back_btn);
         checkbtn = findViewById(R.id.check_btn);
         titleEdit = findViewById(R.id.title_Edit);

@@ -31,13 +31,14 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
+import cookmap.cookandroid.hw.newcalendar.Database.CNM;
 import cookmap.cookandroid.hw.newcalendar.Database.Content_Room;
 
 public class Memo_List_Adapter extends RecyclerView.Adapter<Memo_List_Adapter.ViewHolder> {
     private Context context;
-    private List<Content_Room> list;
+    private List<CNM> list;
 
-    public Memo_List_Adapter(Context context, List<Content_Room> list) {
+    public Memo_List_Adapter(Context context, List<CNM> list) {
         this.context = context;
         this.list = list;
     }
@@ -53,24 +54,24 @@ public class Memo_List_Adapter extends RecyclerView.Adapter<Memo_List_Adapter.Vi
 
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
-        holder.label_mfrag.setBackgroundColor(Color.parseColor(list.get(position).getLabel()));
-        holder.title_mfrag.setText(list.get(position).getTitle());
+        holder.label_mfrag.setBackgroundColor(Color.parseColor(list.get(position).getContent_room().getLabel()));
+        holder.title_mfrag.setText(list.get(position).getContent_room().getTitle());
 
-        if (!list.get(position).getDescription().equals("none")) {
-            holder.sub_txt_mfrag.setText(list.get(position).getDescription());
+        if (!list.get(position).getContent_room().getDescription().equals("none")) {
+            holder.sub_txt_mfrag.setText(list.get(position).getContent_room().getDescription());
         }
-        if (!list.get(position).getMain_Img().equals("none")) {
+        if (!list.get(position).getContent_room().getMain_Img().equals("none")) {
             //glide
-            Glide.with(context).load(list.get(position).getMain_Img()).apply(new RequestOptions().circleCrop()).into(holder.coverImg_mfrg);
+            Glide.with(context).load(list.get(position).getContent_room().getMain_Img()).apply(new RequestOptions().circleCrop()).into(holder.coverImg_mfrg);
         } else {
-            holder.coverImg_mfrg.setBackgroundColor(Color.parseColor(list.get(position).getLabel()));
+            holder.coverImg_mfrg.setBackgroundColor(Color.parseColor(list.get(position).getContent_room().getLabel()));
         }
-        if (!list.get(position).getImg().equals("none")) {
+        if (!list.get(position).getContent_room().getImg().equals("none")) {
 
-            Log.d("img는? json", list.get(position).getImg());
+            Log.d("img는? json", list.get(position).getContent_room().getImg());
             try {
                 int i = 0;
-                JSONObject jsonObject = new JSONObject(list.get(position).getImg());
+                JSONObject jsonObject = new JSONObject(list.get(position).getContent_room().getImg());
                 ArrayList<String> arrayList = new ArrayList<>();
                 while (i < 10) {
                     if (jsonObject.has(String.valueOf(i))) {
@@ -91,7 +92,7 @@ public class Memo_List_Adapter extends RecyclerView.Adapter<Memo_List_Adapter.Vi
             } catch (JSONException e) {
                 e.printStackTrace();
             }
-        } else holder.imgs_mfrag.setVisibility(View.GONE);
+        }else holder.viewPager.setVisibility(View.GONE);
 
     }
 
@@ -102,7 +103,7 @@ public class Memo_List_Adapter extends RecyclerView.Adapter<Memo_List_Adapter.Vi
 
     public class ViewHolder extends RecyclerView.ViewHolder {
         private View label_mfrag;
-        private ImageView coverImg_mfrg, imgs_mfrag, moreBtn_mfrag;
+        private ImageView coverImg_mfrg, moreBtn_mfrag;
         private TextView title_mfrag, sub_txt_mfrag;
         private ViewPager2 viewPager;
         private TabLayout tabLayout;
@@ -113,7 +114,6 @@ public class Memo_List_Adapter extends RecyclerView.Adapter<Memo_List_Adapter.Vi
 
             label_mfrag = itemView.findViewById(R.id.label_mfrag);
             coverImg_mfrg = itemView.findViewById(R.id.coverImg_mfrg);
-            //imgs_mfrag = itemView.findViewById(R.id.imgs_mfrag);
             moreBtn_mfrag = itemView.findViewById(R.id.moreBtn_mfrag);
             title_mfrag = itemView.findViewById(R.id.title_mfrag);
             sub_txt_mfrag = itemView.findViewById(R.id.sub_txt_mfrag);
@@ -150,9 +150,10 @@ public class Memo_List_Adapter extends RecyclerView.Adapter<Memo_List_Adapter.Vi
                         // 수정 페이지 ㄱ
                         prm[0] = value;
                         Intent intent = new Intent(context, writeActivity.class);
-                        intent.putExtra("","");
-                        context.startActivity(new Intent(context, writeActivity.class));
-                        list.get(getAdapterPosition()).getId();
+                        intent.putExtra("id", list.get(getAdapterPosition()).getContent_room().getId());
+                        context.startActivity(intent);
+                        //context.startActivity(new Intent(context, writeActivity.class));
+                        //list.get(getAdapterPosition()).getId();
                         Log.d("prm",value);
                     }else if (value.equals("삭제")){
                         showDialog(2);

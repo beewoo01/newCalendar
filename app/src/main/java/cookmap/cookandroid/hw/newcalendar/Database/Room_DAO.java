@@ -1,7 +1,5 @@
 package cookmap.cookandroid.hw.newcalendar.Database;
 
-import android.util.Pair;
-
 import androidx.room.Dao;
 import androidx.room.Delete;
 import androidx.room.Insert;
@@ -24,7 +22,12 @@ public interface Room_DAO {
     @Query("SELECT * FROM Content_Room " +
             "INNER JOIN Memo_Room  ON Content_Room.id = Memo_Room.contents_id " +
             "WHERE Memo_Room.date = :date")
-    List<Pair<Content_Room, Memo_Room>> getClickMemo(String date);
+    List<Content_Room> getClickMemo(String date);
+
+    @Query("SELECT * FROM Content_Room " +
+            "INNER JOIN Memo_Room  ON Content_Room.id = Memo_Room.contents_id " +
+            "WHERE Memo_Room.date = :date")
+    List<CNM> getCNM(String date);
 
     @Query("SELECT Memo_Room.date FROM Memo_Room JOIN Content_Room ON Memo_Room.contents_id = Content_Room.id")
     List<String> getMemo();
