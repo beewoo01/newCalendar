@@ -41,6 +41,7 @@ import java.util.Calendar;
 import java.util.Collections;
 import java.util.Date;
 import java.util.GregorianCalendar;
+import java.util.Iterator;
 import java.util.List;
 import java.util.TimeZone;
 
@@ -64,6 +65,7 @@ public class writeActivity extends AppCompatActivity implements View.OnClickList
     private Date s_day, e_day;
     private Pair<Long, Long> pair;
     private long now;
+    int id = 0;
 
     private horizontal_Adapter horizontal_adapter;
 
@@ -80,10 +82,6 @@ public class writeActivity extends AppCompatActivity implements View.OnClickList
         init();
         imgAddress = new ArrayList<>(10);
         LinearLayoutManager mLayoutManager = new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, true);
-        //mLayoutManager.setReverseLayout(true);
-        //mLayoutManager.setStackFromEnd(true);
-
-
         img_recycle.setLayoutManager(mLayoutManager);
 
         // findViewById 처리 함수
@@ -150,12 +148,15 @@ public class writeActivity extends AppCompatActivity implements View.OnClickList
         now = System.currentTimeMillis();
         Date date = new Date(now);
         sp = new SimpleDateFormat("yyyy/MM/dd");
-        int id = getIntent().getIntExtra("id", 0);
+        id = getIntent().getIntExtra("id", 0);
 
         if (id > 0) {
-            try { Modified(id); }
-            catch (Exception e) { e.printStackTrace(); }
-        }else{
+            try {
+                Modified(id);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        } else {
             startDate = sp.format(date);
             endDate = startDate;
             s_date.setText(startDate);
@@ -179,7 +180,9 @@ public class writeActivity extends AppCompatActivity implements View.OnClickList
                     e.printStackTrace();
                     Toast.makeText(this, "이미지 저장에 실패하였습니다.", Toast.LENGTH_SHORT).show();
                 }
-                insertDb();
+                int position;
+                insertDb((id> 0)? true : false);
+                //isUpdate();
             } else {
                 Toast.makeText(writeActivity.this, "제목을 입력하여 주세요", Toast.LENGTH_SHORT).show();
                 return;
@@ -284,10 +287,6 @@ public class writeActivity extends AppCompatActivity implements View.OnClickList
                 }
 
             }
-            /*for (int i = 0; i < imgAddress.size(); i++){
-                String key = (String) jsonObject.getString(String.valueOf(i));
-                Log.d("Json??", key);
-            }*/ // SELECT시 이런식으로 가져오면 됨!!
             img = jsonObject.toString();
             Log.d("Jsonstring??", img);
 
@@ -298,47 +297,46 @@ public class writeActivity extends AppCompatActivity implements View.OnClickList
 
     }
 
-    private void insertDb() {
+
+    private void insertDb(boolean po) {
 
         if (desEdit.getText().toString().trim().length() <= 0) des = none;
         else des = desEdit.getText().toString();
 
+
+        if (po){
+            //update
+        }else {
+            //insert
+        }
         List<Long> getid = Database_Room.getInstance(this).getDao().content_insert(new Content_Room(
-                titleEdit.getText().toString(),
-                des,
-                m_img,
-                img,
-                "#9500ff"
-        ));
+                titleEdit.getText().toString(), des, m_img, img, "#9500ff"));
 
-        if (!s_date.getText().equals(e_date.getText())) {
-            try {
+        try {
 
-                Calendar start_Cal = new GregorianCalendar();
-                Calendar end_Cal = new GregorianCalendar();
+            Calendar start_Cal = new GregorianCalendar();
+            Calendar end_Cal = new GregorianCalendar();
 
-                Date start_date = sp.parse(startDate);
-                Date end_date = sp.parse(endDate);
+            Date start_date = sp.parse(startDate);
+            Date end_date = sp.parse(endDate);
 
-                start_Cal.setTime(start_date);
-                end_Cal.setTime(end_date);
+            start_Cal.setTime(start_date);
+            end_Cal.setTime(end_date);
 
-                long diffSec = (end_Cal.getTimeInMillis() - start_Cal.getTimeInMillis()) / 1000;
-                long diffDays = diffSec / (24 * 60 * 60);
-                Log.d("두 날짜간 일수 차 : ", diffDays + " 일");
-                Calendar calendar = Calendar.getInstance();
+            long diffSec = (end_Cal.getTimeInMillis() - start_Cal.getTimeInMillis()) / 1000;
+            long diffDays = diffSec / (24 * 60 * 60);
+            Log.d("두 날짜간 일수 차 : ", diffDays + " 일");
+            Calendar calendar = Calendar.getInstance();
 
-                for (int i = 0; i <= diffDays; i++) {
-                    calendar.setTime(start_date);
-                    calendar.add(Calendar.DATE, i);
-                    Log.d("Add i ", i + "," + sp.format(calendar.getTime()));
-                    Database_Room.getInstance(this).getDao().memo_Insert(new Memo_Room(Integer.parseInt(String.valueOf(getid.get(0))), sp.format(calendar.getTime())));
-                }
-            } catch (ParseException e) {
-                e.printStackTrace();
+            for (int i = 0; i <= diffDays; i++) {
+                calendar.setTime(start_date);
+                calendar.add(Calendar.DATE, i);
+                Log.d("Add i ", i + "," + sp.format(calendar.getTime()));
+                Database_Room.getInstance(this).getDao().memo_Insert(
+                        new Memo_Room(Integer.parseInt(String.valueOf(getid.get(0))), sp.format(calendar.getTime())));
             }
-        } else {
-            Database_Room.getInstance(this).getDao().memo_Insert(new Memo_Room(Integer.parseInt(String.valueOf(getid.get(0))), startDate));
+        } catch (ParseException e) {
+            e.printStackTrace();
         }
 
 

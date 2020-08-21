@@ -12,7 +12,7 @@
         android:layout_height="wrap_content"
         tools:background="@color/colorBlack"
         android:layout_margin="10dp"
-        android:padding="5sp">
+        android:padding="3sp">
 
         <ImageView
             android:id="@+id/last_img"

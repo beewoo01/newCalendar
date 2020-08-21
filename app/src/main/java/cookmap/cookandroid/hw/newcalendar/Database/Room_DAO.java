@@ -4,6 +4,7 @@ import androidx.room.Dao;
 import androidx.room.Delete;
 import androidx.room.Insert;
 import androidx.room.Query;
+import androidx.room.Transaction;
 import androidx.room.Update;
 
 import java.util.List;
@@ -28,8 +29,19 @@ public interface Room_DAO {
     @Query("SELECT Memo_Room.date FROM Memo_Room JOIN Content_Room ON Memo_Room.contents_id = Content_Room.id")
     List<String> getMemo();
 
+    @Query("SELECT * FROM MEMO_ROOM")
+    List<Memo_Room> getAllMemo();
+
     @Query("SELECT COUNT(*) FROM Memo_Room WHERE Memo_Room.date= :date")
     int getMemoCount(String date);
+
+    @Query("DELETE FROM Content_Room WHERE id= :id")
+    void wasAmistake(int id);
+
+    @Transaction
+    static void update(){
+        memo_insert();
+    }
 
     @Insert
     List<Long> content_insert(Content_Room... content_room);
