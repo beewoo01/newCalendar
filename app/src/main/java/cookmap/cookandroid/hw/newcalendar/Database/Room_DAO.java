@@ -38,21 +38,20 @@ public interface Room_DAO {
     @Query("DELETE FROM Content_Room WHERE id= :id")
     void wasAmistake(int id);
 
-    @Transaction
-    static void update(){
-        memo_insert();
-    }
-
     @Insert
-    List<Long> content_insert(Content_Room... content_room);
+    long content_insert(Content_Room content_room);
 
     @Insert
     void memo_Insert(Memo_Room memo_room);
 
-    @Update
-    void update(Content_Room content_room);
+    @Query("UPDATE Content_Room SET title = :title, description = :dcrt," +
+            " main_Img = :main_Img, img = :img, label = :label WHERE id =:id")
+    void content_update(String title, String dcrt, String main_Img, String img, String label,  int id);
 
-    @Delete
-    void delete(Content_Room content_room);
+    @Query("DELETE FROM Content_Room WHERE id = :id")
+    void content_delete(int id);
+
+    @Query("DELETE FROM Memo_Room WHERE contents_id = :id")
+    int memo_delete(int id);
 
 }

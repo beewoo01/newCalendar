@@ -1,4 +1,4 @@
-package cookmap.cookandroid.hw.newcalendar;
+package cookmap.cookandroid.hw.newcalendar.adpater;
 
 import android.content.Context;
 import android.util.Log;
@@ -13,6 +13,8 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.bumptech.glide.Glide;
 
 import java.util.ArrayList;
+
+import cookmap.cookandroid.hw.newcalendar.R;
 
 public class Image_Pager_Adapter extends RecyclerView.Adapter<Image_Pager_Adapter.ViewHolder> {
     private ArrayList<String> list;

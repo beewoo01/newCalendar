@@ -13,6 +13,7 @@ import java.util.List;
 
 import cookmap.cookandroid.hw.newcalendar.Database.Content_Room;
 import cookmap.cookandroid.hw.newcalendar.Database.Database_Room;
+import cookmap.cookandroid.hw.newcalendar.adpater.Memo_List_Adapter;
 
 public class Memo_Click_Activity extends AppCompatActivity {
     private List<Content_Room> list;

@@ -28,7 +28,6 @@ public class Custom_Dialog extends Dialog {
 
     private Context context;
     private ArrayList arrayList;
-    private String[] param;
     private int position;
     private RecyclerView dialog_recyclerView;
 

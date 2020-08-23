@@ -95,7 +95,7 @@ public class writeActivity extends AppCompatActivity implements View.OnClickList
         s_date.setText(SNE.getStart_day());
         e_date.setText(SNE.getEnd_day());
         titleEdit.setText(thisItem.getTitle());
-        desEdit.setText(thisItem.getTitle());
+        desEdit.setText(thisItem.getDescription());
 
         s_day = sp.parse(SNE.getStart_day());
         e_day = sp.parse(SNE.getEnd_day());
@@ -180,9 +180,7 @@ public class writeActivity extends AppCompatActivity implements View.OnClickList
                     e.printStackTrace();
                     Toast.makeText(this, "이미지 저장에 실패하였습니다.", Toast.LENGTH_SHORT).show();
                 }
-                int position;
-                insertDb((id> 0)? true : false);
-                //isUpdate();
+                insertDb((id > 0)? true : false);
             } else {
                 Toast.makeText(writeActivity.this, "제목을 입력하여 주세요", Toast.LENGTH_SHORT).show();
                 return;
@@ -303,14 +301,17 @@ public class writeActivity extends AppCompatActivity implements View.OnClickList
         if (desEdit.getText().toString().trim().length() <= 0) des = none;
         else des = desEdit.getText().toString();
 
-
         if (po){
             //update
+            // memo는 delete 후 insert 해야 하겠고 memo_id, content_id, date
+            // content는 update를 해야겠다. id, title, descrip, label, mainIMG, IMG
+            Database_Room.getInstance(this).getDao().content_update(titleEdit.getText().toString(), des, m_img, img, "#9500ff", id);
         }else {
             //insert
+            id = Math.toIntExact(Database_Room.getInstance(this).getDao().content_insert(new Content_Room(
+                    titleEdit.getText().toString(), des, m_img, img, "#9500ff")));
         }
-        List<Long> getid = Database_Room.getInstance(this).getDao().content_insert(new Content_Room(
-                titleEdit.getText().toString(), des, m_img, img, "#9500ff"));
+
 
         try {
 
@@ -327,13 +328,13 @@ public class writeActivity extends AppCompatActivity implements View.OnClickList
             long diffDays = diffSec / (24 * 60 * 60);
             Log.d("두 날짜간 일수 차 : ", diffDays + " 일");
             Calendar calendar = Calendar.getInstance();
-
+            if (po) Database_Room.getInstance(this).getDao().memo_delete(id);
             for (int i = 0; i <= diffDays; i++) {
                 calendar.setTime(start_date);
                 calendar.add(Calendar.DATE, i);
                 Log.d("Add i ", i + "," + sp.format(calendar.getTime()));
                 Database_Room.getInstance(this).getDao().memo_Insert(
-                        new Memo_Room(Integer.parseInt(String.valueOf(getid.get(0))), sp.format(calendar.getTime())));
+                        new Memo_Room(Integer.parseInt(String.valueOf(id)), sp.format(calendar.getTime())));
             }
         } catch (ParseException e) {
             e.printStackTrace();

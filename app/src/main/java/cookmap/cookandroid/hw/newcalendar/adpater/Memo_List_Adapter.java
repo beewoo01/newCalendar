@@ -1,5 +1,6 @@
-package cookmap.cookandroid.hw.newcalendar;
+package cookmap.cookandroid.hw.newcalendar.adpater;
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
@@ -27,7 +28,11 @@ import org.json.JSONObject;
 import java.util.ArrayList;
 import java.util.List;
 
+import cookmap.cookandroid.hw.newcalendar.Custom_Dialog;
 import cookmap.cookandroid.hw.newcalendar.Database.Content_Room;
+import cookmap.cookandroid.hw.newcalendar.Database.Database_Room;
+import cookmap.cookandroid.hw.newcalendar.R;
+import cookmap.cookandroid.hw.newcalendar.writeActivity;
 
 public class Memo_List_Adapter extends RecyclerView.Adapter<Memo_List_Adapter.ViewHolder> {
     private Context context;
@@ -130,7 +135,6 @@ public class Memo_List_Adapter extends RecyclerView.Adapter<Memo_List_Adapter.Vi
         private void showDialog(int param){
             Log.d("showDialog", String.valueOf(param));
             ArrayList arrayList = new ArrayList();
-            final String[] prm = new String[1];
             if (param == 1) {
                 arrayList.add("수정");
                 arrayList.add("삭제");
@@ -143,20 +147,19 @@ public class Memo_List_Adapter extends RecyclerView.Adapter<Memo_List_Adapter.Vi
                 public void customDialogEvent(String value) {
                     if (value.equals("수정")){
                         // 수정 페이지 ㄱ
-                        prm[0] = value;
                         Intent intent = new Intent(context, writeActivity.class);
                         intent.putExtra("id", list.get(getAdapterPosition()).getId());
                         context.startActivity(intent);
-                        //context.startActivity(new Intent(context, writeActivity.class));
-                        //list.get(getAdapterPosition()).getId();
                         Log.d("prm",value);
                     }else if (value.equals("삭제")){
                         showDialog(2);
                         Log.d("prm",value);
-                        prm[0] = value;
+
                     }else if (value.equals("확인")){
+                        Database_Room.getInstance(context).getDao().content_delete(list.get(getAdapterPosition()).getId());
+                        Database_Room.getInstance(context).getDao().memo_delete(list.get(getAdapterPosition()).getId());
+                        ((Activity)context).finish();
                         Log.d("prm",value);
-                        prm[0] = value;
                     }
                 }
             }, arrayList, param);

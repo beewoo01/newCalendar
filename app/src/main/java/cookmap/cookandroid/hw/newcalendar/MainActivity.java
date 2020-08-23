@@ -91,7 +91,6 @@ public class MainActivity extends AppCompatActivity implements GestureDetector.O
         long now = System.currentTimeMillis();
         Date date = new Date(now);
         selectQuery = format.format(date);
-        //helper = new SQLiteOpenHelper(this, table_name, null, dbVersion);
 
         init();
 
