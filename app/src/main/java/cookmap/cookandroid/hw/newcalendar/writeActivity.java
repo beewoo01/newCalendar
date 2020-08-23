@@ -41,8 +41,6 @@ import java.util.Calendar;
 import java.util.Collections;
 import java.util.Date;
 import java.util.GregorianCalendar;
-import java.util.Iterator;
-import java.util.List;
 import java.util.TimeZone;
 
 import cookmap.cookandroid.hw.newcalendar.Database.Database_Room;
@@ -82,6 +80,7 @@ public class writeActivity extends AppCompatActivity implements View.OnClickList
         init();
         imgAddress = new ArrayList<>(10);
         LinearLayoutManager mLayoutManager = new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, true);
+        mLayoutManager.setReverseLayout(true);
         img_recycle.setLayoutManager(mLayoutManager);
 
         // findViewById 처리 함수
@@ -355,7 +354,7 @@ public class writeActivity extends AppCompatActivity implements View.OnClickList
                 Log.d("for", String.valueOf(imgAddress.get(i)));
                 this.imgAddress.add(String.valueOf(imgAddress.get(i)));
             }
-            Collections.reverse(this.imgAddress);
+            //Collections.reverse(this.imgAddress);
 
             horizontal_adapter = new horizontal_Adapter(this, this.imgAddress);
             img_recycle.setAdapter(horizontal_adapter);
@@ -377,7 +376,7 @@ public class writeActivity extends AppCompatActivity implements View.OnClickList
         public horizontal_Adapter(Context context, ArrayList list) {
             this.context = context;
             this.list = list;
-            coverNum = list.size() - 1;
+            coverNum = 0;
         }
 
         @NonNull
@@ -447,15 +446,22 @@ public class writeActivity extends AppCompatActivity implements View.OnClickList
             }
 
             private void removeItem(int position) {
-                list.remove(position);
-                if (coverNum == position && list.size() > 0) {
-                    coverNum = list.size() - 1;
+
+                if (coverNum == position && list.size()-1 > 0) {
+                    coverNum = 0;
+                    list.remove(position);
                     notifyItemRemoved(position);
                     notifyItemChanged(coverNum);
-                } else if (list.size() <= 0) {
-                    coverNum = -1;
-                    notifyItemRemoved(position);
+
                 } else {
+
+                    list.remove(position);
+                    if (coverNum > position){
+                        coverNum--;
+                        Log.d("coverNum!!!?", String.valueOf(coverNum));
+                        //notifyItemChanged(coverNum);
+                    }
+                    //notifyDataSetChanged();
                     notifyItemRemoved(position);
                 }
             }
