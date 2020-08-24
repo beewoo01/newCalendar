@@ -2,7 +2,6 @@ package cookmap.cookandroid.hw.newcalendar.adpater;
 
 import android.content.Context;
 import android.graphics.Color;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -57,7 +56,7 @@ public class Memo_Adapter extends RecyclerView.Adapter<Memo_Adapter.ViewHolder> 
         return items.size();
     }
 
-    public class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener{
+    public class ViewHolder extends RecyclerView.ViewHolder{
 
         private View label;
         private TextView c_title, c_desc;
@@ -69,12 +68,6 @@ public class Memo_Adapter extends RecyclerView.Adapter<Memo_Adapter.ViewHolder> 
             c_title = itemView.findViewById(R.id.con_title);
             c_desc = itemView.findViewById(R.id.con_desc);
             c_img_main = itemView.findViewById(R.id.con_img);
-
-            itemView.setOnClickListener(this);
-        }
-
-        @Override
-        public void onClick(View v) {
 
         }
     }
