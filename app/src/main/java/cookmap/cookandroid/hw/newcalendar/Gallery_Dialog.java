@@ -34,7 +34,6 @@ public class Gallery_Dialog extends DialogFragment implements Gallery_Adapter.On
     private ArrayList<String> imgArry;
     private ArrayList<String> thumbsDataList;
     private ArrayList<String> thumbsIDList;
-    private String TAG = "TEXT_GD";
     private Gallery_Adapter adapter;
 
     private PassDataInterface passDataInterface;
@@ -50,7 +49,6 @@ public class Gallery_Dialog extends DialogFragment implements Gallery_Adapter.On
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        Log.d(TAG, "onCreateView");
         View view = inflater.inflate(R.layout.gallery_frag, container);
         back_Image = view.findViewById(R.id.back_btn_gf);
         addPhoto = view.findViewById(R.id.check_btn_gf);
@@ -81,15 +79,12 @@ public class Gallery_Dialog extends DialogFragment implements Gallery_Adapter.On
                 adapter.setItemImage(new Gallery_Adapter.getImgListner(){
                     @Override
                     public void onImg(List list) {
-                        //Bundle args = new Bundle();
                         if (list.size() > 0){
                             for (int i = 0; i < list.size(); i++){
-                                Log.d("what is list i", String.valueOf(list.get(i)));
                                 imgArry.add(String.valueOf(list.get(i))) ;
                             }
                         }
                         passDataInterface.onDataReceived(imgArry);
-                        //PassData(passDataInterface);
                         dismissDialog();
 
 
@@ -137,7 +132,6 @@ public class Gallery_Dialog extends DialogFragment implements Gallery_Adapter.On
     @NonNull
     @Override
     public Dialog onCreateDialog(@Nullable Bundle savedInstanceState) {
-        Log.d(TAG,"onCreateDialog");
 
 
         return super.onCreateDialog(savedInstanceState);
@@ -145,13 +139,10 @@ public class Gallery_Dialog extends DialogFragment implements Gallery_Adapter.On
 
     @Override
     public void onResume() {
-        Log.d(TAG,"onResume");
         WindowManager.LayoutParams params = getDialog().getWindow().getAttributes();
         params.width = WindowManager.LayoutParams.MATCH_PARENT;
         params.height = WindowManager.LayoutParams.MATCH_PARENT;
         getDialog().getWindow().setAttributes(params);
-        int whatwid = params.width;
-        Log.d(TAG+ ", p_wid: ", String.valueOf(whatwid));
         super.onResume();
     }
 
@@ -167,9 +158,6 @@ public class Gallery_Dialog extends DialogFragment implements Gallery_Adapter.On
 
                 adapter.setProgressMore(false);
 
-                int start = adapter.getItemCount();
-                Log.d(TAG+ "start: ", String.valueOf(start));
-
                 getThumbInfo(thumbsIDList, thumbsDataList);
 
                 adapter.addItemMore(thumbsDataList);
@@ -181,7 +169,6 @@ public class Gallery_Dialog extends DialogFragment implements Gallery_Adapter.On
 
 
     private void getThumbInfo(ArrayList<String> thumbsIDs, ArrayList<String> thumbsDatas) {
-        Log.d(TAG, "getThumbinfo");
         try {
             String[] proj = {MediaStore.Images.Media._ID,
                     MediaStore.Images.Media.DATA,
@@ -197,17 +184,14 @@ public class Gallery_Dialog extends DialogFragment implements Gallery_Adapter.On
                 String thumbsID;
                 String thumbsImageID;
                 String thumbsData;
-                String imgSize;
 
                 int thumbsIDCol = imageCursor.getColumnIndex(MediaStore.Images.Media._ID);
                 int thumbsDataCol = imageCursor.getColumnIndex(MediaStore.Images.Media.DATA);
                 int thumbsImageIDCol = imageCursor.getColumnIndex(MediaStore.Images.Media.DISPLAY_NAME);
-                int thumbsSizeCol = imageCursor.getColumnIndex(MediaStore.Images.Media.SIZE);
                 do {
                     thumbsID = imageCursor.getString(thumbsIDCol);
                     thumbsData = imageCursor.getString(thumbsDataCol);
                     thumbsImageID = imageCursor.getString(thumbsImageIDCol);
-                    imgSize = imageCursor.getString(thumbsSizeCol);
                     if (thumbsImageID != null) {
                         thumbsIDs.add(thumbsID);
                         thumbsDatas.add(thumbsData);

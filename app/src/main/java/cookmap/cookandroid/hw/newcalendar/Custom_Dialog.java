@@ -2,17 +2,13 @@ package cookmap.cookandroid.hw.newcalendar;
 
 import android.app.Dialog;
 import android.content.Context;
-import android.content.DialogInterface;
-import android.graphics.Color;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.WindowManager;
-import android.widget.ImageView;
 import android.widget.LinearLayout;
-import android.widget.ListView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -20,9 +16,6 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import java.util.ArrayList;
-import java.util.Arrays;
-
-import cookmap.cookandroid.hw.newcalendar.utill.RecyclerViewDecoration;
 
 public class Custom_Dialog extends Dialog {
 
@@ -75,8 +68,6 @@ public class Custom_Dialog extends Dialog {
             title.setText(" 이 게시물을 삭제하시겠어요? ");
         }
 
-        //arrayList = new ArrayList();
-        //arrayList.addAll(Arrays.asList(param));
         dialog_recyclerView.setLayoutManager(new LinearLayoutManager(context));
         dialog_recyclerView.setAdapter(new Custom_Dialog_Adapter(arrayList));
     }
@@ -123,11 +114,9 @@ public class Custom_Dialog extends Dialog {
             @Override
             public void onClick(View v) {
                 if (list.get(getAdapterPosition()).equals("수정")){
-                    Log.d("수정", "수정수정");
                     onDialogEvent.customDialogEvent("수정");
                     dismiss();
                 }else if (list.get(getAdapterPosition()).equals("삭제")){
-                    Log.d("삭제", "삭제삭제");
                     onDialogEvent.customDialogEvent("삭제");
                     dismiss();
 

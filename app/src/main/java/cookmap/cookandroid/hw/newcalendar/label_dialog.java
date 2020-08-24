@@ -2,7 +2,6 @@ package cookmap.cookandroid.hw.newcalendar;
 
 import android.content.Context;
 import android.graphics.Color;
-import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -55,7 +54,6 @@ public class label_dialog extends DialogFragment{
         list.add("#FF000000");
         list.add("#FF4CAF50");
         list.add("#FFFF9800");
-        Log.d("LABEL", "getList");
         return list;
 
     }
@@ -74,18 +72,14 @@ public class label_dialog extends DialogFragment{
         ArrayList<String> list;
 
         private Label_Adapter(ArrayList list){
-            Log.d("LABEL", "Label_Adapter");
             this.list = list;
         }
 
         @NonNull
         @Override
         public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-            Log.d("LABEL", "onCreateViewHolder");
             Context context = parent.getContext();
             int width = (int) (parent.getResources().getDisplayMetrics().widthPixels / 3.25);
-            /*LayoutInflater inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-            View view = inflater.inflate(R.layout.label_bg_img, parent, false);*/
             RelativeLayout.LayoutParams lp = new RelativeLayout.LayoutParams(width, width);
             lp.setMargins(2,2,2,2);
             ImageView imageView = new ImageView(context);
@@ -98,7 +92,6 @@ public class label_dialog extends DialogFragment{
 
         @Override
         public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
-            Log.d("LABEL", "onBindViewHolder");
             holder.imageView.setBackgroundColor(Color.parseColor(list.get(position)));
         }
 
@@ -112,7 +105,6 @@ public class label_dialog extends DialogFragment{
 
             public ViewHolder(@NonNull View itemView) {
                 super(itemView);
-                Log.d("LABEL", "ViewHolder");
                 imageView = (ImageView) itemView;
                 imageView.setOnClickListener(listener);
             }

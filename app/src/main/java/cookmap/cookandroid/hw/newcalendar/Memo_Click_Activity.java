@@ -17,6 +17,9 @@ import cookmap.cookandroid.hw.newcalendar.adpater.Memo_List_Adapter;
 
 public class Memo_Click_Activity extends AppCompatActivity {
     private List<Content_Room> list;
+    private int position;
+    private String date;
+    private RecyclerView recyclerView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -26,14 +29,21 @@ public class Memo_Click_Activity extends AppCompatActivity {
         Intent intent = getIntent();
         Bundle bundle = intent.getExtras();
 
-        int position = bundle.getInt("position");
-        String date = bundle.getString("date");
+        position = bundle.getInt("position");
+        date = bundle.getString("date");
 
-        list = Database_Room.getInstance(this).getDao().getClickMemo(date);
+        //list = Database_Room.getInstance(this).getDao().getClickMemo(date);
 
         View backBtn = findViewById(R.id.back_in_mfrag);
-        RecyclerView recyclerView = findViewById(R.id.memo_recycler_mfrag);
+        recyclerView = findViewById(R.id.memo_recycler_mfrag);
 
+        backBtn.setOnClickListener(onClickListener);
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        list = Database_Room.getInstance(this).getDao().getClickMemo(date);
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(this);
 
         recyclerView.setLayoutManager(linearLayoutManager);
@@ -42,8 +52,6 @@ public class Memo_Click_Activity extends AppCompatActivity {
 
 
         scrollFunction(linearLayoutManager, position);
-
-        backBtn.setOnClickListener(onClickListener);
     }
 
     private void scrollFunction(LinearLayoutManager linearLayoutManager, int position){

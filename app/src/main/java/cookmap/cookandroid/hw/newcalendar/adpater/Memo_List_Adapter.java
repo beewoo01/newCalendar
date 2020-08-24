@@ -11,6 +11,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.Window;
 import android.widget.ImageView;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -48,8 +49,7 @@ public class Memo_List_Adapter extends RecyclerView.Adapter<Memo_List_Adapter.Vi
     public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         LayoutInflater inflater = (LayoutInflater) context.getSystemService(context.LAYOUT_INFLATER_SERVICE);
         View view = inflater.inflate(R.layout.memo_frag_item, parent, false);
-        ViewHolder viewHolder = new ViewHolder(view);
-        return viewHolder;
+        return new ViewHolder(view);
     }
 
     @Override
@@ -57,18 +57,17 @@ public class Memo_List_Adapter extends RecyclerView.Adapter<Memo_List_Adapter.Vi
         holder.label_mfrag.setBackgroundColor(Color.parseColor(list.get(position).getLabel()));
         holder.title_mfrag.setText(list.get(position).getTitle());
 
-        if (!list.get(position).getDescription().equals("none")) {
+        if (!list.get(position).getDescription().equals("NONE")) {
             holder.sub_txt_mfrag.setText(list.get(position).getDescription());
         }
-        if (!list.get(position).getMain_Img().equals("none")) {
+        if (!list.get(position).getMain_Img().equals("NONE")) {
             //glide
             Glide.with(context).load(list.get(position).getMain_Img()).apply(new RequestOptions().circleCrop()).into(holder.coverImg_mfrg);
         } else {
-            holder.coverImg_mfrg.setBackgroundColor(Color.parseColor(list.get(position).getLabel()));
+            holder.coverImg_mfrg.setVisibility(View.GONE);
         }
-        if (!list.get(position).getImg().equals("none")) {
-
-            Log.d("img는? json", list.get(position).getImg());
+        if (!list.get(position).getImg().equals("NONE")) {
+            Log.d("NONE?", list.get(position).getImg());
             try {
                 int i = 0;
                 JSONObject jsonObject = new JSONObject(list.get(position).getImg());
@@ -92,7 +91,7 @@ public class Memo_List_Adapter extends RecyclerView.Adapter<Memo_List_Adapter.Vi
             } catch (JSONException e) {
                 e.printStackTrace();
             }
-        }else holder.viewPager.setVisibility(View.GONE);
+        }else holder.viewpager_bg.setVisibility(View.GONE);
 
     }
 
@@ -103,6 +102,7 @@ public class Memo_List_Adapter extends RecyclerView.Adapter<Memo_List_Adapter.Vi
 
     public class ViewHolder extends RecyclerView.ViewHolder {
         private View label_mfrag;
+        private RelativeLayout viewpager_bg;
         private ImageView coverImg_mfrg, moreBtn_mfrag;
         private TextView title_mfrag, sub_txt_mfrag;
         private ViewPager2 viewPager;
@@ -119,6 +119,7 @@ public class Memo_List_Adapter extends RecyclerView.Adapter<Memo_List_Adapter.Vi
             sub_txt_mfrag = itemView.findViewById(R.id.sub_txt_mfrag);
             viewPager = itemView.findViewById(R.id.viewpager);
             tabLayout = itemView.findViewById(R.id.tab_layout);
+            viewpager_bg = itemView.findViewById(R.id.viewpager_bg);
 
             moreBtn_mfrag.setOnClickListener(onClickListener);
 
@@ -128,7 +129,6 @@ public class Memo_List_Adapter extends RecyclerView.Adapter<Memo_List_Adapter.Vi
             @Override
             public void onClick(View v) {
                 showDialog(1);
-                //수정 삭제 버튼 화면 중앙에
             }
         };
 
@@ -146,20 +146,15 @@ public class Memo_List_Adapter extends RecyclerView.Adapter<Memo_List_Adapter.Vi
                 @Override
                 public void customDialogEvent(String value) {
                     if (value.equals("수정")){
-                        // 수정 페이지 ㄱ
                         Intent intent = new Intent(context, writeActivity.class);
                         intent.putExtra("id", list.get(getAdapterPosition()).getId());
                         context.startActivity(intent);
-                        Log.d("prm",value);
                     }else if (value.equals("삭제")){
                         showDialog(2);
-                        Log.d("prm",value);
-
                     }else if (value.equals("확인")){
                         Database_Room.getInstance(context).getDao().content_delete(list.get(getAdapterPosition()).getId());
                         Database_Room.getInstance(context).getDao().memo_delete(list.get(getAdapterPosition()).getId());
                         ((Activity)context).finish();
-                        Log.d("prm",value);
                     }
                 }
             }, arrayList, param);

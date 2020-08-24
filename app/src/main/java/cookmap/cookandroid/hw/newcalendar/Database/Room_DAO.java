@@ -17,7 +17,7 @@ public interface Room_DAO {
 
     @Query("SELECT C.id, C.title, C.description, C.main_Img, C.img, C.label FROM Content_Room as C " +
             "INNER JOIN Memo_Room as M  ON C.id = M.contents_id " +
-            "WHERE M.date = :date")
+            "WHERE M.date = :date ORDER BY C.id ASC")
     List<Content_Room> getClickMemo(String date);
 
     @Query("SELECT MIN(Memo_Room.date) as start_day, MAX(Memo_Room.date) as end_day from  Memo_Room where Memo_Room.contents_id = :id")
@@ -26,17 +26,8 @@ public interface Room_DAO {
     @Query("SELECT * FROM Content_Room WHERE Content_Room.id = :id")
     Content_Room getOneItem(int id);
 
-    @Query("SELECT Memo_Room.date FROM Memo_Room JOIN Content_Room ON Memo_Room.contents_id = Content_Room.id")
-    List<String> getMemo();
-
-    @Query("SELECT * FROM MEMO_ROOM")
-    List<Memo_Room> getAllMemo();
-
     @Query("SELECT COUNT(*) FROM Memo_Room WHERE Memo_Room.date= :date")
     int getMemoCount(String date);
-
-    @Query("DELETE FROM Content_Room WHERE id= :id")
-    void wasAmistake(int id);
 
     @Insert
     long content_insert(Content_Room content_room);

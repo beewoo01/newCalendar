@@ -46,16 +46,13 @@ import cookmap.cookandroid.hw.newcalendar.Database.Database_Room;
 import cookmap.cookandroid.hw.newcalendar.Database.Content_Room;
 import cookmap.cookandroid.hw.newcalendar.Database.Memo_Room;
 import cookmap.cookandroid.hw.newcalendar.Database.Memo_Date;
+import cookmap.cookandroid.hw.newcalendar.adpater.horizontal_Adapter;
 
 public class writeActivity extends AppCompatActivity implements View.OnClickListener, Gallery_Dialog.PassDataInterface, label_dialog.passColor {
 
-    private ImageView backbtn;
     private EditText titleEdit, desEdit;
-    private TextView s_date, e_date, checkbtn;
-    private RelativeLayout select_date, fap;
-    private LinearLayout descr_Linear;
+    private TextView s_date, e_date;
     private RecyclerView img_recycle;
-    private View labelView;
     private String startDate, endDate;
     private String des = "", m_img = "", img = "", label = "";
     private String none = "NONE";
@@ -82,8 +79,6 @@ public class writeActivity extends AppCompatActivity implements View.OnClickList
         LinearLayoutManager mLayoutManager = new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, true);
         mLayoutManager.setReverseLayout(true);
         img_recycle.setLayoutManager(mLayoutManager);
-
-        // findViewById 처리 함수
     }
 
     private void Modify(int id) throws Exception {
@@ -93,6 +88,8 @@ public class writeActivity extends AppCompatActivity implements View.OnClickList
 
         s_date.setText(SNE.getStart_day());
         e_date.setText(SNE.getEnd_day());
+        startDate = SNE.getStart_day();
+        endDate = SNE.getEnd_day();
         titleEdit.setText(thisItem.getTitle());
         desEdit.setText(thisItem.getDescription());
 
@@ -101,6 +98,8 @@ public class writeActivity extends AppCompatActivity implements View.OnClickList
         long S_time = s_day.getTime();
         long E_time = e_day.getTime();
         pair = Pair.create(S_time, E_time);
+        label = thisItem.getLabel();
+        findViewById(R.id.setLabelColor).setBackgroundColor(Color.parseColor(thisItem.getLabel()));
 
         int i = 0;
         JSONObject jsonObject = new JSONObject(thisItem.getImg());
@@ -114,10 +113,6 @@ public class writeActivity extends AppCompatActivity implements View.OnClickList
         horizontal_adapter = new horizontal_Adapter(this, imgAddress);
         img_recycle.setAdapter(horizontal_adapter);
         horizontal_adapter.notifyDataSetChanged();
-
-        //imgAddress.add();
-
-
     }
 
     private void init() {
@@ -127,13 +122,6 @@ public class writeActivity extends AppCompatActivity implements View.OnClickList
         s_date = findViewById(R.id.start_date);
         e_date = findViewById(R.id.end_date);
         img_recycle = findViewById(R.id.setImg_recycler);
-
-
-        //select_date = findViewById(R.id.select_Date);
-        //fap = findViewById(R.id.fab_button);
-        //backbtn = findViewById(R.id.back_btn);
-        //checkbtn = findViewById(R.id.check_btn);
-        //descr_Linear = findViewById(R.id.description_Linear);
 
         findViewById(R.id.description_Linear).setOnClickListener(this);
         findViewById(R.id.check_btn).setOnClickListener(this);
@@ -165,6 +153,8 @@ public class writeActivity extends AppCompatActivity implements View.OnClickList
             s_date.setText(startDate);
             e_date.setText(endDate);
             pair = Pair.create(now, now);
+            label = "#BCC7C7C7";
+            findViewById(R.id.setLabelColor).setBackgroundColor(Color.parseColor(label));
         }
 
 
@@ -194,7 +184,6 @@ public class writeActivity extends AppCompatActivity implements View.OnClickList
             // 달력으로
         else if (v.getId() == R.id.fab_button) {
             checkSelfPermission();
-            Log.d(TAG, "Fab_Button");
             return;
         }
         // 사진 선택창 띄워줘야함
@@ -206,12 +195,6 @@ public class writeActivity extends AppCompatActivity implements View.OnClickList
         else if (v.getId() == R.id.setLabelColor) {
             DialogFragment lableDF = new label_dialog(this);
             lableDF.show(getSupportFragmentManager(), "Label_Dialog");
-            label_dialog.passColor f = new label_dialog.passColor() {
-                @Override
-                public void getColor(String color) {
-                    Log.d("LABEL오나?1111", color);
-                }
-            };
         }
 
     }
@@ -227,12 +210,9 @@ public class writeActivity extends AppCompatActivity implements View.OnClickList
         }
 
         if (TextUtils.isEmpty(temp) == false) {
-            //권한 요청
             ActivityCompat.requestPermissions(this, temp.trim().split(" "), 1);
 
         } else {
-            // 모두 허용 상태
-            //Toast.makeText(this, "권한을 모두 허용", Toast.LENGTH_SHORT).show();
 
             DialogFragment dialogFragment = new Gallery_Dialog(this);
             dialogFragment.show(getSupportFragmentManager(), "Gallery_Dialog");
@@ -242,7 +222,6 @@ public class writeActivity extends AppCompatActivity implements View.OnClickList
 
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
-        Log.d(TAG, "PermissionsResult");
         if (requestCode == 1) {
             int length = permissions.length;
             for (int i = 0; i < length; i++) {
@@ -299,7 +278,6 @@ public class writeActivity extends AppCompatActivity implements View.OnClickList
 
             }
             img = jsonObject.toString();
-            Log.d("Jsonstring??", img);
 
         } else {
             m_img = none;
@@ -315,10 +293,10 @@ public class writeActivity extends AppCompatActivity implements View.OnClickList
         else des = desEdit.getText().toString();
 
         if (po){
-            Database_Room.getInstance(this).getDao().content_update(titleEdit.getText().toString(), des, m_img, img, "#9500ff", id);
+            Database_Room.getInstance(this).getDao().content_update(titleEdit.getText().toString(), des, m_img, img, label, id);
         }else {
             id = Math.toIntExact(Database_Room.getInstance(this).getDao().content_insert(new Content_Room(
-                    titleEdit.getText().toString(), des, m_img, img, "#9500ff")));
+                    titleEdit.getText().toString(), des, m_img, img, label)));
         }
 
 
@@ -335,13 +313,11 @@ public class writeActivity extends AppCompatActivity implements View.OnClickList
 
             long diffSec = (end_Cal.getTimeInMillis() - start_Cal.getTimeInMillis()) / 1000;
             long diffDays = diffSec / (24 * 60 * 60);
-            Log.d("두 날짜간 일수 차 : ", diffDays + " 일");
             Calendar calendar = Calendar.getInstance();
             if (po) Database_Room.getInstance(this).getDao().memo_delete(id);
             for (int i = 0; i <= diffDays; i++) {
                 calendar.setTime(start_date);
                 calendar.add(Calendar.DATE, i);
-                Log.d("Add i ", i + "," + sp.format(calendar.getTime()));
                 Database_Room.getInstance(this).getDao().memo_Insert(
                         new Memo_Room(Integer.parseInt(String.valueOf(id)), sp.format(calendar.getTime())));
             }
@@ -355,11 +331,8 @@ public class writeActivity extends AppCompatActivity implements View.OnClickList
 
     @Override
     public void onDataReceived(ArrayList imgAddress) {
-        Log.d("onDataReceived", "왓네");
-        Log.d("onDataReceived", String.valueOf(imgAddress.size()));
 
         if (!imgAddress.isEmpty()) {
-            Log.d("onDataReceived", "if");
             for (int i = 0; i < imgAddress.size(); i++) {
                 Log.d("for", String.valueOf(imgAddress.get(i)));
                 this.imgAddress.add(String.valueOf(imgAddress.get(i)));
@@ -371,115 +344,13 @@ public class writeActivity extends AppCompatActivity implements View.OnClickList
             horizontal_adapter.notifyDataSetChanged();
 
 
-        } else {
-
-            Log.d("onDataReceived", "else");
         }
 
     }
 
     @Override
     public void getColor(String color) {
-        // 요온나
-        Log.d("LABEL오나?22222", color);
-        findViewById(R.id.setLabelColor).setBackgroundColor(Color.parseColor(color));
-    }
-
-    class horizontal_Adapter extends RecyclerView.Adapter<horizontal_Adapter.CustomViewHolder> {
-        private Context context;
-        private ArrayList list;
-        private int coverNum;
-
-        public horizontal_Adapter(Context context, ArrayList list) {
-            this.context = context;
-            this.list = list;
-            coverNum = 0;
-        }
-
-        @NonNull
-        @Override
-        public horizontal_Adapter.CustomViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-            LayoutInflater inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-            View view = inflater.inflate(R.layout.last_img_item, parent, false);
-            CustomViewHolder viewHolder = new CustomViewHolder(view);
-
-            return viewHolder;
-        }
-
-        @Override
-        public void onBindViewHolder(@NonNull CustomViewHolder holder, int position) {
-            Glide.with(context).load(list.get(position)).into(holder.picture);
-            if (coverNum == position) {
-                holder.background.setBackgroundColor(Color.parseColor("#000000"));
-            } else {
-                holder.background.setBackgroundColor(0x00000000);
-            }
-
-        }
-
-        @Override
-        public int getItemCount() {
-            return list.size();
-        }
-
-        private class CustomViewHolder extends RecyclerView.ViewHolder {
-            private ImageView picture, x_img;
-            private RelativeLayout background, closeImg;
-
-            private CustomViewHolder(View itemView) {
-                super(itemView);
-                this.picture = itemView.findViewById(R.id.last_img);
-                this.background = itemView.findViewById(R.id.last_img_bg);
-                this.closeImg = itemView.findViewById(R.id.last_close_img);
-                this.x_img = itemView.findViewById(R.id.last_x_img);
-
-                x_img.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        removeItem(getAdapterPosition());
-                    }
-                });
-
-                closeImg.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        // 삭제
-                        removeItem(getAdapterPosition());
-                    }
-                });
-
-                picture.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-
-                        background.setBackgroundColor(Color.parseColor("#000000"));
-                        Log.d("picpostion: ", String.valueOf(getAdapterPosition()));
-                        //notifyDataSetChanged();
-                        coverNum = getAdapterPosition();
-                        notifyDataSetChanged();
-                    }
-                });
-
-            }
-
-            private void removeItem(int position) {
-
-                if (coverNum == position && list.size()-1 > 0) {
-                    coverNum = 0;
-                    list.remove(position);
-                    notifyItemRemoved(position);
-                    notifyItemChanged(coverNum);
-
-                } else {
-
-                    list.remove(position);
-                    if (coverNum > position){
-                        coverNum--;
-                        Log.d("coverNum!!!?", String.valueOf(coverNum));
-                    }
-                    notifyItemRemoved(position);
-                }
-            }
-        }
+        label = color;
+        findViewById(R.id.setLabelColor).setBackgroundColor(Color.parseColor(label));
     }
 }

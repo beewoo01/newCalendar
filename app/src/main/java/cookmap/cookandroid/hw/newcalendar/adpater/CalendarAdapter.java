@@ -73,14 +73,14 @@ public class CalendarAdapter extends RecyclerView.Adapter<CalendarAdapter.ViewHo
         if (day.getIsMemo() > 0){
             holder.imgMemo.setVisibility(View.VISIBLE);
             int backColor = 000000;
-            if (day.getIsMemo() >= 5) {
+            if (day.getIsMemo() >= 3) {
                 //빨강
                 Log.d("색별추출", "빨강");
                 backColor = mContext.getResources().getColor(R.color.colorRed);
 
-            } else if (day.getIsMemo() >= 3 || day.getIsMemo() > 2){
+            } else if (day.getIsMemo() == 2){
                 backColor = mContext.getResources().getColor(R.color.colorYellow);
-            } else if (day.getIsMemo() <= 2) {
+            } else if (day.getIsMemo() == 1) {
                 backColor = mContext.getResources().getColor(R.color.colorGreen);
                 Log.d("카운트@@", "2개이상 14일?");
             }
@@ -105,6 +105,7 @@ public class CalendarAdapter extends RecyclerView.Adapter<CalendarAdapter.ViewHo
             llBackground = itemView.findViewById(R.id.day_cell_ll_background);
             tvDay = itemView.findViewById(R.id.day_cell_tv_day);
             imgMemo = itemView.findViewById(R.id.img_item_dot);
+
         }
     }
 

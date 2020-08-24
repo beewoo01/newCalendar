@@ -45,12 +45,9 @@ public class Memo_Adapter extends RecyclerView.Adapter<Memo_Adapter.ViewHolder> 
         holder.label.setBackgroundColor(Color.parseColor(item.getLabel()));
 
         if (item.getMain_Img().equals("NONE")) {
-            //holder.c_img_main.setVisibility(View.INVISIBLE);
-            holder.c_img_main.setBackgroundColor(Color.parseColor("#489201"));
+            holder.c_img_main.setVisibility(View.GONE);
         } else {
-            Log.d("Recy_Adapter", "glide로 구현하세요");
             Glide.with(context).load(item.getMain_Img()).into(holder.c_img_main);
-            // glide 라이브러리 써서 main_img 구현 하세요 holder
         }
 
     }

@@ -14,9 +14,6 @@ public class RecyclerItemClickListener implements RecyclerView.OnItemTouchListen
     private GestureDetector detector;
     private OnItemClickListener listener;
     private View child;
-    final static int DISTANCE = 200;
-    final static int VELOCITY = 350;
-    private String TAG = "RvClLis";
 
     public interface OnItemClickListener{
         void OnItemClick(View view, int position);
@@ -37,10 +34,6 @@ public class RecyclerItemClickListener implements RecyclerView.OnItemTouchListen
 
     @Override
     public boolean onInterceptTouchEvent(@NonNull RecyclerView rv, @NonNull MotionEvent ev) {
-        Log.d(TAG,"onInterceptTouchEvent");
-        /*child = rv.findChildViewUnder(ev.getX(), ev.getY());
-        detector.onTouchEvent(ev)*/;
-
         View childView = rv.findChildViewUnder(ev.getX(), ev.getY());
         if (childView != null && listener != null && detector.onTouchEvent(ev)) {
             try {
@@ -48,7 +41,6 @@ public class RecyclerItemClickListener implements RecyclerView.OnItemTouchListen
             } catch (Exception e) {
                 e.printStackTrace();
             }
-            //return false;
         }
 
         return false;
@@ -56,7 +48,6 @@ public class RecyclerItemClickListener implements RecyclerView.OnItemTouchListen
 
     @Override
     public void onTouchEvent(@NonNull RecyclerView rv, @NonNull MotionEvent e) {
-        Log.d(TAG, "onTouchEvent=>" + rv.getChildAdapterPosition(child));
 
     }
 
