@@ -86,7 +86,6 @@ public class Gallery_Dialog extends DialogFragment implements Gallery_Adapter.On
                             for (int i = 0; i < list.size(); i++){
                                 Log.d("what is list i", String.valueOf(list.get(i)));
                                 imgArry.add(String.valueOf(list.get(i))) ;
-                                //imgArry[i] = String.valueOf(list.get(i));
                             }
                         }
                         passDataInterface.onDataReceived(imgArry);

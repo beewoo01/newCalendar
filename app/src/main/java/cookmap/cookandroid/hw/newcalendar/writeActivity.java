@@ -38,7 +38,6 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
-import java.util.Collections;
 import java.util.Date;
 import java.util.GregorianCalendar;
 import java.util.TimeZone;
@@ -48,7 +47,7 @@ import cookmap.cookandroid.hw.newcalendar.Database.Content_Room;
 import cookmap.cookandroid.hw.newcalendar.Database.Memo_Room;
 import cookmap.cookandroid.hw.newcalendar.Database.Memo_Date;
 
-public class writeActivity extends AppCompatActivity implements View.OnClickListener, Gallery_Dialog.PassDataInterface {
+public class writeActivity extends AppCompatActivity implements View.OnClickListener, Gallery_Dialog.PassDataInterface, label_dialog.passColor {
 
     private ImageView backbtn;
     private EditText titleEdit, desEdit;
@@ -56,6 +55,7 @@ public class writeActivity extends AppCompatActivity implements View.OnClickList
     private RelativeLayout select_date, fap;
     private LinearLayout descr_Linear;
     private RecyclerView img_recycle;
+    private View labelView;
     private String startDate, endDate;
     private String des = "", m_img = "", img = "", label = "";
     private String none = "NONE";
@@ -86,7 +86,7 @@ public class writeActivity extends AppCompatActivity implements View.OnClickList
         // findViewById 처리 함수
     }
 
-    private void Modified(int id) throws Exception {
+    private void Modify(int id) throws Exception {
 
         Memo_Date SNE = Database_Room.getInstance(this).getDao().getXN(id);
         Content_Room thisItem = Database_Room.getInstance(this).getDao().getOneItem(id);
@@ -121,22 +121,26 @@ public class writeActivity extends AppCompatActivity implements View.OnClickList
     }
 
     private void init() {
-        backbtn = findViewById(R.id.back_btn);
-        checkbtn = findViewById(R.id.check_btn);
+
         titleEdit = findViewById(R.id.title_Edit);
         desEdit = findViewById(R.id.description_Edit);
-        select_date = findViewById(R.id.select_Date);
         s_date = findViewById(R.id.start_date);
         e_date = findViewById(R.id.end_date);
-        fap = findViewById(R.id.fab_button);
-        descr_Linear = findViewById(R.id.description_Linear);
         img_recycle = findViewById(R.id.setImg_recycler);
 
-        descr_Linear.setOnClickListener(this);
-        backbtn.setOnClickListener(this);
-        checkbtn.setOnClickListener(this);
-        fap.setOnClickListener(this);
-        select_date.setOnClickListener(this);
+
+        //select_date = findViewById(R.id.select_Date);
+        //fap = findViewById(R.id.fab_button);
+        //backbtn = findViewById(R.id.back_btn);
+        //checkbtn = findViewById(R.id.check_btn);
+        //descr_Linear = findViewById(R.id.description_Linear);
+
+        findViewById(R.id.description_Linear).setOnClickListener(this);
+        findViewById(R.id.check_btn).setOnClickListener(this);
+        findViewById(R.id.back_btn).setOnClickListener(this);
+        findViewById(R.id.fab_button).setOnClickListener(this);
+        findViewById(R.id.select_Date).setOnClickListener(this);
+        findViewById(R.id.setLabelColor).setOnClickListener(this);
     }
 
 
@@ -151,7 +155,7 @@ public class writeActivity extends AppCompatActivity implements View.OnClickList
 
         if (id > 0) {
             try {
-                Modified(id);
+                Modify(id);
             } catch (Exception e) {
                 e.printStackTrace();
             }
@@ -198,6 +202,16 @@ public class writeActivity extends AppCompatActivity implements View.OnClickList
             desEdit.requestFocus(); // 내용 부분
             InputMethodManager im = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
             im.toggleSoftInput(InputMethodManager.SHOW_FORCED, InputMethodManager.HIDE_IMPLICIT_ONLY);
+        }
+        else if (v.getId() == R.id.setLabelColor) {
+            DialogFragment lableDF = new label_dialog(this);
+            lableDF.show(getSupportFragmentManager(), "Label_Dialog");
+            label_dialog.passColor f = new label_dialog.passColor() {
+                @Override
+                public void getColor(String color) {
+                    Log.d("LABEL오나?1111", color);
+                }
+            };
         }
 
     }
@@ -301,12 +315,8 @@ public class writeActivity extends AppCompatActivity implements View.OnClickList
         else des = desEdit.getText().toString();
 
         if (po){
-            //update
-            // memo는 delete 후 insert 해야 하겠고 memo_id, content_id, date
-            // content는 update를 해야겠다. id, title, descrip, label, mainIMG, IMG
             Database_Room.getInstance(this).getDao().content_update(titleEdit.getText().toString(), des, m_img, img, "#9500ff", id);
         }else {
-            //insert
             id = Math.toIntExact(Database_Room.getInstance(this).getDao().content_insert(new Content_Room(
                     titleEdit.getText().toString(), des, m_img, img, "#9500ff")));
         }
@@ -366,6 +376,13 @@ public class writeActivity extends AppCompatActivity implements View.OnClickList
             Log.d("onDataReceived", "else");
         }
 
+    }
+
+    @Override
+    public void getColor(String color) {
+        // 요온나
+        Log.d("LABEL오나?22222", color);
+        findViewById(R.id.setLabelColor).setBackgroundColor(Color.parseColor(color));
     }
 
     class horizontal_Adapter extends RecyclerView.Adapter<horizontal_Adapter.CustomViewHolder> {
@@ -459,9 +476,7 @@ public class writeActivity extends AppCompatActivity implements View.OnClickList
                     if (coverNum > position){
                         coverNum--;
                         Log.d("coverNum!!!?", String.valueOf(coverNum));
-                        //notifyItemChanged(coverNum);
                     }
-                    //notifyDataSetChanged();
                     notifyItemRemoved(position);
                 }
             }
