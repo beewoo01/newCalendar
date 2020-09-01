@@ -31,6 +31,12 @@
 
     </style>
 
+    <style name="Div">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">1px</item>
+        <item name="android:background">#dedede</item>
+    </style>
+
     <style name="AppTheme.PreviewFix" parent="AppTheme">
         <item name="buttonStyle">@style/AppTheme.Button.PreviewFix</item>
     </style>

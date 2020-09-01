@@ -12,6 +12,12 @@
     <color name="colorYellow">#FFEB3B</color>
     <color name="colorVeryLightGrey">#E6E6E6</color>
 
+    <color name="selectedDay">#e1e1e1</color>
+    <color name="black">#000000</color>
+    <color name="white">#ffffff</color>
+    <color name="today">@color/black</color>
+    <color name="transparent">@android:color/transparent</color>
+
 
 
     <color name="my_app_primary_variant_color">#FFFFFF</color>

@@ -148,7 +148,12 @@ public class MainActivity extends AppCompatActivity implements GestureDetector.O
 
         } else {
             // 모두 허용 상태
-            startActivity(new Intent(MainActivity.this, writeActivity.class));
+            Intent intent = new Intent(this, writeActivity.class);
+            Bundle bundle = new Bundle();
+            bundle.putInt("id", 0);
+            bundle.putString("select_Day",selectQuery);
+            intent.putExtras(bundle);
+            startActivity(intent);
         }
 
     }
@@ -157,12 +162,17 @@ public class MainActivity extends AppCompatActivity implements GestureDetector.O
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
         if (requestCode == 1) {
             int length = permissions.length;
+            Intent intent = new Intent(this, writeActivity.class);
+            Bundle bundle = new Bundle();
+            bundle.putInt("id", 0);
+            bundle.putString("select_Day",selectQuery);
+            intent.putExtras(bundle);
             for (int i = 0; i < length; i++) {
                 if (grantResults[i] == PackageManager.PERMISSION_GRANTED) {
-                    startActivity(new Intent(MainActivity.this, writeActivity.class));
+                    startActivity(intent);
                 } else {
                     Toast.makeText(this, "사진 업로드 기능이 제한 됩니다.", Toast.LENGTH_SHORT).show();
-                    startActivity(new Intent(MainActivity.this, writeActivity.class));
+                    startActivity(intent);
                 }
             }
         }
@@ -427,13 +437,11 @@ public class MainActivity extends AppCompatActivity implements GestureDetector.O
             select();
             getCalendar(getLastMonth(mThisMonthCalendar));
             DayperformClick();
-            Log.d("one if", "여기와?");
         }
         if (e2.getX() - e1.getX() < DISTANCE && Math.abs(velocityX) > VELOCITY) {
             select();
             getCalendar(getNextMonth(mThisMonthCalendar));
             DayperformClick();
-            Log.d("two if", "여기와?");
         }
         return true;
     }

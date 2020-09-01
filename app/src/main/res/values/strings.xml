@@ -1,4 +1,14 @@
 <resources>
     <string name="app_name">newCalendar</string>
     <string name="count_indicator_text">"%1$d/%2$d"</string>
+
+    <string-array name="day_of_week">
+        <item>sun</item>
+        <item>mon</item>
+        <item>tue</item>
+        <item>wed</item>
+        <item>thu</item>
+        <item>fri</item>
+        <item>sat</item>
+    </string-array>
 </resources>

@@ -11,6 +11,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import android.Manifest;
 import android.content.Context;
+import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Color;
 import android.os.Bundle;
@@ -139,7 +140,13 @@ public class writeActivity extends AppCompatActivity implements View.OnClickList
         now = System.currentTimeMillis();
         Date date = new Date(now);
         sp = new SimpleDateFormat("yyyy/MM/dd");
-        id = getIntent().getIntExtra("id", 0);
+        SimpleDateFormat testformat = new SimpleDateFormat("HH:mm:ss");
+        String testTime = testformat.format(now);
+        Log.d("현재시간", testTime);
+        Intent intent = getIntent();
+        Bundle bundle = intent.getExtras();
+        //id = getIntent().getIntExtra("id", 0);
+        id = bundle.getInt("id");
 
         if (id > 0) {
             try {
@@ -148,13 +155,34 @@ public class writeActivity extends AppCompatActivity implements View.OnClickList
                 e.printStackTrace();
             }
         } else {
-            startDate = sp.format(date);
-            endDate = startDate;
+            Log.d("id=0 ", "else옴");
+            String setDay = bundle.getString("select_Day");
+
+
+            try {
+                Log.d("id=0 ", "try옴");
+                s_day = sp.parse(String.valueOf(setDay));
+                e_day = sp.parse(String.valueOf(setDay));
+                startDate = sp.format(s_day);
+                endDate = sp.format(e_day);
+                long S_time = s_day.getTime();
+                long E_time = e_day.getTime();
+                Log.d("pair first? ", sp.format(S_time));
+                Log.d("pair end? ", sp.format(E_time));
+                pair = Pair.create(S_time, E_time);
+            } catch (ParseException e) {
+                e.printStackTrace();
+                startDate = sp.format(date);
+                endDate = startDate;
+                pair = Pair.create(now, now);
+            }
             s_date.setText(startDate);
             e_date.setText(endDate);
-            pair = Pair.create(now, now);
+
             label = "#BCC7C7C7";
             findViewById(R.id.setLabelColor).setBackgroundColor(Color.parseColor(label));
+
+
         }
 
 
@@ -239,7 +267,9 @@ public class writeActivity extends AppCompatActivity implements View.OnClickList
 
         MaterialDatePicker.Builder<Pair<Long, Long>> builder = MaterialDatePicker.Builder.dateRangePicker();
         builder.setTitleText("날짜를 선택하세요");
+        Log.d("pair.toString ", pair.toString());
         builder.setSelection(pair);
+        Log.d("showDatePickerDialog ", sp.format(pair.first) + ", " + sp.format(pair.second));
         MaterialDatePicker materialDatePicker = builder.build();
 
         materialDatePicker.show(getSupportFragmentManager(), "태그");
