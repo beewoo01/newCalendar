@@ -1,25 +1,51 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout
-    xmlns:android="http://schemas.android.com/apk/res/android" android:layout_width="match_parent"
-    android:layout_height="match_parent">
+<layout xmlns:android="http://schemas.android.com/apk/res/android">
 
-    <androidx.viewpager2.widget.ViewPager2
-        android:id="@+id/pager"
+    <data>
+
+        <variable
+            name="activity"
+            type="cookmap.cookandroid.hw.newcalendar.MainActivity_2" />
+    </data>
+
+
+    <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:background="#ffffff"></androidx.viewpager2.widget.ViewPager2>
+        android:layout_height="match_parent">
 
-    <View
-        android:id="@+id/div"
-        android:layout_width="match_parent"
-        android:layout_height="4dp"
-        android:layout_below="@+id/pager"
-        android:background="@drawable/shape_div_gradient" />
 
-    <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/rcv"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_below="@+id/div" />
+        <ImageButton
+            android:id="@+id/fab_button"
+            android:layout_width="60sp"
+            android:layout_height="60sp"
+            android:layout_alignParentRight="true"
+            android:layout_alignParentBottom="true"
+            android:layout_margin="20sp"
+            android:background="@drawable/button_state"
+            android:elevation="10dp"
+            android:onClick="@{() -> activity.feb_click()}"
+            android:src="@drawable/ic_add_white_24dp" />
 
-</RelativeLayout>
+        <View
+            android:id="@+id/div"
+            android:layout_width="match_parent"
+            android:layout_height="4dp"
+            android:layout_below="@+id/pager"
+            android:background="@drawable/shape_div_gradient" />
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/memo_recycler"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_below="@+id/div" />
+
+        <androidx.viewpager2.widget.ViewPager2
+            android:id="@+id/pager"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="#ffffff"></androidx.viewpager2.widget.ViewPager2>
+
+    </RelativeLayout>
+
+
+</layout>

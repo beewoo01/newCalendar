@@ -37,6 +37,7 @@ import cookmap.cookandroid.hw.newcalendar.adpater.CalendarAdapter;
 import cookmap.cookandroid.hw.newcalendar.adpater.Memo_Adapter;
 import cookmap.cookandroid.hw.newcalendar.utill.RecyclerItemClickListener;
 import cookmap.cookandroid.hw.newcalendar.utill.RecyclerViewDecoration;
+import cookmap.cookandroid.hw.newcalendar.view.SimpleViewBinder;
 
 
 public class MainActivity extends AppCompatActivity implements GestureDetector.OnGestureListener {
@@ -63,6 +64,8 @@ public class MainActivity extends AppCompatActivity implements GestureDetector.O
     private Calendar mThisMonthCalendar;
     private int height = 0;
     private String selectQuery = null;
+
+    private SimpleViewBinder.RecyclerViewBuilder builder;
 
     public static int SUNDAY = 1;
     private int DISTANCE = 200;
@@ -327,6 +330,9 @@ public class MainActivity extends AppCompatActivity implements GestureDetector.O
         memo_Adapter = new Memo_Adapter(memo_Click_List);
         memo_Adapter.notifyDataSetChanged();
         memo_list.setAdapter(memo_Adapter);
+
+        /*builder = new SimpleViewBinder.RecyclerViewBuilder(getWindow()).setAdapter(memo_Adapter,
+                 getSupportFragmentManager()).setList(memo_Click_List);*/
     }
 
     private void sql_select() {

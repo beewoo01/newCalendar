@@ -15,17 +15,15 @@ import androidx.viewpager2.widget.ViewPager2;
 import java.util.ArrayList;
 import java.util.Calendar;
 
-import cookmap.cookandroid.hw.newcalendar.adapter.AdapterFrgCalendar;
-import cookmap.cookandroid.hw.newcalendar.adapter.AdapterRcvSimple;
 import cookmap.cookandroid.hw.newcalendar.Database.Database_Room;
 import cookmap.cookandroid.hw.newcalendar.adpater.AdapterFrgCalendar;
+import cookmap.cookandroid.hw.newcalendar.adpater.Memo_Adapter;
 import cookmap.cookandroid.hw.newcalendar.view.SimpleViewBinder;
 
 public class MultiCalendarActivity extends BaseActivity implements FrgCalendar.OnFragmentListener {
     private static final int COUNT_PAGE = 12;
     ViewPager2 pager;
     private AdapterFrgCalendar adapter;
-    private AdapterRcvSimple adapterHourLine;
     private RecyclerView rcv;
     private ArrayList mList;
     private SimpleViewBinder.RecyclerViewBuilder builder;
@@ -95,13 +93,11 @@ public class MultiCalendarActivity extends BaseActivity implements FrgCalendar.O
                 }
             }
         });
-
-
     }
 
     public void changeMemo(){
-        adapterHourLine = new AdapterRcvSimple(R.layout.item_rcv_simple);
-        builder =  new SimpleViewBinder.RecyclerViewBuilder(getWindow()).setAdapter(adapterHourLine, getSupportFragmentManager()).setList(mList);
+        //adapterHourLine = new Memo_Adapter(R.layout.memo_list_contents);
+        //builder =  new SimpleViewBinder.RecyclerViewBuilder(getWindow()).setAdapter(adapterHourLine, getSupportFragmentManager()).setList(mList);
         rcv = builder.build();
         builder.getAdapter().notifyDataSetChanged();
     }

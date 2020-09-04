@@ -16,9 +16,9 @@ import androidx.core.content.ContextCompat;
 
 import java.util.Calendar;
 
-import cookmap.cookandroid.hw.test_calendar.Common;
-import cookmap.cookandroid.hw.test_calendar.R;
-import cookmap.cookandroid.hw.test_calendar.database.teat_ContentDatabase;
+import cookmap.cookandroid.hw.newcalendar.Common;
+import cookmap.cookandroid.hw.newcalendar.R;
+import cookmap.cookandroid.hw.newcalendar.Database.Database_Room;
 
 public class CalendarItemView extends View {
 
@@ -133,7 +133,7 @@ public class CalendarItemView extends View {
             fullday += calendar.get(Calendar.DATE);
         }
 
-        int count_memo = teat_ContentDatabase.getInstance(getContext()).getContentDao().getMemoCount(fullday);
+        int count_memo = Database_Room.getInstance(getContext()).getDao().getMemoCount(fullday);
         Log.d("count_memo111", String.valueOf(count_memo) + "," + fullday);
         if (count_memo != 0){
             setEvent();
@@ -201,7 +201,7 @@ public class CalendarItemView extends View {
 
     public void setEvent() {
         hasEvent = true;
-        mColorEvents = R.color.yellow;
+        mColorEvents = R.color.colorYellow;
     }
 
     /*public void setEvent(int... resid) {

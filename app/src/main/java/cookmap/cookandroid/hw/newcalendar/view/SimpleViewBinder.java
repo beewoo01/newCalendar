@@ -1,5 +1,6 @@
 package cookmap.cookandroid.hw.newcalendar.view;
 
+import android.content.Intent;
 import android.view.Window;
 
 import androidx.fragment.app.FragmentManager;
@@ -9,12 +10,14 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 
 import cookmap.cookandroid.hw.newcalendar.R;
+import cookmap.cookandroid.hw.newcalendar.adpater.AdapterRCVBase;
+import cookmap.cookandroid.hw.newcalendar.adpater.Memo_Adapter;
 
 public class SimpleViewBinder {
     public SimpleViewBinder() {
-
     }
 
     public static class RecyclerViewBuilder implements Builder {
@@ -22,13 +25,14 @@ public class SimpleViewBinder {
         private static final int LAYOUTMANAGER_GRID = 1;
         private final Window window;
         private int layoutManager = LAYOUTMANAGER_LINEAR;
-        private int idLayout = R.id.rcv;
+        private int idLayout = R.id.memo_recycler;
         private int rawCount;
         private int orientation = LinearLayoutManager.VERTICAL;
-        private ArrayList list;
+        private List list;
         private HashMap map;
         private AdapterRCVBase adapter;
         private AdapterRCVBase.OnRCVItemListener onClickListener;
+
 
         public RecyclerViewBuilder(Window window) {
             this.window = window;
@@ -54,7 +58,7 @@ public class SimpleViewBinder {
             return this;
         }
 
-        public RecyclerViewBuilder setList(ArrayList list) {
+        public RecyclerViewBuilder setList(List list) {
             this.list = new ArrayList();
             this.list.addAll(list);
             return this;
@@ -66,10 +70,10 @@ public class SimpleViewBinder {
             return this;
         }
 
-        public RecyclerViewBuilder setSimpleAdapter(FragmentManager fm) {
-            adapter = new AdapterRcvSimple(R.layout.item_rcv_simple);
+        /*public RecyclerViewBuilder setSimpleAdapter(FragmentManager fm) {
+            adapter = new Memo_Adapter(R.layout.memo_list_contents);
             return this;
-        }
+        }*/
 
         public RecyclerViewBuilder setAdapter(AdapterRCVBase adapter, FragmentManager fm) {
             this.adapter = adapter;

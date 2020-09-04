@@ -33,6 +33,7 @@ public class Memo_Adapter extends RecyclerView.Adapter<Memo_Adapter.ViewHolder> 
         LayoutInflater inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         View view = inflater.inflate(R.layout.memo_list_contents, parent, false);
         Memo_Adapter.ViewHolder vh = new Memo_Adapter.ViewHolder(view);
+
         return vh;
     }
 

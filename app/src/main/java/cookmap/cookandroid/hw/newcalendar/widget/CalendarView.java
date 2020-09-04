@@ -13,6 +13,7 @@ import android.view.ViewGroup;
 
 import java.util.Calendar;
 
+import cookmap.cookandroid.hw.newcalendar.MainActivity_2;
 import cookmap.cookandroid.hw.newcalendar.MultiCalendarActivity;
 import cookmap.cookandroid.hw.newcalendar.R;
 
@@ -214,7 +215,8 @@ public class CalendarView extends ViewGroup {
             cal.setTimeInMillis(time);
             pager.setTag(view);
             view.invalidate();
-            ((MultiCalendarActivity)getContext()).initData(time);
+            ((MainActivity_2)getContext()).initData(time);
+            //((MultiCalendarActivity)getContext()).initData(time);
 
         }
     }
