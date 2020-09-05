@@ -156,7 +156,8 @@ public class writeActivity extends AppCompatActivity implements View.OnClickList
             }
         } else {
             Log.d("id=0 ", "else옴");
-            String setDay = bundle.getString("select_Day");
+            String setDay = new Convert_Date().Convert_Date(bundle.getLong("select_Day"));
+            //String setDay = bundle.getString("select_Day");
 
 
             try {

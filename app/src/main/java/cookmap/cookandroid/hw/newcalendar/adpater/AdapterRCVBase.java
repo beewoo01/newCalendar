@@ -1,5 +1,6 @@
 package cookmap.cookandroid.hw.newcalendar.adpater;
 
+import android.content.Context;
 import android.view.View;
 import android.view.ViewGroup;
 
@@ -16,6 +17,7 @@ public class AdapterRCVBase extends RecyclerView.Adapter {
     protected HashMap mMap = new HashMap();
     protected int idLayout = -1;
     protected RecyclerView.ViewHolder holder = null;
+    protected Context context;
 
     public Object getItem(int position) {
         if (mList == null || mList.size() < 1) {
@@ -32,6 +34,7 @@ public class AdapterRCVBase extends RecyclerView.Adapter {
 
     @Override
     public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+        context = parent.getContext();
         return holder;
     }
 

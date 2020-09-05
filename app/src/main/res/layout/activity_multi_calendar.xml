@@ -23,7 +23,6 @@
             android:layout_margin="20sp"
             android:background="@drawable/button_state"
             android:elevation="10dp"
-            android:onClick="@{() -> activity.feb_click()}"
             android:src="@drawable/ic_add_white_24dp" />
 
         <View

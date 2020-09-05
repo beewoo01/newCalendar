@@ -51,7 +51,7 @@ public class adapter_memoList extends AdapterRCVBase {
         if (mList.get(position).getMain_Img().equals("NONE")) {
             ((adapter_memoList.ViewHolder) holder).c_img_main.setVisibility(View.GONE);
         } else {
-            Glide.with(context).load(mList.get(position).getMain_Img()).into(((adapter_memoList.ViewHolder) holder).c_img_main);
+            Glide.with(super.context).load(mList.get(position).getMain_Img()).into(((adapter_memoList.ViewHolder) holder).c_img_main);
         }
 
         super.onBindViewHolder(holder, position);

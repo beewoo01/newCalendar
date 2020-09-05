@@ -36,7 +36,7 @@ public class CalendarItemView extends View {
     private int dp16;
     private boolean hasEvent = false;
     //private int[] mColorEvents;
-    private int mColorEvents;
+    private int mColorEvents = R.color.colorYellow;
     private final float RADIUS = 100f;
 
     public CalendarItemView(Context context) {
@@ -59,7 +59,7 @@ public class CalendarItemView extends View {
         mPaintTextWhite.setColor(Color.WHITE);
         mPaintTextWhite.setTextSize(dp11);
         mPaintTextWhite.setTextAlign(Paint.Align.CENTER);
-        mPaintBackground.setColor(ContextCompat.getColor(getContext(), R.color.colorPrimaryDark));
+        mPaintBackground.setColor(ContextCompat.getColor(getContext(), R.color.selectedDay));
         mPaintBackgroundToday.setColor(ContextCompat.getColor(getContext(), R.color.today));
         mPaintBackgroundEvent.setColor(ContextCompat.getColor(getContext(), R.color.colorPrimary));
         setClickable(true);
@@ -176,6 +176,7 @@ public class CalendarItemView extends View {
         if (!isStaticText && hasEvent) {
             //mPaintBackgroundEvent.setColor(getResources().getColor(mColorEvents[0]));
             mPaintBackgroundEvent.setColor(getResources().getColor(mColorEvents));
+            //ContextCompat.getColor(getContext(), mColorEvents);
             RectF rectF = new RectF(xPos - 5, getHeight() / 2 + 20, xPos + 5, getHeight() / 2 + 30);
             //canvas.drawRoundRect(rectF, RADIUS, RADIUS, mPaintBackgroundToday);
             canvas.drawRoundRect(rectF, RADIUS, RADIUS, mPaintBackgroundEvent);
@@ -201,7 +202,7 @@ public class CalendarItemView extends View {
 
     public void setEvent() {
         hasEvent = true;
-        mColorEvents = R.color.colorYellow;
+        //mColorEvents = R.color.colorYellow;
     }
 
     /*public void setEvent(int... resid) {

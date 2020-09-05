@@ -62,15 +62,19 @@ public class MainActivity_2 extends BaseActivity implements FrgCalendar.OnFragme
         //데이터를 넣어주는곳
         // 다른 곳에서는 recyclerview(메모)데이터를 여기서 넣어 줬음
         //adapter_memoLine = new adapter_memoList();
-        builder = new SimpleViewBinder.RecyclerViewBuilder(
-                getWindow()).setAdapter(adapter_memoLine, getSupportFragmentManager()).setList(memo_Click_List);
+        if (data > 0){
+            String full = new Convert_Date().Convert_Date(data);
+            Log.d("whats fullday : ", full);
+            memo_Click_List = Database_Room.getInstance(this).getDao().getClickMemo(full);
+            builder = new SimpleViewBinder.RecyclerViewBuilder(
+                    getWindow()).setAdapter(adapter_memoLine, getSupportFragmentManager()).setList(memo_Click_List);
 
-        AdapterRCVBase baseAdapter = new adapter_memoList();
-        baseAdapter.setList(memo_Click_List);
-        binding.memoRecycler.setAdapter(baseAdapter);
-        binding.memoRecycler.setLayoutManager(new LinearLayoutManager(this));
-        baseAdapter.notifyDataSetChanged();
-        Log.d("main2 data? ", String.valueOf(data));
+            AdapterRCVBase baseAdapter = new adapter_memoList();
+            baseAdapter.setList(memo_Click_List);
+            binding.memoRecycler.setAdapter(baseAdapter);
+            binding.memoRecycler.setLayoutManager(new LinearLayoutManager(this));
+            baseAdapter.notifyDataSetChanged();
+        }
         selectDate = data;
         //CalendarView - setCurrentSelectedView 에서 memo_Click_List에 item을 넣어줘야함
 
@@ -84,6 +88,7 @@ public class MainActivity_2 extends BaseActivity implements FrgCalendar.OnFragme
     public void initControl() {
         adapter = new AdapterFrgCalendar(this);
         binding.pager.setAdapter(adapter);
+        binding.fabButton.setOnClickListener(v -> feb_click(v));
 
         binding.pager.setAdapter(adapter);
         adapter.setOnFragmentListener(this);
@@ -94,8 +99,7 @@ public class MainActivity_2 extends BaseActivity implements FrgCalendar.OnFragme
 
         getSupportActionBar().setBackgroundDrawable(new ColorDrawable(Color.WHITE));
 
-        getSupportActionBar().setTitle(Html.fromHtml(("<font color=\"black\">" + title+
-                "</font>")));
+        getSupportActionBar().setTitle(Html.fromHtml(("<font color=\"black\">" + title + "</font>")));
 
 
         Log.d("getSupportActionBar", String.valueOf(getSupportActionBar().getTitle()));
@@ -162,7 +166,8 @@ public class MainActivity_2 extends BaseActivity implements FrgCalendar.OnFragme
         initIntent(MainActivity_2.this, bundle, Memo_Click_Activity.class);
     }
 
-    public void feb_click(){
+    public void feb_click(View view){
+        Log.d("feb_click", "옴?");
         Bundle bundle = new Bundle();
         bundle.putInt("id", 0);
         bundle.putLong("select_Day", selectDate);
