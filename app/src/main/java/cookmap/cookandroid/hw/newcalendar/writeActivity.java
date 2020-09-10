@@ -140,9 +140,6 @@ public class writeActivity extends AppCompatActivity implements View.OnClickList
         now = System.currentTimeMillis();
         Date date = new Date(now);
         sp = new SimpleDateFormat("yyyy/MM/dd");
-        SimpleDateFormat testformat = new SimpleDateFormat("HH:mm:ss");
-        String testTime = testformat.format(now);
-        Log.d("현재시간", testTime);
         Intent intent = getIntent();
         Bundle bundle = intent.getExtras();
         //id = getIntent().getIntExtra("id", 0);

@@ -6,14 +6,18 @@ import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
+import android.os.Build;
 import android.os.Bundle;
 import android.text.Html;
+import android.text.SpannableString;
+import android.text.Spanned;
 import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
 import androidx.annotation.Nullable;
+import androidx.core.text.HtmlCompat;
 import androidx.databinding.DataBindingUtil;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -32,7 +36,7 @@ import cookmap.cookandroid.hw.newcalendar.adpater.adapter_memoList;
 import cookmap.cookandroid.hw.newcalendar.databinding.ActivityMultiCalendarBinding;
 import cookmap.cookandroid.hw.newcalendar.view.SimpleViewBinder;
 
-public class MainActivity_2 extends BaseActivity implements FrgCalendar.OnFragmentListener, AdapterRCVBase.OnRCVItemListener {
+public class MainActivity_2 extends BaseActivity implements FrgCalendar.OnFragmentListener {
     private static final int COUNT_PAGE = 12;
     private RecyclerView memo_list;
 
@@ -66,19 +70,19 @@ public class MainActivity_2 extends BaseActivity implements FrgCalendar.OnFragme
             String full = new Convert_Date().Convert_Date(data);
             Log.d("whats fullday : ", full);
             memo_Click_List = Database_Room.getInstance(this).getDao().getClickMemo(full);
-            builder = new SimpleViewBinder.RecyclerViewBuilder(
-                    getWindow()).setAdapter(adapter_memoLine, getSupportFragmentManager()).setList(memo_Click_List);
-
             AdapterRCVBase baseAdapter = new adapter_memoList();
             baseAdapter.setList(memo_Click_List);
             binding.memoRecycler.setAdapter(baseAdapter);
             binding.memoRecycler.setLayoutManager(new LinearLayoutManager(this));
+            baseAdapter.setOnItemClickListener((view, position) -> onItemClick(view, position));
             baseAdapter.notifyDataSetChanged();
         }
         selectDate = data;
         //CalendarView - setCurrentSelectedView 에서 memo_Click_List에 item을 넣어줘야함
 
+
     }
+
 
     @Override
     public void initView() {
@@ -99,7 +103,7 @@ public class MainActivity_2 extends BaseActivity implements FrgCalendar.OnFragme
 
         getSupportActionBar().setBackgroundDrawable(new ColorDrawable(Color.WHITE));
 
-        getSupportActionBar().setTitle(Html.fromHtml(("<font color=\"black\">" + title + "</font>")));
+        getSupportActionBar().setTitle(fromHtml(("<font color=\"black\">" + title + "</font>")));
 
 
         Log.d("getSupportActionBar", String.valueOf(getSupportActionBar().getTitle()));
@@ -110,8 +114,7 @@ public class MainActivity_2 extends BaseActivity implements FrgCalendar.OnFragme
             public void onPageSelected(int position) {
                 String title = adapter.getMonthDisplayed(position);
                 //mTvCalendarTitle.setText(title);
-                getSupportActionBar().setTitle(Html.fromHtml(("<font color=\"black\">" + title+
-                        "</font>")));
+                getSupportActionBar().setTitle(fromHtml(("<font color=\"black\">" + title + "</font>")));
 
                 if (position == 0) {
                     adapter.addPrev();
@@ -124,6 +127,17 @@ public class MainActivity_2 extends BaseActivity implements FrgCalendar.OnFragme
         });
 
 
+    }
+
+    @SuppressWarnings("deprecation")
+    public Spanned fromHtml(String html){
+        if(html == null){
+            return new SpannableString("");
+        }else if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+            return Html.fromHtml(html, Html.FROM_HTML_MODE_LEGACY);
+        } else {
+            return Html.fromHtml(html);
+        }
     }
 
 
@@ -158,8 +172,8 @@ public class MainActivity_2 extends BaseActivity implements FrgCalendar.OnFragme
         anim.start();
     }
 
-    @Override
     public void onItemClick(View view, int position) {
+        Log.d("onItemClick" ,"Yes");
         Bundle bundle = new Bundle();
         bundle.putLong("date", selectDate);
         bundle.putInt("position", position);

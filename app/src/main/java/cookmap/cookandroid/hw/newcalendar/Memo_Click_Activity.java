@@ -18,8 +18,10 @@ import cookmap.cookandroid.hw.newcalendar.adpater.Memo_List_Adapter;
 public class Memo_Click_Activity extends AppCompatActivity {
     private List<Content_Room> list;
     private int position;
-    private String date;
+    //private String date;
     private RecyclerView recyclerView;
+
+    private long date;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -30,7 +32,8 @@ public class Memo_Click_Activity extends AppCompatActivity {
         Bundle bundle = intent.getExtras();
 
         position = bundle.getInt("position");
-        date = bundle.getString("date");
+        //date = bundle.getString("date");
+        date = bundle.getLong("date");
 
         //list = Database_Room.getInstance(this).getDao().getClickMemo(date);
 
@@ -43,7 +46,7 @@ public class Memo_Click_Activity extends AppCompatActivity {
     @Override
     protected void onResume() {
         super.onResume();
-        list = Database_Room.getInstance(this).getDao().getClickMemo(date);
+        list = Database_Room.getInstance(this).getDao().getClickMemo(new Convert_Date().Convert_Date(date));
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(this);
 
         recyclerView.setLayoutManager(linearLayoutManager);

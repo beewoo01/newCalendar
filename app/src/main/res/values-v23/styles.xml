@@ -10,6 +10,16 @@
         <item name="colorAccent">@color/colorAccent</item>
     </style>
 
+    <style name="NomalTheme" parent="Theme.AppCompat.Light.NoActionBar">
+        <item name="windowActionBar">false</item>
+        <item name="windowNoTitle">true</item>
+        <item name="android:statusBarColor">#ffffff</item>
+        <item name="android:windowLightStatusBar">true</item>
+        <item name="colorPrimary">@color/colorPrimary</item>
+        <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
+        <item name="colorAccent">@color/colorAccent</item>
+    </style>
+
     <style name="AppTheme" parent="Theme.MaterialComponents.DayNight.NoActionBar">
         <!-- Customize your theme here. -->
         <item name="colorPrimary">@color/colorPrimary</item>
@@ -20,21 +30,9 @@
         <item name="android:windowLightStatusBar">true</item>
         <item name="buttonStyle">@style/AppTheme.Button</item>
 
-        <!-- New MaterialComponents attributes. -->
-        <!--<item name="colorPrimaryVariant">@color/my_app_primary_variant_color</item>
-        <item name="colorSecondaryVariant">@color/my_app_secondary_variant_color</item>
-        <item name="colorSurface">@color/my_app_surface_color</item>
-        <item name="colorOnPrimary">@color/my_app_color_on_primary</item>
-        <item name="colorOnSecondary">@color/my_app_color_on_secondary</item>
-        <item name="colorOnBackground">@color/my_app_color_on_background</item>
-        <item name="colorOnError">@color/my_app_color_on_error</item>
-        <item name="colorOnSurface">@color/my_app_color_on_surface</item>
-        <item name="scrimBackground">@color/mtrl_scrim_color</item>-->
-
         <item name="colorControlActivated">#33691e</item>
         <item name="android:selectableItemBackgroundBorderless">@color/colorPrimaryDark</item>
         <item name="colorControlHighlight">#BD56CF</item>
-
 
         <item name="scrimBackground">@color/mtrl_scrim_color</item>
 

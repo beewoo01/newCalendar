@@ -2,6 +2,7 @@ package cookmap.cookandroid.hw.newcalendar.adpater;
 
 import android.content.Context;
 import android.graphics.Color;
+import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
@@ -69,6 +70,20 @@ public class adapter_memoList extends AdapterRCVBase {
             c_title = itemView.findViewById(R.id.con_title);
             c_desc = itemView.findViewById(R.id.con_desc);
             c_img_main = itemView.findViewById(R.id.con_img);
+            itemView.setOnClickListener(v -> {
+                int position = getAdapterPosition();
+                if (position != RecyclerView.NO_POSITION){
+                    if (onRCVItemListener != null){
+                        onRCVItemListener.onItemClick(v, position);
+                        Log.d("ViewHolder ", "onRCVItemListener != null");
+                    }else {
+                        Log.d("ViewHolder ", "onRCVItemListener ===== null");
+                    }
+
+                }
+            });
+
+
 
         }
     }

@@ -11,10 +11,11 @@
         android:label="@string/app_name"
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
-        android:theme="@style/MainTheme">
+        android:theme="@style/NomalTheme">
         <activity
             android:name=".Memo_Click_Activity"></activity>
         <activity
+            android:theme="@style/MainTheme"
             android:name=".MainActivity_2"
             android:screenOrientation="portrait"
             android:windowSoftInputMode="adjustResize|adjustPan">

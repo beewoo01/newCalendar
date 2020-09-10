@@ -1,12 +1,23 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:background="@color/colorWhite"
-    android:orientation="vertical"
-    tools:context=".writeActivity">
+    android:layout_height="match_parent">
+
+    <data>
+
+        <variable
+            name="activity"
+            type="cookmap.cookandroid.hw.newcalendar.PainttingActivity" />
+    </data>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@color/colorWhite"
+        android:orientation="vertical"
+        >
 
     <RelativeLayout
         android:layout_width="match_parent"
@@ -178,20 +189,20 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content">
 
-                <RelativeLayout
-                    android:id="@+id/fab_button"
-                    android:layout_width="85dp"
-                    android:layout_height="30dp"
-                    android:layout_alignParentLeft="true"
-                    android:background="@drawable/button_state_two">
+                    <RelativeLayout
+                        android:id="@+id/fab_button"
+                        android:layout_width="85dp"
+                        android:layout_height="30dp"
+                        android:layout_alignParentLeft="true"
+                        android:background="@drawable/button_state_two">
 
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_centerInParent="true"
-                        android:text="Add Img +"
-                        />
-                </RelativeLayout>
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_centerInParent="true"
+                            android:text="Add Img +"
+                            />
+                    </RelativeLayout>
 
                     <View
                         android:id="@+id/setLabelColor"
@@ -218,4 +229,5 @@
         </LinearLayout>
 
     </LinearLayout>
-</LinearLayout>
+    </LinearLayout>
+</layout>
