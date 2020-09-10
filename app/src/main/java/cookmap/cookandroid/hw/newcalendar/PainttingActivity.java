@@ -1,18 +1,26 @@
 package cookmap.cookandroid.hw.newcalendar;
 
+import android.Manifest;
+import android.content.Context;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.graphics.Color;
 import android.os.Bundle;
+import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.ImageView;
 import android.widget.Toast;
 
+import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 import androidx.core.util.Pair;
 import androidx.databinding.BindingAdapter;
 import androidx.databinding.DataBindingUtil;
+import androidx.fragment.app.DialogFragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 
 import com.google.android.material.datepicker.MaterialDatePicker;
@@ -178,13 +186,19 @@ public class PainttingActivity extends BaseActivity implements View.OnClickListe
                 return;
             }
         }else if (v == binding.selectDate){
-
+            showDatePickerDialog();
         }else if (v == binding.fabButton){
+            checkSelfPermission();
+            return;
 
         }else if (v == binding.descriptionLinear){
+            binding.descriptionEdit.requestFocus(); // 내용 부분
+            InputMethodManager im = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
+            im.toggleSoftInput(InputMethodManager.SHOW_FORCED, InputMethodManager.HIDE_IMPLICIT_ONLY);
 
         }else if (v == binding.setLabelColor){
-
+            DialogFragment lableDF = new label_dialog(this);
+            lableDF.show(getSupportFragmentManager(), "Label_Dialog");
         }
 
     }
@@ -281,5 +295,42 @@ public class PainttingActivity extends BaseActivity implements View.OnClickListe
     public void getColor(String color) {
         label = color;
         binding.setLabelColor.setBackgroundColor(Color.parseColor(label));
+    }
+
+
+    public void checkSelfPermission() {
+        String temp = "";
+
+        //파일 읽기 권한 확인
+        if (ContextCompat.checkSelfPermission(this, Manifest.permission.READ_EXTERNAL_STORAGE)
+                != PackageManager.PERMISSION_GRANTED) {
+            temp += Manifest.permission.READ_EXTERNAL_STORAGE + " ";
+
+        }
+
+        if (TextUtils.isEmpty(temp) == false) {
+            ActivityCompat.requestPermissions(this, temp.trim().split(" "), 1);
+
+        } else {
+
+            DialogFragment dialogFragment = new Gallery_Dialog(this);
+            dialogFragment.show(getSupportFragmentManager(), "Gallery_Dialog");
+        }
+
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        if (requestCode == 1) {
+            int length = permissions.length;
+            for (int i = 0; i < length; i++) {
+                if (grantResults[i] == PackageManager.PERMISSION_GRANTED) {
+                    DialogFragment dialogFragment = new Gallery_Dialog(this);
+                    dialogFragment.show(getSupportFragmentManager(), "Gallery_Dialog");
+                } else {
+                    Toast.makeText(this, "권한이 없어 접근할 수 없습니다.", Toast.LENGTH_SHORT).show();
+                }
+            }
+        }
     }
 }
