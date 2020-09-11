@@ -233,12 +233,7 @@ public class PainttingActivity extends BaseActivity implements View.OnClickListe
         else des = binding.descriptionEdit.getText().toString();
 
         if (po){
-            Database_Room.getInstance(this).getDao().content_update(binding.titleEdit.getText().toString(),
-                    des,
-                    m_img,
-                    img,
-                    label,
-                    id);
+            Database_Room.getInstance(this).getDao().content_update(binding.titleEdit.getText().toString(), des, m_img, img, label, id);
         }else {
             id = Math.toIntExact(Database_Room.getInstance(this).getDao().content_insert(new Content_Room(
                     binding.titleEdit.getText().toString(), des, m_img, img, label)));

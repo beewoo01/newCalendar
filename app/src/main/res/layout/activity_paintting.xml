@@ -1,15 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
 <layout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    xmlns:tools="http://schemas.android.com/tools">
 
     <data>
 
         <variable
             name="activity"
             type="cookmap.cookandroid.hw.newcalendar.PainttingActivity" />
+
     </data>
 
     <LinearLayout
@@ -19,51 +18,52 @@
         android:orientation="vertical"
         >
 
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="45dp"
+            android:background="@color/colorWhite">
+
+            <ImageView
+                android:id="@+id/back_btn"
+                android:layout_width="50dp"
+                android:layout_height="match_parent"
+                android:layout_alignParentStart="true"
+                android:src="@drawable/ic_back_button_icon"
+                android:contentDescription="TODO" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerInParent="true"
+                android:text="일정 등록"
+                android:textColor="@color/colorBlack"
+                android:textSize="20sp" />
+
+            <TextView
+                android:id="@+id/check_btn"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentEnd="true"
+                android:layout_centerInParent="true"
+                android:layout_marginEnd="20dp"
+                android:text="등록"
+                android:textColor="@color/colorPrimary"
+                android:textSize="20sp" />
+
+        </RelativeLayout>
+
     <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="45dp"
-        android:background="@color/colorWhite">
-
-        <ImageView
-            android:id="@+id/back_btn"
-            android:layout_width="50dp"
-            android:layout_height="match_parent"
-            android:layout_alignParentLeft="true"
-            android:src="@drawable/ic_back_button_icon" />
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_centerInParent="true"
-            android:text="일정 등록"
-            android:textColor="@color/colorBlack"
-            android:textSize="20sp" />
-
-        <!--<ImageView
-            android:id="@+id/check_btn"
-            android:layout_width="50dp"
-            android:layout_height="match_parent"
-            android:layout_alignParentRight="true"
-            android:src="@drawable/ic_check_btn" />-->
-
-        <TextView
-            android:id="@+id/check_btn"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentRight="true"
-            android:layout_centerInParent="true"
-            android:layout_marginRight="20dp"
-            android:text="등록"
-            android:textColor="@color/colorPrimary"
-            android:textSize="20sp" />
-
-    </RelativeLayout>
-
-    <LinearLayout
-        android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:orientation="vertical"
         android:padding="10dp">
+
+        <LinearLayout
+            android:id="@+id/toplayout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:layout_alignParentTop="true"
+            >
 
         <EditText
             android:id="@+id/title_Edit"
@@ -73,7 +73,9 @@
             android:background="@android:color/transparent"
             android:hint="제목"
             android:singleLine="true"
-            android:textSize="20sp" />
+            android:textSize="20sp"
+            android:importantForAutofill="no"
+            tools:targetApi="o" />
 
         <View
             android:layout_width="match_parent"
@@ -88,19 +90,16 @@
             android:orientation="horizontal"
             android:padding="10dp">
 
-
             <LinearLayout
-                android:layout_width="wrap_content"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_alignParentLeft="true">
+                android:layout_centerHorizontal="true"
+                >
 
                 <TextView
                     android:id="@+id/start_date"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_alignParentLeft="true"
-                    android:layout_centerVertical="true"
-                    android:gravity="center"
                     android:text="20/ 07/ 07"
                     android:textColor="@color/colorBlack"
                     android:textSize="20sp" />
@@ -108,12 +107,12 @@
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_gravity="center"
                     android:layout_marginLeft="10sp"
                     android:layout_marginRight="10sp"
                     android:text="-"
                     android:textColor="@color/colorBlack"
                     android:textStyle="bold" />
+
 
                 <TextView
                     android:id="@+id/end_date"
@@ -128,106 +127,100 @@
 
             </LinearLayout>
 
-
             <ImageView
                 android:layout_width="30dp"
                 android:layout_height="30dp"
+                android:src="@drawable/ic_calendar_afafaf_24dp"
                 android:layout_alignParentRight="true"
-                android:layout_centerVertical="true"
-                android:src="@drawable/ic_calendar_afafaf_24dp" />
-
+                android:layout_centerHorizontal="true"
+                />
 
         </RelativeLayout>
 
-        <View
-            android:layout_width="match_parent"
-            android:layout_height="0.5dp"
-            android:background="@color/colorGray" />
-
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:orientation="vertical">
-
-            <LinearLayout
-                android:id="@+id/description_Linear"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_weight="8">
-
-                <EditText
-                    android:id="@+id/description_Edit"
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:layout_marginTop="15dp"
-                    android:background="@android:color/transparent"
-                    android:hint="내용"
-                    android:inputType="textMultiLine"
-                    android:maxLength="100"
-                    android:maxLines="12"
-                    android:textSize="20sp" />
-            </LinearLayout>
-
             <View
-                android:layout_width="wrap_content"
+                android:layout_width="match_parent"
                 android:layout_height="0.5dp"
                 android:background="@color/colorGray" />
 
+        </LinearLayout>
 
-            <LinearLayout
+        <LinearLayout
+            android:id="@+id/descriptionLinear"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_below="@+id/toplayout"
+            android:layout_above="@+id/bottomLayout"
+            >
 
-                android:id="@+id/imageLine"
+            <EditText
+                android:id="@+id/description_Edit"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_alignParentBottom="true"
-                android:layout_weight="2"
+                android:background="@android:color/transparent"
                 android:layout_marginTop="10dp"
-                android:orientation="vertical">
-
-                <RelativeLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content">
-
-                    <RelativeLayout
-                        android:id="@+id/fab_button"
-                        android:layout_width="85dp"
-                        android:layout_height="30dp"
-                        android:layout_alignParentLeft="true"
-                        android:background="@drawable/button_state_two">
-
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_centerInParent="true"
-                            android:text="Add Img +"
-                            />
-                    </RelativeLayout>
-
-                    <View
-                        android:id="@+id/setLabelColor"
-                        android:layout_width="30dp"
-                        android:layout_height="30dp"
-                        android:layout_alignParentRight="true"
-                        android:background="@color/colorGray"
-                        />
-
-                </RelativeLayout>
-
-                <androidx.recyclerview.widget.RecyclerView
-                    android:id="@+id/setImg_recycler"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_margin="10dp"
-                    android:layout_gravity="center"
-                    android:scrollbars="horizontal"
-                    app:stackFromEnd="true"
-                    app:reverseLayout="true"
-                    ></androidx.recyclerview.widget.RecyclerView>
-            </LinearLayout>
+                android:hint="내용"
+                android:inputType="textMultiLine"
+                android:maxLength="160"
+                android:maxLines="12"
+                android:textSize="20sp" />
 
         </LinearLayout>
 
+        <LinearLayout
+            android:id="@+id/bottomLayout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:layout_alignParentBottom="true"
+            >
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+                <RelativeLayout
+                    android:id="@+id/fab_button"
+                    android:layout_width="85dp"
+                    android:layout_height="30dp"
+                    android:layout_alignParentLeft="true"
+                    android:background="@drawable/button_state_two">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_centerInParent="true"
+                        android:text="Add Img +"
+                        />
+                </RelativeLayout>
+
+                <View
+                    android:id="@+id/setLabelColor"
+                    android:layout_width="30dp"
+                    android:layout_height="30dp"
+                    android:layout_alignParentRight="true"
+                    android:background="@color/colorGray"
+                    />
+
+            </RelativeLayout>
+
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/setImg_recycler"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_margin="10dp"
+                android:layout_gravity="center"
+                android:scrollbars="horizontal"
+                app:stackFromEnd="true"
+                app:reverseLayout="true"
+                ></androidx.recyclerview.widget.RecyclerView>
+
+
+        </LinearLayout>
+
+
+
+    </RelativeLayout>
+
     </LinearLayout>
-    </LinearLayout>
+
 </layout>

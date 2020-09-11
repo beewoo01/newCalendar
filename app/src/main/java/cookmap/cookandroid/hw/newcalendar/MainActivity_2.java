@@ -185,7 +185,8 @@ public class MainActivity_2 extends BaseActivity implements FrgCalendar.OnFragme
         Bundle bundle = new Bundle();
         bundle.putInt("id", 0);
         bundle.putLong("select_Day", selectDate);
-        initIntent(MainActivity_2.this, bundle, writeActivity.class);
+        //initIntent(MainActivity_2.this, bundle, writeActivity.class);
+        initIntent(MainActivity_2.this, bundle, PainttingActivity.class);
 
     }
 }

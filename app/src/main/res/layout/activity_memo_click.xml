@@ -1,48 +1,58 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:background="@color/colorWhite"
-    tools:context=".Memo_Click_Activity">
+<layout xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <data>
+
+        <variable
+            name="activity"
+            type="cookmap.cookandroid.hw.newcalendar.Memo_Click_Activity" />
+
+    </data>
 
     <RelativeLayout
-        android:id="@+id/tab_in_mfrag"
         android:layout_width="match_parent"
-        android:layout_height="45sp"
-        >
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="메모장"
-            android:textSize="20sp"
-            android:textStyle="bold"
-            android:textColor="@color/colorBlack"
-            android:layout_centerInParent="true"
-            />
+        android:layout_height="match_parent">
+
+        <RelativeLayout
+            android:id="@+id/tab_in_mfrag"
+            android:layout_width="match_parent"
+            android:layout_height="45sp">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerInParent="true"
+                android:text="메모장"
+                android:textColor="@color/colorBlack"
+                android:textSize="20sp"
+                android:textStyle="bold" />
+
+            <View
+                android:id="@+id/back_in_mfrag"
+                android:layout_width="40sp"
+                android:layout_height="40sp"
+                android:layout_centerVertical="true"
+                android:layout_marginLeft="5sp"
+                android:onClick="@{activity::onclick}"
+                android:background="@drawable/ic_back_button_icon" />
+        </RelativeLayout>
+
         <View
-            android:id="@+id/back_in_mfrag"
-            android:layout_width="40sp"
-            android:layout_height="40sp"
-            android:background="@drawable/ic_back_button_icon"
-            android:layout_centerVertical="true"
-            android:layout_marginLeft="5sp"
-            />
+            android:id="@+id/line_in_mfrag"
+            android:layout_width="match_parent"
+            android:layout_height="2sp"
+            android:layout_below="@+id/tab_in_mfrag"
+            android:background="@color/colorGray_No2" />
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/memo_recycler_mfrag"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_below="@+id/line_in_mfrag"
+            android:layout_marginTop="5sp"></androidx.recyclerview.widget.RecyclerView>
+
     </RelativeLayout>
-    <View
-        android:id="@+id/line_in_mfrag"
-        android:layout_width="match_parent"
-        android:layout_height="2sp"
-        android:background="@color/colorGray_No2"
-        android:layout_below="@+id/tab_in_mfrag"
-        />
 
-    <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/memo_recycler_mfrag"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_below="@+id/line_in_mfrag"
-        android:layout_marginTop="5sp"
-        ></androidx.recyclerview.widget.RecyclerView>
 
-</RelativeLayout>
+
+</layout>

@@ -1,6 +1,6 @@
 package cookmap.cookandroid.hw.newcalendar;
 
-import androidx.appcompat.app.AppCompatActivity;
+import androidx.databinding.DataBindingUtil;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.LinearSmoothScroller;
 import androidx.recyclerview.widget.RecyclerView;
@@ -14,45 +14,38 @@ import java.util.List;
 import cookmap.cookandroid.hw.newcalendar.Database.Content_Room;
 import cookmap.cookandroid.hw.newcalendar.Database.Database_Room;
 import cookmap.cookandroid.hw.newcalendar.adpater.Memo_List_Adapter;
+import cookmap.cookandroid.hw.newcalendar.databinding.ActivityMemoClickBinding;
 
-public class Memo_Click_Activity extends AppCompatActivity {
+public class Memo_Click_Activity extends BaseActivity {
     private List<Content_Room> list;
     private int position;
-    //private String date;
-    private RecyclerView recyclerView;
+    private ActivityMemoClickBinding binding;
 
     private long date;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_memo_click);
+        binding = DataBindingUtil.setContentView(this, R.layout.activity_memo_click);
+        binding.setActivity(this);
+        initView();
+    }
+
+    @Override
+    public void initView() {
+        super.initView();
 
         Intent intent = getIntent();
         Bundle bundle = intent.getExtras();
 
         position = bundle.getInt("position");
-        //date = bundle.getString("date");
         date = bundle.getLong("date");
 
-        //list = Database_Room.getInstance(this).getDao().getClickMemo(date);
-
-        View backBtn = findViewById(R.id.back_in_mfrag);
-        recyclerView = findViewById(R.id.memo_recycler_mfrag);
-
-        backBtn.setOnClickListener(onClickListener);
-    }
-
-    @Override
-    protected void onResume() {
-        super.onResume();
         list = Database_Room.getInstance(this).getDao().getClickMemo(new Convert_Date().Convert_Date(date));
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(this);
 
-        recyclerView.setLayoutManager(linearLayoutManager);
-        recyclerView.setAdapter(new Memo_List_Adapter(this, list));
-
-
+        binding.memoRecyclerMfrag.setLayoutManager(linearLayoutManager);
+        binding.memoRecyclerMfrag.setAdapter(new Memo_List_Adapter(this, list));
 
         scrollFunction(linearLayoutManager, position);
     }
@@ -68,11 +61,7 @@ public class Memo_Click_Activity extends AppCompatActivity {
         linearLayoutManager.startSmoothScroll(smoothScroller);
     }
 
-    private View.OnClickListener onClickListener = new View.OnClickListener() {
-        @Override
-        public void onClick(View v) {
-            // backBtn = 종료
-            finish();
-        }
-    };
+    public void onclick(View view){
+        finish();
+    }
 }

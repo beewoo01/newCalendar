@@ -32,8 +32,8 @@ import java.util.List;
 import cookmap.cookandroid.hw.newcalendar.Custom_Dialog;
 import cookmap.cookandroid.hw.newcalendar.Database.Content_Room;
 import cookmap.cookandroid.hw.newcalendar.Database.Database_Room;
+import cookmap.cookandroid.hw.newcalendar.PainttingActivity;
 import cookmap.cookandroid.hw.newcalendar.R;
-import cookmap.cookandroid.hw.newcalendar.writeActivity;
 
 public class Memo_List_Adapter extends RecyclerView.Adapter<Memo_List_Adapter.ViewHolder> {
     private Context context;
@@ -47,7 +47,7 @@ public class Memo_List_Adapter extends RecyclerView.Adapter<Memo_List_Adapter.Vi
     @NonNull
     @Override
     public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        LayoutInflater inflater = (LayoutInflater) context.getSystemService(context.LAYOUT_INFLATER_SERVICE);
+        LayoutInflater inflater = (LayoutInflater) parent.getContext().getSystemService(context.LAYOUT_INFLATER_SERVICE);
         View view = inflater.inflate(R.layout.memo_frag_item, parent, false);
         return new ViewHolder(view);
     }
@@ -81,12 +81,7 @@ public class Memo_List_Adapter extends RecyclerView.Adapter<Memo_List_Adapter.Vi
                 }
                 if (i > 0) {
                     holder.viewPager.setAdapter(new Image_Pager_Adapter(arrayList, context));
-                    new TabLayoutMediator(holder.tabLayout, holder.viewPager,
-                            new TabLayoutMediator.TabConfigurationStrategy() {
-                                @Override
-                                public void onConfigureTab(@NonNull TabLayout.Tab tab, int position) {
-                                }
-                            }).attach();
+                    new TabLayoutMediator(holder.tabLayout, holder.viewPager, (tab, position1) ->  { }).attach();
                 }
             } catch (JSONException e) {
                 e.printStackTrace();
@@ -142,11 +137,12 @@ public class Memo_List_Adapter extends RecyclerView.Adapter<Memo_List_Adapter.Vi
                 arrayList.add("확인");
                 arrayList.add("취소");
             }
+
             builder = new Custom_Dialog(context, new Custom_Dialog.Custom_Dialog_EventListener() {
                 @Override
                 public void customDialogEvent(String value) {
                     if (value.equals("수정")){
-                        Intent intent = new Intent(context, writeActivity.class);
+                        Intent intent = new Intent(context, PainttingActivity.class);
                         intent.putExtra("id", list.get(getAdapterPosition()).getId());
                         context.startActivity(intent);
                     }else if (value.equals("삭제")){
