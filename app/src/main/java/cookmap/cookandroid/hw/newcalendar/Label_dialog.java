@@ -3,7 +3,6 @@ package cookmap.cookandroid.hw.newcalendar;
 import android.content.Context;
 import android.graphics.Color;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -13,21 +12,24 @@ import android.widget.RelativeLayout;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.databinding.DataBindingUtil;
 import androidx.fragment.app.DialogFragment;
 import androidx.fragment.app.Fragment;
-import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import java.util.ArrayList;
+import java.util.Collections;
 
-public class label_dialog extends DialogFragment{
+import cookmap.cookandroid.hw.newcalendar.databinding.LabelDialogBinding;
+
+public class Label_dialog extends DialogFragment{
     private passColor passColor;
 
     public interface passColor{
         void getColor(String color);
     }
 
-    label_dialog(passColor passColor){
+    public Label_dialog(passColor passColor){
         this.passColor = passColor;
     }
 
@@ -35,38 +37,24 @@ public class label_dialog extends DialogFragment{
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.label_dialog, container);
-        view.findViewById(R.id.back_btn_LD).setOnClickListener(listener);
-        RecyclerView recyclerView = view.findViewById(R.id.label_recycler);
-        recyclerView.setLayoutManager(new GridLayoutManager(getActivity(), 3));
-        recyclerView.setAdapter(new Label_Adapter(getList()));
+        LabelDialogBinding binding = DataBindingUtil.inflate(inflater, R.layout.label_dialog, container, false);
+        binding.setFragment(this);
+        View view = binding.getRoot();
+        binding.labelRecycler.setAdapter(new Label_Adapter(getList()));
 
         return view;
     }
-    private ArrayList getList(){
-        ArrayList list = new ArrayList();
-        list.add("#FFF44336");
-        list.add("#FF8BC34A");
-        list.add("#FFFFEB3B");
-        list.add("#FF9C27B0");
-        list.add("#FF03A9F4");
-        list.add("#FF3F51B5");
-        list.add("#FF000000");
-        list.add("#FF4CAF50");
-        list.add("#FFFF9800");
+    private ArrayList<String> getList(){
+        ArrayList<String> list = new ArrayList();
+        Collections.addAll(list, getResources().getStringArray(R.array.label_string));
         return list;
-
     }
 
-
-    View.OnClickListener listener = new View.OnClickListener() {
-        @Override
-        public void onClick(View v) {
-            Fragment fragment = getActivity().getSupportFragmentManager().findFragmentByTag("Label_Dialog");
-            DialogFragment dialogFragment = (DialogFragment) fragment;
-            dialogFragment.dismiss();
-        }
-    };
+    public void onClick(View view){
+        Fragment fragment = getActivity().getSupportFragmentManager().findFragmentByTag("Label_Dialog");
+        DialogFragment dialogFragment = (DialogFragment) fragment;
+        dialogFragment.dismiss();
+    }
 
     class Label_Adapter extends RecyclerView.Adapter<Label_Adapter.ViewHolder>{
         ArrayList<String> list;
@@ -109,14 +97,11 @@ public class label_dialog extends DialogFragment{
                 imageView.setOnClickListener(listener);
             }
 
-            private View.OnClickListener listener = new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
+            private View.OnClickListener listener = v ->  {
                     passColor.getColor(list.get(getAdapterPosition()));
                     Fragment fragment = getActivity().getSupportFragmentManager().findFragmentByTag("Label_Dialog");
                     DialogFragment dialogFragment = (DialogFragment) fragment;
                     dialogFragment.dismiss();
-                }
             };
         }
     }

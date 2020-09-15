@@ -5,7 +5,7 @@
 
         <variable
             name="activity"
-            type="cookmap.cookandroid.hw.newcalendar.MainActivity_2" />
+            type="cookmap.cookandroid.hw.newcalendar.MainActivity" />
     </data>
 
 

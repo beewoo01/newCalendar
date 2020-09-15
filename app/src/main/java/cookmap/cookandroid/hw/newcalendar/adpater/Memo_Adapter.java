@@ -15,7 +15,7 @@ import com.bumptech.glide.Glide;
 
 import java.util.List;
 
-import cookmap.cookandroid.hw.newcalendar.Database.Content_Room;
+import cookmap.cookandroid.hw.newcalendar.db.Content_Room;
 import cookmap.cookandroid.hw.newcalendar.R;
 
 public class Memo_Adapter extends RecyclerView.Adapter<Memo_Adapter.ViewHolder> {

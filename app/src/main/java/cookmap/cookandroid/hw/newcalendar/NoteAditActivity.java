@@ -10,7 +10,6 @@ import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
-import android.widget.ImageView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -18,7 +17,6 @@ import androidx.annotation.Nullable;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 import androidx.core.util.Pair;
-import androidx.databinding.BindingAdapter;
 import androidx.databinding.DataBindingUtil;
 import androidx.fragment.app.DialogFragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -37,14 +35,14 @@ import java.util.Date;
 import java.util.GregorianCalendar;
 import java.util.TimeZone;
 
-import cookmap.cookandroid.hw.newcalendar.Database.Content_Room;
 import cookmap.cookandroid.hw.newcalendar.Database.Database_Room;
-import cookmap.cookandroid.hw.newcalendar.Database.Memo_Date;
-import cookmap.cookandroid.hw.newcalendar.Database.Memo_Room;
-import cookmap.cookandroid.hw.newcalendar.adpater.horizontal_Adapter;
+import cookmap.cookandroid.hw.newcalendar.db.Memo_Date;
+import cookmap.cookandroid.hw.newcalendar.db.Memo_Room;
+import cookmap.cookandroid.hw.newcalendar.adpater.Horizontal_Adapter;
 import cookmap.cookandroid.hw.newcalendar.databinding.ActivityPainttingBinding;
+import cookmap.cookandroid.hw.newcalendar.db.Content_Room;
 
-public class PainttingActivity extends BaseActivity implements View.OnClickListener, Gallery_Dialog.PassDataInterface, label_dialog.passColor{
+public class NoteAditActivity extends BaseActivity implements View.OnClickListener, Gallery_Dialog.PassDataInterface, Label_dialog.passColor{
 
     ActivityPainttingBinding binding;
 
@@ -54,7 +52,7 @@ public class PainttingActivity extends BaseActivity implements View.OnClickListe
     private Pair<Long, Long> pair;
     int id = 0;
 
-    private horizontal_Adapter horizontal_adapter;
+    private Horizontal_Adapter horizontal_adapter;
 
     private ArrayList<String> imgAddress;
 
@@ -160,7 +158,7 @@ public class PainttingActivity extends BaseActivity implements View.OnClickListe
                 i++;
             } else break;
         }
-        horizontal_adapter = new horizontal_Adapter(this, imgAddress);
+        horizontal_adapter = new Horizontal_Adapter(imgAddress);
         binding.setImgRecycler.setAdapter(horizontal_adapter);
         horizontal_adapter.notifyDataSetChanged();
     }
@@ -197,7 +195,7 @@ public class PainttingActivity extends BaseActivity implements View.OnClickListe
             im.toggleSoftInput(InputMethodManager.SHOW_FORCED, InputMethodManager.HIDE_IMPLICIT_ONLY);
 
         }else if (v == binding.setLabelColor){
-            DialogFragment lableDF = new label_dialog(this);
+            DialogFragment lableDF = new Label_dialog(this);
             lableDF.show(getSupportFragmentManager(), "Label_Dialog");
         }
 
@@ -276,9 +274,8 @@ public class PainttingActivity extends BaseActivity implements View.OnClickListe
                 Log.d("for", String.valueOf(imgAddress.get(i)));
                 this.imgAddress.add(String.valueOf(imgAddress.get(i)));
             }
-            //Collections.reverse(this.imgAddress);
 
-            horizontal_adapter = new horizontal_Adapter(this, this.imgAddress);
+            horizontal_adapter = new Horizontal_Adapter(this.imgAddress);
             binding.setImgRecycler.setAdapter(horizontal_adapter);
             horizontal_adapter.notifyDataSetChanged();
 

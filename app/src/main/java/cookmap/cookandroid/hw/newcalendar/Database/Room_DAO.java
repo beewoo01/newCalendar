@@ -1,13 +1,14 @@
 package cookmap.cookandroid.hw.newcalendar.Database;
 
 import androidx.room.Dao;
-import androidx.room.Delete;
 import androidx.room.Insert;
 import androidx.room.Query;
-import androidx.room.Transaction;
-import androidx.room.Update;
 
 import java.util.List;
+
+import cookmap.cookandroid.hw.newcalendar.db.Content_Room;
+import cookmap.cookandroid.hw.newcalendar.db.Memo_Date;
+import cookmap.cookandroid.hw.newcalendar.db.Memo_Room;
 
 @Dao
 public interface Room_DAO {

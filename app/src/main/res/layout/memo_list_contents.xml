@@ -1,63 +1,80 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    android:background="@android:drawable/dialog_holo_light_frame"
-    android:orientation="horizontal">
+    xmlns:app="http://schemas.android.com/apk/res-auto">
 
-    <View
-        android:id="@+id/con_label"
-        android:layout_width="10sp"
-        android:layout_height="match_parent"
-        tools:background="@color/colorBlack"
-        />
+    <data>
+        <variable
+            name="activity"
+            type="cookmap.cookandroid.hw.newcalendar.db.Content_Room" />
+    </data>
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_weight="1"
-        android:background="@color/colorWhite"
-        android:orientation="vertical">
+        android:orientation="horizontal"
+        android:background="@android:drawable/dialog_holo_light_frame">
 
-        <TextView
-            android:id="@+id/con_title"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginLeft="20sp"
-            android:text="title"
-            android:textColor="@color/colorBlack"
-            android:textSize="20sp"
-            android:textStyle="bold" />
 
-        <TextView
-            android:id="@+id/con_desc"
-            android:layout_width="wrap_content"
+        <View
+            android:id="@+id/con_label"
+            android:layout_width="10sp"
+            android:layout_height="match_parent"
+            tools:background="@color/colorBlack"
+            app:bgColor="@{activity.label}"
+            />
+
+        <LinearLayout
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginLeft="20sp"
-            android:layout_marginTop="5sp"
-            android:layout_marginBottom="5sp"
-            android:text="title"
-            android:textColor="#484848"
-            android:textSize="15sp" />
+            android:layout_weight="1"
+            android:background="@color/colorWhite"
+            android:orientation="vertical">
+
+            <TextView
+                android:id="@+id/con_title"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="20sp"
+                android:text="title"
+                android:textColor="@color/colorBlack"
+                android:textSize="20sp"
+                app:text="@{activity.title}"
+                android:textStyle="bold" />
+
+            <TextView
+                android:id="@+id/con_desc"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="20sp"
+                android:layout_marginTop="5sp"
+                android:layout_marginBottom="5sp"
+                android:text="title"
+                app:text="@{activity.description}"
+                android:textColor="#484848"
+                android:textSize="15sp" />
+        </LinearLayout>
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="@color/colorWhite"
+            android:layout_weight="3.5">
+
+            <ImageView
+                android:id="@+id/con_img"
+                android:layout_width="46sp"
+                android:layout_height="46sp"
+                android:layout_alignParentRight="true"
+                android:layout_centerVertical="true"
+                android:layout_marginRight="20sp"
+                android:adjustViewBounds="true"
+                android:scaleType="centerCrop"
+                app:imgUrl="@{activity.main_Img}"
+                app:cicle ="@{false}"
+                tools:background="@color/colorBlack" />
+        </RelativeLayout>
+
     </LinearLayout>
 
-    <RelativeLayout
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:background="@color/colorWhite"
-        android:layout_weight="3.5">
-
-        <ImageView
-            android:id="@+id/con_img"
-            android:layout_width="46sp"
-            android:layout_height="46sp"
-            android:layout_alignParentRight="true"
-            android:layout_centerVertical="true"
-            android:layout_marginRight="20sp"
-            android:adjustViewBounds="true"
-            android:scaleType="centerCrop"
-            tools:background="@color/colorBlack" />
-    </RelativeLayout>
-
-</LinearLayout>
+</layout>

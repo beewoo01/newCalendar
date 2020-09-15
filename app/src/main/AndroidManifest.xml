@@ -16,7 +16,7 @@
             android:name=".Memo_Click_Activity"></activity>
         <activity
             android:theme="@style/MainTheme"
-            android:name=".MainActivity_2"
+            android:name=".MainActivity"
             android:screenOrientation="portrait"
             android:windowSoftInputMode="adjustResize|adjustPan">
             <intent-filter>
@@ -27,7 +27,7 @@
         </activity>
         <activity
             android:theme="@style/AppTheme"
-            android:name=".PainttingActivity"
+            android:name=".NoteAditActivity"
             android:screenOrientation="portrait"
             android:windowSoftInputMode="adjustResize|adjustPan" />
     </application>

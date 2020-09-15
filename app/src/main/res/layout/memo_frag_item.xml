@@ -1,116 +1,128 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:orientation="vertical">
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <data>
+        <variable
+            name="activity"
+            type="cookmap.cookandroid.hw.newcalendar.db.Content_Room" />
+        <variable
+            name="item"
+            type="cookmap.cookandroid.hw.newcalendar.adpater.Memo_ListView_Adapter" />
+    </data>
 
     <RelativeLayout
-        android:id="@+id/top_layout_mfrag"
         android:layout_width="match_parent"
-        android:layout_height="50sp"
-        android:layout_alignParentTop="true"
-        >
-
-        <View
-            android:id="@+id/label_mfrag"
-            android:layout_width="8sp"
-            android:layout_height="match_parent"
-            android:layout_centerVertical="true"
-            android:layout_margin="10sp"
-            tools:background="@color/colorYellow" />
-
-        <ImageView
-            android:id="@+id/coverImg_mfrg"
-            android:layout_width="30sp"
-            android:layout_height="30sp"
-            android:layout_centerVertical="true"
-            android:layout_toRightOf="@+id/label_mfrag"
-            android:adjustViewBounds="true" />
-
-        <TextView
-            android:id="@+id/title_mfrag"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_centerVertical="true"
-            android:layout_marginLeft="25dp"
-            android:layout_toRightOf="@+id/coverImg_mfrg"
-            android:textColor="@color/colorBlack"
-            android:textSize="15sp"
-            android:textStyle="bold"
-            tools:text="제목 라인 입니다." />
-
-        <ImageView
-            android:id="@+id/moreBtn_mfrag"
-            android:layout_width="30sp"
-            android:layout_height="30sp"
-            android:layout_alignParentRight="true"
-            android:layout_centerVertical="true"
-            android:layout_marginRight="10sp"
-            android:src="@drawable/ic_more_black_24dp" />
-
-    </RelativeLayout>
-
-
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_below="@+id/top_layout_mfrag"
-        android:orientation="vertical">
+        android:layout_height="wrap_content">
 
         <RelativeLayout
-            android:id="@+id/viewpager_bg"
+            android:id="@+id/top_layout_mfrag"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_above="@+id/bottom_layout_mfrag"
-            android:orientation="vertical">
+            android:layout_height="50sp"
+            android:layout_alignParentTop="true"
+            >
 
-            <androidx.viewpager2.widget.ViewPager2
-                android:id="@+id/viewpager"
-                android:layout_width="match_parent"
-                android:layout_height="500sp"
-                >
-            </androidx.viewpager2.widget.ViewPager2>
-            <com.google.android.material.tabs.TabLayout
-                android:id="@+id/tab_layout"
-                android:layout_width="match_parent"
+            <View
+                android:id="@+id/label_mfrag"
+                android:layout_width="8sp"
+                android:layout_height="match_parent"
+                android:layout_centerVertical="true"
+                android:layout_margin="10sp"
+                app:bgColor="@{activity.label}"
+                tools:background="@color/colorYellow" />
+
+            <ImageView
+                android:id="@+id/coverImg_mfrg"
+                android:layout_width="30sp"
+                android:layout_height="30sp"
+                android:layout_centerVertical="true"
+                android:layout_toRightOf="@+id/label_mfrag"
+                android:adjustViewBounds="true"
+                app:imgUrl="@{activity.main_Img}"
+                app:cicle ="@{true}"
+                />
+
+            <TextView
+                android:id="@+id/title_mfrag"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_below="@+id/viewpager"
-                app:tabBackground="@drawable/tab_selector"
-                app:tabGravity="center"
-                app:tabIndicatorHeight="0dp"
-                >
+                android:layout_centerVertical="true"
+                android:layout_marginLeft="25dp"
+                android:layout_toRightOf="@+id/coverImg_mfrg"
+                android:textColor="@color/colorBlack"
+                android:textSize="15sp"
+                android:textStyle="bold"
+                android:text="@{activity.title}"
+                tools:text="제목 라인 입니다." />
 
-            </com.google.android.material.tabs.TabLayout>
+            <ImageView
+                android:id="@+id/moreBtn_mfrag"
+                android:layout_width="30sp"
+                android:layout_height="30sp"
+                android:layout_alignParentRight="true"
+                android:layout_centerVertical="true"
+                android:layout_marginRight="10sp"
+                android:src="@drawable/ic_more_black_24dp"
+                />
+
         </RelativeLayout>
 
 
         <LinearLayout
-            android:id="@+id/bottom_layout_mfrag"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:layout_alignParentBottom="true"
-            >
+            android:layout_height="match_parent"
+            android:layout_below="@+id/top_layout_mfrag"
+            android:orientation="vertical">
 
-            <TextView
-                android:id="@+id/sub_txt_mfrag"
-                android:layout_width="wrap_content"
+            <RelativeLayout
+                android:id="@+id/viewpager_bg"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_margin="10sp"
-                android:textColor="@color/colorBlack"
-                android:textSize="15dp"
-                android:textStyle="bold"
-                tools:text="안녕하세요 적당히 바람이 시원해 기분이 정말 좋아요 유후 빨리와줘요
-             아싸 한잔했어요 기분이 너무 좋아f
-             dsfdssgdsgdsgsdgsdgdsgdsgsdgdsgdsgsdgsdgdsgsdgsdgsdgsdg
-             sdgsdgsdgsdgsdgsdgsdgsdgsdgsdgsdgsdgsdgsdgsdgdsgdsgsgdsgsdgs
-             dgdsgsdgsdgsdgsdgsgsdgdsgsdgsdgsdgsdgsdgs서 궁금했어요gegewegwagag
-             wgwegwegewgewgewgewgewewggewgewgewgewgewgewgwegewgewgewgewgewgewg
-             SSSSSSSSSSSSSSSSSSSSSSSSSSSSSSfwfwefwaewegwgawgewagewa" />
+                android:layout_above="@+id/bottom_layout_mfrag"
+                android:orientation="vertical">
+
+                <androidx.viewpager2.widget.ViewPager2
+                    android:id="@+id/viewpager"
+                    android:layout_width="match_parent"
+                    android:layout_height="500sp"
+                    >
+                </androidx.viewpager2.widget.ViewPager2>
+                <com.google.android.material.tabs.TabLayout
+                    android:id="@+id/tab_layout"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@+id/viewpager"
+                    app:tabBackground="@drawable/tab_selector"
+                    app:tabGravity="center"
+                    app:tabIndicatorHeight="0dp"
+                    >
+
+                </com.google.android.material.tabs.TabLayout>
+            </RelativeLayout>
+
+
+            <LinearLayout
+                android:id="@+id/bottom_layout_mfrag"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                >
+
+                <TextView
+                    android:id="@+id/sub_txt_mfrag"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="10sp"
+                    android:textColor="@color/colorBlack"
+                    android:textSize="15sp"
+                    android:textStyle="bold"
+                    android:text="@{activity.description}"
+                    />
+            </LinearLayout>
         </LinearLayout>
-    </LinearLayout>
+
+    </RelativeLayout>
 
 
-</RelativeLayout>
+</layout>

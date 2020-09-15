@@ -1,4 +1,4 @@
-package cookmap.cookandroid.hw.newcalendar.Database;
+package cookmap.cookandroid.hw.newcalendar.db;
 
 public class Memo_Date {
     private String start_day;

@@ -11,10 +11,10 @@ import android.view.View;
 
 import java.util.List;
 
-import cookmap.cookandroid.hw.newcalendar.Database.Content_Room;
 import cookmap.cookandroid.hw.newcalendar.Database.Database_Room;
-import cookmap.cookandroid.hw.newcalendar.adpater.Memo_List_Adapter;
+import cookmap.cookandroid.hw.newcalendar.adpater.Memo_ListView_Adapter;
 import cookmap.cookandroid.hw.newcalendar.databinding.ActivityMemoClickBinding;
+import cookmap.cookandroid.hw.newcalendar.db.Content_Room;
 
 public class Memo_Click_Activity extends BaseActivity {
     private List<Content_Room> list;
@@ -45,7 +45,7 @@ public class Memo_Click_Activity extends BaseActivity {
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(this);
 
         binding.memoRecyclerMfrag.setLayoutManager(linearLayoutManager);
-        binding.memoRecyclerMfrag.setAdapter(new Memo_List_Adapter(this, list));
+        binding.memoRecyclerMfrag.setAdapter(new Memo_ListView_Adapter(list));
 
         scrollFunction(linearLayoutManager, position);
     }

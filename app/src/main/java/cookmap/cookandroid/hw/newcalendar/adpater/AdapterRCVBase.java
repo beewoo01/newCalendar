@@ -4,19 +4,19 @@ import android.content.Context;
 import android.view.View;
 import android.view.ViewGroup;
 
+import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 
-import cookmap.cookandroid.hw.newcalendar.Database.Content_Room;
+import cookmap.cookandroid.hw.newcalendar.db.Content_Room;
 
 public class AdapterRCVBase extends RecyclerView.Adapter {
     protected List<Content_Room> mList = new ArrayList();
-    protected HashMap mMap = new HashMap();
     protected int idLayout = -1;
     protected RecyclerView.ViewHolder holder = null;
+    //protected TT_Custom_ViewHolder holder = null;
     protected Context context;
 
     public Object getItem(int position) {
@@ -39,9 +39,10 @@ public class AdapterRCVBase extends RecyclerView.Adapter {
     }
 
     @Override
-    public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
+    public void onBindViewHolder(@NonNull RecyclerView.ViewHolder holder, int position) {
 
     }
+
 
     @Override
     public int getItemCount() {
@@ -55,14 +56,6 @@ public class AdapterRCVBase extends RecyclerView.Adapter {
         }
         mList.clear();
         mList.addAll(list);
-        notifyDataSetChanged();
-    }
-    public void setMap(HashMap map) {
-        if (map == null) {
-            return;
-        }
-        mMap.clear();
-        mMap.putAll(map);
         notifyDataSetChanged();
     }
 

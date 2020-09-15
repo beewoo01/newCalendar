@@ -1,43 +1,52 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tool="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="wrap_content"
-    android:layout_height="wrap_content"
-    android:orientation="vertical">
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools">
+
+
+    <data>
+        <variable
+            name="items"
+            type="cookmap.cookandroid.hw.newcalendar.adpater.Horizontal_Adapter" />
+    </data>
 
     <RelativeLayout
-        android:id="@+id/last_img_bg"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        tools:background="@color/colorBlack"
-        android:layout_margin="10dp"
-        android:padding="3sp">
+        android:layout_height="wrap_content">
 
-        <ImageView
-            android:id="@+id/last_img"
-            android:layout_width="100dp"
-            android:layout_height="100dp"
-            android:adjustViewBounds="false"
-            android:scaleType="centerCrop"
-            tools:background="@mipmap/ic_launcher" />
+
+        <RelativeLayout
+            android:id="@+id/last_img_bg"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_margin="10dp"
+            android:padding="3sp"
+            tools:background="@color/colorBlack">
+
+            <ImageView
+                android:id="@+id/last_img"
+                android:layout_width="100dp"
+                android:layout_height="100dp"
+                android:adjustViewBounds="false"
+                android:scaleType="centerCrop"
+                tools:background="@mipmap/ic_launcher" />
+
+        </RelativeLayout>
+
+        <RelativeLayout
+            android:id="@+id/last_close_img"
+            android:layout_width="25dp"
+            android:layout_height="25dp"
+            android:background="@drawable/dot_primary">
+
+            <ImageView
+                android:id="@+id/last_x_img"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:src="@drawable/ic_close_white_24dp" />
+
+        </RelativeLayout>
 
     </RelativeLayout>
 
-    <RelativeLayout
-        android:id="@+id/last_close_img"
-        android:layout_width="25dp"
-        android:layout_height="25dp"
-        android:background="@drawable/dot_primary"
-        >
-        <ImageView
-            android:id="@+id/last_x_img"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:src="@drawable/ic_close_white_24dp"
-            />
 
-    </RelativeLayout>
-
-
-</RelativeLayout>
+</layout>

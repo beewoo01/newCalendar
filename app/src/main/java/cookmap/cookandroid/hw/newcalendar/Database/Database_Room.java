@@ -6,6 +6,9 @@ import androidx.room.Database;
 import androidx.room.Room;
 import androidx.room.RoomDatabase;
 
+import cookmap.cookandroid.hw.newcalendar.db.Content_Room;
+import cookmap.cookandroid.hw.newcalendar.db.Memo_Room;
+
 @Database(entities = {Content_Room.class, Memo_Room.class}, version=1)
 public abstract class Database_Room extends RoomDatabase {
 

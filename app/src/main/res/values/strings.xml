@@ -11,4 +11,17 @@
         <item>fri</item>
         <item>sat</item>
     </string-array>
+
+    <string-array name="label_string">
+        <item>#FFF44336</item>
+        <item>#FF8BC34A</item>
+        <item>#FFFFEB3B</item>
+        <item>#FF9C27B0</item>
+        <item>#FF03A9F4</item>
+        <item>#FF3F51B5</item>
+        <item>#FF000000</item>
+        <item>#FF4CAF50</item>
+        <item>#FFFF9800</item>
+    </string-array>
+
 </resources>

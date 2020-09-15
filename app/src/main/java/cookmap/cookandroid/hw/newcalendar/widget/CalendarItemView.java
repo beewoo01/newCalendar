@@ -16,7 +16,6 @@ import androidx.core.content.ContextCompat;
 
 import java.util.Calendar;
 
-import cookmap.cookandroid.hw.newcalendar.Common;
 import cookmap.cookandroid.hw.newcalendar.R;
 import cookmap.cookandroid.hw.newcalendar.Database.Database_Room;
 

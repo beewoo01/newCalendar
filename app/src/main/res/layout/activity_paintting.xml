@@ -7,7 +7,7 @@
 
         <variable
             name="activity"
-            type="cookmap.cookandroid.hw.newcalendar.PainttingActivity" />
+            type="cookmap.cookandroid.hw.newcalendar.NoteAditActivity" />
 
     </data>
 
@@ -100,7 +100,6 @@
                     android:id="@+id/start_date"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="20/ 07/ 07"
                     android:textColor="@color/colorBlack"
                     android:textSize="20sp" />
 
@@ -118,10 +117,7 @@
                     android:id="@+id/end_date"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_centerHorizontal="true"
-                    android:layout_centerVertical="true"
                     android:layout_gravity="center"
-                    android:text="20/ 07/ 07"
                     android:textColor="@color/colorBlack"
                     android:textSize="20sp" />
 

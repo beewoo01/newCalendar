@@ -20,7 +20,7 @@ public class Image_Pager_Adapter extends RecyclerView.Adapter<Image_Pager_Adapte
     private ArrayList<String> list;
     private Context context;
 
-    Image_Pager_Adapter(ArrayList list, Context context){
+    public Image_Pager_Adapter(ArrayList list, Context context){
         this.list = list;
         this.context = context;
     }
@@ -33,7 +33,6 @@ public class Image_Pager_Adapter extends RecyclerView.Adapter<Image_Pager_Adapte
 
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
-        Log.d("Viewpager_Img", list.get(position));
         Glide.with(context).load(list.get(position)).into(holder.carouselImageView);
     }
 

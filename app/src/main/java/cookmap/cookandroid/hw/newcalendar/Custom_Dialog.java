@@ -52,12 +52,8 @@ public class Custom_Dialog extends Dialog {
         init();
     }
 
-    private View.OnClickListener listener = new View.OnClickListener() {
-        @Override
-        public void onClick(View v) {
-            dismiss();
-        }
-    };
+    private View.OnClickListener listener = v -> dismiss();
+
     private void init(){
         dialog_recyclerView = findViewById(R.id.alert_recycler);
         findViewById(R.id.alert_close).setOnClickListener(listener);

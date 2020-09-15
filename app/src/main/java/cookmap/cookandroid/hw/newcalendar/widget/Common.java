@@ -1,4 +1,4 @@
-package cookmap.cookandroid.hw.newcalendar;
+package cookmap.cookandroid.hw.newcalendar.widget;
 
 import android.content.Context;
 

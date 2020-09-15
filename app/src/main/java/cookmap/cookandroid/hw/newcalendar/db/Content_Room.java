@@ -1,4 +1,4 @@
-package cookmap.cookandroid.hw.newcalendar.Database;
+package cookmap.cookandroid.hw.newcalendar.db;
 
 import androidx.room.Entity;
 import androidx.room.Ignore;
