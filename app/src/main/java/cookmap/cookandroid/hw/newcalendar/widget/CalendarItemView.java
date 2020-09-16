@@ -16,6 +16,7 @@ import androidx.core.content.ContextCompat;
 
 import java.util.Calendar;
 
+import cookmap.cookandroid.hw.newcalendar.Convert_Date;
 import cookmap.cookandroid.hw.newcalendar.R;
 import cookmap.cookandroid.hw.newcalendar.Database.Database_Room;
 
@@ -69,15 +70,12 @@ public class CalendarItemView extends View {
                 Log.d("hatti.onTouchEvent", event.getAction() + "");
                 switch (action) {
                     case MotionEvent.ACTION_DOWN:
-//                        setBackgroundResource(R.drawable.round_default_select);
                         rect = new Rect(v.getLeft(), v.getTop(), v.getRight(), v.getBottom());
                         isTouchMode = true;
                         break;
                     case MotionEvent.ACTION_UP:
                         if (isTouchMode) {
                             ((CalendarView) getParent()).setCurrentSelectedView(v);
-                            Log.d("GetParent1111", String.valueOf(((CalendarView) getParent())));
-                            Log.d("GetParent2222", String.valueOf(getParent()));
                             isTouchMode = false;
                         }
                         break;
@@ -119,24 +117,12 @@ public class CalendarItemView extends View {
         int yPos = (int) ((canvas.getHeight() / 2) - ((mPaint.descent() + mPaint.ascent()) / 2));
         Calendar calendar = Calendar.getInstance();
         calendar.setTimeInMillis(millis);
-        String fullday;
-        if (calendar.get(Calendar.MONTH) +1  < 10){
-            String month = "0"+(calendar.get(Calendar.MONTH) +1);
-            fullday = calendar.get(Calendar.YEAR) + "/" + month + "/";
-        }else {
-            fullday = calendar.get(Calendar.YEAR) + "/" + (calendar.get(Calendar.MONTH) +1 ) + "/";
-        }
-        if (calendar.get(Calendar.DATE) < 10){
-            fullday += "0" + calendar.get(Calendar.DATE);
-        }else{
-            fullday += calendar.get(Calendar.DATE);
-        }
 
-        int count_memo = Database_Room.getInstance(getContext()).getDao().getMemoCount(fullday);
-        Log.d("count_memo111", String.valueOf(count_memo) + "," + fullday);
-        if (count_memo != 0){
+        int count_memo = Database_Room.getInstance(getContext()).getDao().getMemoCount(
+                new Convert_Date().Convert_Date(calendar.getTimeInMillis()));
+        Log.d("convert!!!", new Convert_Date().Convert_Date(calendar.getTimeInMillis()));
+        if (count_memo > 0){
             setEvent();
-            Log.d("count_memo222", String.valueOf(count_memo) + "," + fullday);
         }
 
         CalendarView calendarView = (CalendarView) getParent();

@@ -2,7 +2,7 @@ package cookmap.cookandroid.hw.newcalendar;
 
 import java.util.Calendar;
 
-class Convert_Date {
+public class Convert_Date {
 
     public String Convert_Date(long date) {
         Calendar cal = Calendar.getInstance();

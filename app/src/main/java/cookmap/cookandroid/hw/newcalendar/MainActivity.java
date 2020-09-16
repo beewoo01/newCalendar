@@ -30,15 +30,8 @@ import cookmap.cookandroid.hw.newcalendar.db.Content_Room;
 public class MainActivity extends BaseActivity implements FrgCalendar.OnFragmentListener {
     private static final int COUNT_PAGE = 12;
 
-    long selectDate;
-
-    //private TextView mTvCalendarTitle;
-    private AdapterFrgCalendar adapter;
-    //private adapter_memoList adapter_memoLine;
-    //private RecyclerView rcv;
-
+    private long selectDate;
     private List<Content_Room> memo_Click_List = new ArrayList<>();;
-
     private ActivityMultiCalendarBinding binding;
 
     @Override
@@ -50,6 +43,14 @@ public class MainActivity extends BaseActivity implements FrgCalendar.OnFragment
     }
 
     @Override
+    protected void onResume() {
+        super.onResume();
+        Log.d("selectedData", new Convert_Date().Convert_Date(selectDate));
+        //binding.memoRecycler.getAdapter().notifyDataSetChanged();
+        initData(selectDate);
+    }
+
+    @Override
     public void initData(long data) {
         super.initData(data);
         //데이터를 넣어주는곳
@@ -58,6 +59,7 @@ public class MainActivity extends BaseActivity implements FrgCalendar.OnFragment
         if (data > 0){
             String full = new Convert_Date().Convert_Date(data);
             Log.d("whats fullday : ", full);
+            memo_Click_List.clear();
             memo_Click_List = Database_Room.getInstance(this).getDao().getClickMemo(full);
             Adapter_memoList baseAdapter = new Adapter_memoList(memo_Click_List);
             binding.memoRecycler.setAdapter(baseAdapter);
@@ -78,7 +80,7 @@ public class MainActivity extends BaseActivity implements FrgCalendar.OnFragment
     }
 
     public void initControl() {
-        adapter = new AdapterFrgCalendar(this);
+        AdapterFrgCalendar adapter = new AdapterFrgCalendar(this);
         binding.pager.setAdapter(adapter);
         binding.fabButton.setOnClickListener(v -> feb_click(v));
         adapter.setOnFragmentListener(this);

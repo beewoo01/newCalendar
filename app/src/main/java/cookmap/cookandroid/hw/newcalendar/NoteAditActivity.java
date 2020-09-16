@@ -64,8 +64,6 @@ public class NoteAditActivity extends BaseActivity implements View.OnClickListen
         initView();
         initControl();
 
-
-        imgAddress = new ArrayList<>(10);
         LinearLayoutManager mLayoutManager = new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, true);
         mLayoutManager.setReverseLayout(true);
         binding.setImgRecycler.setLayoutManager(mLayoutManager);
@@ -90,6 +88,7 @@ public class NoteAditActivity extends BaseActivity implements View.OnClickListen
         sp = new SimpleDateFormat("yyyy/MM/dd");
         Intent intent = getIntent();
         Bundle bundle = intent.getExtras();
+        imgAddress = new ArrayList<>(10);
         id = bundle.getInt("id");
 
         if (id > 0) {
@@ -136,6 +135,8 @@ public class NoteAditActivity extends BaseActivity implements View.OnClickListen
     }
 
     private void Modify(int id) throws Exception {
+        Log.d("수정" , "드러옴");
+        //수정
 
         Memo_Date SNE = Database_Room.getInstance(this).getDao().getXN(id);
         Content_Room thisItem = Database_Room.getInstance(this).getDao().getOneItem(id);
@@ -155,6 +156,7 @@ public class NoteAditActivity extends BaseActivity implements View.OnClickListen
             if (jsonObject.has(String.valueOf(i))) {
                 String key = jsonObject.getString(String.valueOf(i));
                 imgAddress.add(key);
+                Log.d("수정 이미지" + i + " ",imgAddress.get(i));
                 i++;
             } else break;
         }

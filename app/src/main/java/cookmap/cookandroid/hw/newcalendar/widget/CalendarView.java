@@ -181,6 +181,10 @@ public class CalendarView extends ViewGroup {
     public void setCurrentSelectedView(View view) {
         Log.d("getParent112121", String.valueOf(getParent()));
         Log.d("getParent232232", String.valueOf(view.getTag()));
+        view.getParent();
+
+
+
 
         if (getParent() instanceof ViewGroup) {
             ViewGroup pager = (ViewGroup) getParent();
@@ -205,17 +209,16 @@ public class CalendarView extends ViewGroup {
                     }
                 }
             }
-            if (tagView == view) {
+            /*if (tagView == view) {
                 pager.setTag(null);
                 return;
-            }
+            }*/
             long time = (long) view.getTag();
             Calendar cal = Calendar.getInstance();
             cal.setTimeInMillis(time);
             pager.setTag(view);
             view.invalidate();
             ((MainActivity)getContext()).initData(time);
-            //((MultiCalendarActivity)getContext()).initData(time);
 
         }
     }
