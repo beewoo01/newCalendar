@@ -40,9 +40,10 @@ public class Memo_Click_Activity extends BaseActivity {
         Bundle bundle = intent.getExtras();
 
         position = bundle.getInt("position");
-        date = bundle.getLong("date");
-
-        list = Database_Room.getInstance(this).getDao().getClickMemo(new Convert_Date().Convert_Date(date));
+        //date = bundle.getLong("date");
+        String day = new Convert_Date().Convert_Date(bundle.getLong("date"));
+        binding.selectedDay.setText(day);
+        list = Database_Room.getInstance(this).getDao().getClickMemo(day);
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(this);
 
         binding.memoRecyclerMfrag.setLayoutManager(linearLayoutManager);

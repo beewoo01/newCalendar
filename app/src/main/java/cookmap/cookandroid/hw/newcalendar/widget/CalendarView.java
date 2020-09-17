@@ -181,10 +181,6 @@ public class CalendarView extends ViewGroup {
     public void setCurrentSelectedView(View view) {
         Log.d("getParent112121", String.valueOf(getParent()));
         Log.d("getParent232232", String.valueOf(view.getTag()));
-        view.getParent();
-
-
-
 
         if (getParent() instanceof ViewGroup) {
             ViewGroup pager = (ViewGroup) getParent();

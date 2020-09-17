@@ -7,7 +7,6 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import androidx.fragment.app.Fragment;
-import androidx.fragment.app.FragmentStatePagerAdapter;
 
 import java.util.Calendar;
 
@@ -74,7 +73,6 @@ public class FrgCalendar extends Fragment {
             child.setDate(calendar.getTimeInMillis());
             int count_memo = Database_Room.getInstance(getContext()).getDao().getMemoCount(
                     new Convert_Date().Convert_Date(calendar.getTimeInMillis()));
-            Log.d("convert!!!", new Convert_Date().Convert_Date(calendar.getTimeInMillis()));
             if (count_memo > 0){
                 child.setEvent();
             }
@@ -113,17 +111,6 @@ public class FrgCalendar extends Fragment {
 
         }
     }
-
-/*
-    @Override
-    public void onActivityCreated(Bundle savedInstanceState) {
-        super.onActivityCreated(savedInstanceState);
-        if (getUserVisibleHint()) {
-
-            mRootView.post(() -> onFragmentListener.onFragmentListener(mRootView));
-
-        }
-    }*/
 
     public void setTimeByMillis(long timeByMillis) {
         this.timeByMillis = timeByMillis;

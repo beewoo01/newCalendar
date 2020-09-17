@@ -21,14 +21,20 @@ import org.json.JSONObject;
 import java.util.ArrayList;
 import java.util.List;
 
+import cookmap.cookandroid.hw.newcalendar.BR;
 import cookmap.cookandroid.hw.newcalendar.Custom_Dialog;
 import cookmap.cookandroid.hw.newcalendar.Database.Database_Room;
 import cookmap.cookandroid.hw.newcalendar.NoteAditActivity;
 import cookmap.cookandroid.hw.newcalendar.databinding.MemoFragItemBinding;
+import cookmap.cookandroid.hw.newcalendar.databinding.MemoListNoimgBinding;
 import cookmap.cookandroid.hw.newcalendar.db.Content_Room;
 import cookmap.cookandroid.hw.newcalendar.R;
+import cookmap.cookandroid.hw.newcalendar.db.Memo_Date;
 
-public class Memo_ListView_Adapter extends RecyclerView.Adapter<Memo_ListView_Adapter.Viewholder> {
+public class Memo_ListView_Adapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
+
+    private final int VIEW_ITEM = 1;
+    private final int VIEW_NOIMG = 0;
     private List<Content_Room> list;
     private Context context;
     private Custom_Dialog builder;
@@ -39,38 +45,58 @@ public class Memo_ListView_Adapter extends RecyclerView.Adapter<Memo_ListView_Ad
 
     @NonNull
     @Override
-    public Viewholder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+    public RecyclerView.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         context = parent.getContext();
-        MemoFragItemBinding binding = MemoFragItemBinding.inflate(
-                LayoutInflater.from(parent.getContext()), parent, false);
-        return new Viewholder(binding);
+        if (viewType == VIEW_ITEM){
+            MemoFragItemBinding binding = MemoFragItemBinding.inflate(
+                    LayoutInflater.from(parent.getContext()), parent, false);
+
+            return new itemViewholder(binding);
+        }else{
+            MemoListNoimgBinding binding = MemoListNoimgBinding.inflate(
+                    LayoutInflater.from(parent.getContext()), parent, false);
+
+            return new noImge(binding);
+        }
+
     }
 
     @Override
-    public void onBindViewHolder(@NonNull Viewholder holder, int position) {
-        holder.binding.setItem(this);
-        holder.binding.setActivity(list.get(position));
-        if (!list.get(position).getImg().equals("NONE")) {
-            Log.d("NONE?", list.get(position).getImg());
-            try {
-                int i = 0;
-                JSONObject jsonObject = new JSONObject(list.get(position).getImg());
-                ArrayList<String> arrayList = new ArrayList<>();
-                while (i < 10) {
-                    if (jsonObject.has(String.valueOf(i))) {
-                        String key = jsonObject.getString(String.valueOf(i));
-                        arrayList.add(key);
-                        i++;
-                    } else break;
+    public int getItemViewType(int position) {
+        return list.get(position).getMain_Img().equals("NONE")? VIEW_NOIMG : VIEW_ITEM ;
+    }
+
+    @Override
+    public void onBindViewHolder(@NonNull RecyclerView.ViewHolder holder, int position) {
+
+        if (holder instanceof itemViewholder){
+            ((itemViewholder)holder).binding.setItem(this);
+            ((itemViewholder)holder).binding.setActivity(list.get(position));
+                try {
+                    int i = 0;
+                    JSONObject jsonObject = new JSONObject(list.get(position).getImg());
+                    ArrayList<String> arrayList = new ArrayList<>();
+                    while (i < 10) {
+                        if (jsonObject.has(String.valueOf(i))) {
+                            String key = jsonObject.getString(String.valueOf(i));
+                            arrayList.add(key);
+                            i++;
+                        } else break;
+                    }
+                    if (i > 0) {
+                        ((itemViewholder)holder).binding.viewpager.setAdapter(new Image_Pager_Adapter(arrayList, context));
+                        new TabLayoutMediator(((itemViewholder)holder).binding.tabLayout,
+                                ((itemViewholder)holder).binding.viewpager, (tab, position1) ->  { }).attach();
+                    }
+                } catch (JSONException e) {
+                    e.printStackTrace();
                 }
-                if (i > 0) {
-                    holder.binding.viewpager.setAdapter(new Image_Pager_Adapter(arrayList, context));
-                    new TabLayoutMediator(holder.binding.tabLayout, holder.binding.viewpager, (tab, position1) ->  { }).attach();
-                }
-            } catch (JSONException e) {
-                e.printStackTrace();
-            }
-        }else holder.binding.viewpagerBg.setVisibility(View.GONE);
+        }else{
+            Memo_Date SNE = Database_Room.getInstance(context).getDao().getXN(list.get(position).getId());
+            ((noImge)holder).binding.setItemContent(list.get(position));
+            ((noImge)holder).binding.setVariable(BR.item_term, SNE);
+        }
+
     }
 
 
@@ -80,9 +106,9 @@ public class Memo_ListView_Adapter extends RecyclerView.Adapter<Memo_ListView_Ad
     }
 
 
-    class Viewholder extends RecyclerView.ViewHolder {
+    class itemViewholder extends RecyclerView.ViewHolder {
         MemoFragItemBinding binding;
-        public Viewholder(@NonNull MemoFragItemBinding binding) {
+        public itemViewholder(@NonNull MemoFragItemBinding binding) {
             super(binding.getRoot());
             this.binding = binding;
             binding.moreBtnMfrag.setOnClickListener(v -> showDialog(1));
@@ -119,6 +145,15 @@ public class Memo_ListView_Adapter extends RecyclerView.Adapter<Memo_ListView_Ad
                     ViewGroup.LayoutParams.WRAP_CONTENT);
             builder.getWindow().setWindowAnimations(R.style.DialogTheme);
             builder.show();
+        }
+    }
+
+    class noImge extends RecyclerView.ViewHolder {
+        MemoListNoimgBinding binding;
+
+        public noImge(@NonNull MemoListNoimgBinding binding) {
+            super(binding.getRoot());
+            this.binding = binding;
         }
     }
 
