@@ -1,6 +1,15 @@
 package cookmap.cookandroid.hw.newcalendar;
 
+import android.icu.util.LocaleData;
+import android.os.Build;
+
+import androidx.annotation.RequiresApi;
+
 import java.text.SimpleDateFormat;
+import java.time.LocalDate;
+import java.time.ZoneId;
+import java.time.ZoneOffset;
+import java.time.format.DateTimeFormatter;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.Locale;
@@ -11,21 +20,27 @@ public class Convert_Date {
         Calendar cal = Calendar.getInstance();
         cal.setTimeInMillis(date);
         String fullday = cal.get(Calendar.YEAR) + "/";
-        if ((cal.get(Calendar.MONTH)+1) < 10){
-            fullday += "0" + (cal.get(Calendar.MONTH)+1) + "/";
-        }else fullday += cal.get(Calendar.MONTH) + "/";
+        if ((cal.get(Calendar.MONTH) + 1) < 10) {
+            fullday += "0" + (cal.get(Calendar.MONTH) + 1) + "/";
+        } else fullday += cal.get(Calendar.MONTH) + "/";
 
-        if (cal.get(Calendar.DATE) < 10){
+        if (cal.get(Calendar.DATE) < 10) {
             fullday += "0" + cal.get(Calendar.DATE);
-        }else fullday += cal.get(Calendar.DATE);
+        } else fullday += cal.get(Calendar.DATE);
 
         return fullday;
     }
 
-    public String Convert_date_short(long day){
-            Calendar calendar = Calendar.getInstance();
-            int yyyy = calendar.get(Calendar.YEAR);
-            calendar.setTimeInMillis(day);
+    public String Convert_date_short(long day, int type) {
+        // type 0 = month 까지, 1 = day 까지, 2 = day, 요일
+        Calendar calendar = Calendar.getInstance();
+        int yyyy = calendar.get(Calendar.YEAR);
+        calendar.setTimeInMillis(day);
+        if (type == 1){
+            return calendar.getDisplayName(Calendar.DAY_OF_MONTH, Calendar.SHORT, Locale.getDefault());
+        }else if (type == 2){
+            return calendar.get(Calendar.DAY_OF_MONTH)+ "|n" + Convert_Day_Of_Week(calendar.get(Calendar.DAY_OF_WEEK));
+        }else{
             if (yyyy != calendar.get(Calendar.YEAR)) {
                 SimpleDateFormat sdf = new SimpleDateFormat("yyyy. MM");
                 Date date = new Date();
@@ -35,5 +50,29 @@ public class Convert_Date {
             } else {
                 return calendar.getDisplayName(Calendar.MONTH, Calendar.SHORT, Locale.getDefault());
             }
+        }
+
+
+    }
+
+    @RequiresApi(api = Build.VERSION_CODES.O)
+    public long Convert_StringToLong(String date){
+        DateTimeFormatter sdf = DateTimeFormatter.ofPattern(date,Locale.getDefault());
+        long day = LocalDate.parse(date, sdf).atStartOfDay(ZoneId.of("Asia/Seoul")).toInstant().toEpochMilli();
+        return 0;
+    }
+
+    private String Convert_Day_Of_Week(int day){
+        String dayOfWeek = "";
+        switch (day){
+            case 1: dayOfWeek = "일";    break ;
+            case 2: dayOfWeek = "월";    break ;
+            case 3: dayOfWeek = "화";    break ;
+            case 4: dayOfWeek = "수";    break ;
+            case 5: dayOfWeek = "목";    break ;
+            case 6: dayOfWeek = "금";    break ;
+            case 7: dayOfWeek = "토";    break ;
+        }
+        return dayOfWeek;
     }
 }

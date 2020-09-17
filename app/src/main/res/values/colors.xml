@@ -20,6 +20,18 @@
     <color name="transparent">@android:color/transparent</color>
 
 
+    <color name="lightRed">#FFFF8178</color>
+    <color name="lightGreen">#CFEFAB</color>
+    <color name="lightYellow">#FFFFF280</color>
+    <color name="lightPurple">#F1B5FB</color>
+    <color name="lightblue">#B0E6FF</color>
+    <color name="lightNavy">#FF96A6FF</color>
+    <color name="lightFluorescent">#FFDAE385</color>
+    <color name="light_DGreen">#85AF86</color>
+    <color name="light_Orange">#FDD497</color>
+    <color name="light_Gray">#E8E8E8</color>
+
+
 
     <color name="my_app_primary_variant_color">#FFFFFF</color>
     <!--모르겟음-->

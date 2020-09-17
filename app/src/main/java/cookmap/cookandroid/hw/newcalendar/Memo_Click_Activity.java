@@ -36,14 +36,14 @@ public class Memo_Click_Activity extends BaseActivity {
     public void initView() {
         super.initView();
 
-        Intent intent = getIntent();
-        Bundle bundle = intent.getExtras();
+        Bundle bundle = getIntent().getExtras();
 
         position = bundle.getInt("position");
-        //date = bundle.getLong("date");
-        String day = new Convert_Date().Convert_Date(bundle.getLong("date"));
-        binding.selectedDay.setText(day);
-        list = Database_Room.getInstance(this).getDao().getClickMemo(day);
+        date = bundle.getLong("date");
+        String full_day = new Convert_Date().Convert_Date(date);
+        String short_day = new Convert_Date().Convert_date_short(date, 0);
+        binding.selectedDay.setText(short_day);
+        list = Database_Room.getInstance(this).getDao().getClickMemo(full_day);
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(this);
 
         binding.memoRecyclerMfrag.setLayoutManager(linearLayoutManager);

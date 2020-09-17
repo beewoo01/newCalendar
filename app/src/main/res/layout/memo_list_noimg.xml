@@ -17,27 +17,16 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
+        android:background="@android:drawable/dialog_holo_light_frame"
         >
 
         <RelativeLayout
-            android:layout_width="35dp"
+            android:layout_width="10dp"
             android:layout_height="match_parent"
             android:orientation="vertical"
             app:bgColor="@{item_content.label}"
             tools:background="@color/colorYellow"
             >
-
-                <TextView
-                    android:id="@+id/day"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_centerInParent="true"
-                    android:textStyle="bold"
-                    android:textColor="@color/white"
-                    android:textSize="20sp"
-                    tools:text="12\nfri"
-                    >
-                </TextView>
 
         </RelativeLayout>
 
@@ -45,7 +34,8 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical"
-            android:layout_marginStart="5dp"
+            android:paddingStart="5dp"
+            app:lightColor="@{item_content.label}"
             >
             <TextView
                 android:id="@+id/title"
@@ -81,7 +71,7 @@
                     android:textColor="@color/black"
                     android:textSize="20sp"
                     android:text="@{item_term.start_day}"
-                    tools:text="12/30"
+                    tools:text="12월 30"
                     />
 
                 <TextView
