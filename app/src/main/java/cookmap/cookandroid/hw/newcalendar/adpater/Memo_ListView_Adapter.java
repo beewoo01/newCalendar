@@ -9,6 +9,9 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.Window;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
+import android.widget.ImageView;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
@@ -43,16 +46,22 @@ public class Memo_ListView_Adapter extends RecyclerView.Adapter<RecyclerView.Vie
         this.list = list;
     }
 
+    private Animation setAnima(){
+        Animation animation = AnimationUtils.loadAnimation(context, R.anim.recyclerview_anim);
+        animation.setStartOffset(-200);
+        return animation;
+    }
+
     @NonNull
     @Override
     public RecyclerView.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         context = parent.getContext();
-        if (viewType == VIEW_ITEM){
+        if (viewType == VIEW_ITEM) {
             MemoFragItemBinding binding = MemoFragItemBinding.inflate(
                     LayoutInflater.from(parent.getContext()), parent, false);
 
             return new itemViewholder(binding);
-        }else{
+        } else {
             MemoListNoimgBinding binding = MemoListNoimgBinding.inflate(
                     LayoutInflater.from(parent.getContext()), parent, false);
 
@@ -63,38 +72,39 @@ public class Memo_ListView_Adapter extends RecyclerView.Adapter<RecyclerView.Vie
 
     @Override
     public int getItemViewType(int position) {
-        return list.get(position).getMain_Img().equals("NONE")? VIEW_NOIMG : VIEW_ITEM ;
+        return list.get(position).getMain_Img().equals("NONE") ? VIEW_NOIMG : VIEW_ITEM;
     }
 
     @Override
     public void onBindViewHolder(@NonNull RecyclerView.ViewHolder holder, int position) {
-
-        if (holder instanceof itemViewholder){
-            ((itemViewholder)holder).binding.setItem(this);
-            ((itemViewholder)holder).binding.setActivity(list.get(position));
-                try {
-                    int i = 0;
-                    JSONObject jsonObject = new JSONObject(list.get(position).getImg());
-                    ArrayList<String> arrayList = new ArrayList<>();
-                    while (i < 10) {
-                        if (jsonObject.has(String.valueOf(i))) {
-                            String key = jsonObject.getString(String.valueOf(i));
-                            arrayList.add(key);
-                            i++;
-                        } else break;
-                    }
-                    if (i > 0) {
-                        ((itemViewholder)holder).binding.viewpager.setAdapter(new Image_Pager_Adapter(arrayList, context));
-                        new TabLayoutMediator(((itemViewholder)holder).binding.tabLayout,
-                                ((itemViewholder)holder).binding.viewpager, (tab, position1) ->  { }).attach();
-                    }
-                } catch (JSONException e) {
-                    e.printStackTrace();
+        holder.itemView.setAnimation(setAnima());
+        if (holder instanceof itemViewholder) {
+            ((itemViewholder) holder).binding.setItem(this);
+            ((itemViewholder) holder).binding.setActivity(list.get(position));
+            try {
+                int i = 0;
+                JSONObject jsonObject = new JSONObject(list.get(position).getImg());
+                ArrayList<String> arrayList = new ArrayList<>();
+                while (i < 10) {
+                    if (jsonObject.has(String.valueOf(i))) {
+                        String key = jsonObject.getString(String.valueOf(i));
+                        arrayList.add(key);
+                        i++;
+                    } else break;
                 }
-        }else{
+                if (i > 0) {
+                    ((itemViewholder) holder).binding.viewpager.setAdapter(new Image_Pager_Adapter(arrayList, context));
+                    new TabLayoutMediator(((itemViewholder) holder).binding.tabLayout,
+                            ((itemViewholder) holder).binding.viewpager, (tab, position1) -> {
+                    }).attach();
+                }
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+        } else {
             Memo_Date SNE = Database_Room.getInstance(context).getDao().getXN(list.get(position).getId());
-            ((noImge)holder).binding.setItemContent(list.get(position));
-            ((noImge)holder).binding.setVariable(BR.item_term, SNE);
+            ((noImge) holder).binding.setItemContent(list.get(position));
+            ((noImge) holder).binding.setVariable(BR.item_term, SNE);
         }
 
     }
@@ -108,53 +118,65 @@ public class Memo_ListView_Adapter extends RecyclerView.Adapter<RecyclerView.Vie
 
     class itemViewholder extends RecyclerView.ViewHolder {
         MemoFragItemBinding binding;
+
         public itemViewholder(@NonNull MemoFragItemBinding binding) {
             super(binding.getRoot());
             this.binding = binding;
-            binding.moreBtnMfrag.setOnClickListener(v -> showDialog(1));
+            binding.moreBtnMfrag.setOnClickListener(v -> showDialog(1, getAdapterPosition()));
         }
 
-        public void showDialog(int param){
-            Log.d("showDialog", String.valueOf(param));
-            ArrayList arrayList = new ArrayList();
-            if (param == 1) {
-                arrayList.add("수정");
-                arrayList.add("삭제");
-            }else {
-                arrayList.add("확인");
-                arrayList.add("취소");
-            }
 
-            builder = new Custom_Dialog(context, value ->  {
-                if (value.equals("수정")){
-                    Intent intent = new Intent(context, NoteAditActivity.class);
-                    intent.putExtra("id", list.get(getAdapterPosition()).getId());
-                    context.startActivity(intent);
-                }else if (value.equals("삭제")){
-                    showDialog(2);
-                }else if (value.equals("확인")){
-                    Database_Room.getInstance(context).getDao().content_delete(list.get(getAdapterPosition()).getId());
-                    Database_Room.getInstance(context).getDao().memo_delete(list.get(getAdapterPosition()).getId());
-                    ((Activity)context).finish();
-                }
-            }, arrayList, param);
-
-            DisplayMetrics display = context.getResources().getDisplayMetrics();
-            Window window = builder.getWindow();
-            window.setLayout(Math.round(display.widthPixels * 0.8f),
-                    ViewGroup.LayoutParams.WRAP_CONTENT);
-            builder.getWindow().setWindowAnimations(R.style.DialogTheme);
-            builder.show();
-        }
     }
 
-    class noImge extends RecyclerView.ViewHolder {
+    class noImge extends RecyclerView.ViewHolder implements View.OnLongClickListener{
         MemoListNoimgBinding binding;
 
         public noImge(@NonNull MemoListNoimgBinding binding) {
             super(binding.getRoot());
             this.binding = binding;
+            //binding.getRoot().setAnimation(AnimationUtils.loadAnimation(context, R.anim.recyclerview_anim));
+            binding.getRoot().setOnLongClickListener(this);
         }
+
+        @Override
+        public boolean onLongClick(View v) {
+            showDialog(1, getAdapterPosition());
+            return false;
+        }
+    }
+
+
+    public void showDialog(int param, int position) {
+        Log.d("showDialog", String.valueOf(param));
+        ArrayList arrayList = new ArrayList();
+        if (param == 1) {
+            arrayList.add("수정");
+            arrayList.add("삭제");
+        } else {
+            arrayList.add("확인");
+            arrayList.add("취소");
+        }
+
+        builder = new Custom_Dialog(context, value -> {
+            if (value.equals("수정")) {
+                Intent intent = new Intent(context, NoteAditActivity.class);
+                intent.putExtra("id", list.get(position).getId());
+                context.startActivity(intent);
+            } else if (value.equals("삭제")) {
+                showDialog(2, position);
+            } else if (value.equals("확인")) {
+                Database_Room.getInstance(context).getDao().content_delete(list.get(position).getId());
+                Database_Room.getInstance(context).getDao().memo_delete(list.get(position).getId());
+                ((Activity) context).finish();
+            }
+        }, arrayList, param);
+
+        DisplayMetrics display = context.getResources().getDisplayMetrics();
+        Window window = builder.getWindow();
+        window.setLayout(Math.round(display.widthPixels * 0.8f),
+                ViewGroup.LayoutParams.WRAP_CONTENT);
+        builder.getWindow().setWindowAnimations(R.style.DialogTheme);
+        builder.show();
     }
 
 }

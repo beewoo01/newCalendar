@@ -55,6 +55,7 @@ public class NoteAditActivity extends BaseActivity implements View.OnClickListen
     private Horizontal_Adapter horizontal_adapter;
 
     private ArrayList<String> imgAddress;
+    private InputMethodManager im;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -64,6 +65,7 @@ public class NoteAditActivity extends BaseActivity implements View.OnClickListen
         initView();
         initControl();
 
+        im = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
         LinearLayoutManager mLayoutManager = new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, true);
         mLayoutManager.setReverseLayout(true);
         binding.setImgRecycler.setLayoutManager(mLayoutManager);
@@ -168,7 +170,7 @@ public class NoteAditActivity extends BaseActivity implements View.OnClickListen
     @Override
     public void onClick(View v) {
         if (v == binding.backBtn){
-            finish();
+            endAct();
         }else if (v == binding.checkBtn){
             //check data
             if (binding.titleEdit.getText().toString().length() > 0) {
@@ -193,7 +195,7 @@ public class NoteAditActivity extends BaseActivity implements View.OnClickListen
 
         }else if (v == binding.descriptionLinear){
             binding.descriptionEdit.requestFocus(); // 내용 부분
-            InputMethodManager im = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
+
             im.toggleSoftInput(InputMethodManager.SHOW_FORCED, InputMethodManager.HIDE_IMPLICIT_ONLY);
 
         }else if (v == binding.setLabelColor){
@@ -266,6 +268,12 @@ public class NoteAditActivity extends BaseActivity implements View.OnClickListen
         }
 
 
+        endAct();
+    }
+
+    private void endAct(){
+        im.hideSoftInputFromWindow(binding.titleEdit.getWindowToken(), 0);
+        im.hideSoftInputFromWindow(binding.descriptionEdit.getWindowToken(), 0);
         finish();
     }
 

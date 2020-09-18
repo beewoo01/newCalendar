@@ -68,17 +68,18 @@
                     android:id="@+id/sterm"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:textColor="@color/black"
-                    android:textSize="20sp"
-                    android:text="@{item_term.start_day}"
+                    android:textColor="@color/white"
+                    android:textSize="15sp"
+                    app:day_text="@{item_term.start_day}"
+                    app:type="@{2}"
                     tools:text="12월 30"
                     />
 
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:textColor="@color/black"
-                    android:textSize="20sp"
+                    android:textColor="@color/white"
+                    android:textSize="15sp"
                     android:text="~"
                     android:layout_marginStart="10dp"
                     />
@@ -87,9 +88,10 @@
                     android:id="@+id/eterm"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:textColor="@color/black"
-                    android:textSize="20sp"
-                    android:text="@{item_term.end_day}"
+                    android:textColor="@color/white"
+                    android:textSize="15sp"
+                    app:day_text="@{item_term.end_day}"
+                    app:type="@{2}"
                     android:layout_marginStart="10dp"
                     tools:text="21/03/30"
                     />

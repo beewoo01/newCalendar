@@ -29,17 +29,24 @@ public class Memo_Click_Activity extends BaseActivity {
         super.onCreate(savedInstanceState);
         binding = DataBindingUtil.setContentView(this, R.layout.activity_memo_click);
         binding.setActivity(this);
+        Bundle bundle = getIntent().getExtras();
+        position = bundle.getInt("position");
+        date = bundle.getLong("date");
+        //initView();
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
         initView();
+
     }
 
     @Override
     public void initView() {
         super.initView();
 
-        Bundle bundle = getIntent().getExtras();
 
-        position = bundle.getInt("position");
-        date = bundle.getLong("date");
         String full_day = new Convert_Date().Convert_Date(date);
         String short_day = new Convert_Date().Convert_date_short(date, 0);
         binding.selectedDay.setText(short_day);

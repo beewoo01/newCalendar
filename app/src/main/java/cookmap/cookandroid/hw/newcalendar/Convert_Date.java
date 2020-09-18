@@ -5,6 +5,7 @@ import android.os.Build;
 
 import androidx.annotation.RequiresApi;
 
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.time.LocalDate;
 import java.time.ZoneId;
@@ -39,7 +40,7 @@ public class Convert_Date {
         if (type == 1){
             return calendar.getDisplayName(Calendar.DAY_OF_MONTH, Calendar.SHORT, Locale.getDefault());
         }else if (type == 2){
-            return calendar.get(Calendar.DAY_OF_MONTH)+ "|n" + Convert_Day_Of_Week(calendar.get(Calendar.DAY_OF_WEEK));
+            return calendar.get(Calendar.DAY_OF_MONTH)+ "일 " + Convert_Day_Of_Week(calendar.get(Calendar.DAY_OF_WEEK));
         }else{
             if (yyyy != calendar.get(Calendar.YEAR)) {
                 SimpleDateFormat sdf = new SimpleDateFormat("yyyy. MM");
@@ -55,23 +56,32 @@ public class Convert_Date {
 
     }
 
-    @RequiresApi(api = Build.VERSION_CODES.O)
-    public long Convert_StringToLong(String date){
-        DateTimeFormatter sdf = DateTimeFormatter.ofPattern(date,Locale.getDefault());
-        long day = LocalDate.parse(date, sdf).atStartOfDay(ZoneId.of("Asia/Seoul")).toInstant().toEpochMilli();
-        return 0;
+
+    public long Convert_StringToLong(String date)  {
+        /*DateTimeFormatter sdf = DateTimeFormatter.ofPattern(date,Locale.getDefault());
+        long day = LocalDate.parse(date, sdf).atStartOfDay(ZoneId.of("Asia/Seoul")).toInstant().toEpochMilli();*/
+        Date to = null;
+
+        try {
+            SimpleDateFormat sdf = new SimpleDateFormat("yyyy/MM/dd");
+            to = sdf.parse(date);
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+        long milli = to.getTime();
+        return milli;
     }
 
     private String Convert_Day_Of_Week(int day){
         String dayOfWeek = "";
         switch (day){
-            case 1: dayOfWeek = "일";    break ;
-            case 2: dayOfWeek = "월";    break ;
-            case 3: dayOfWeek = "화";    break ;
-            case 4: dayOfWeek = "수";    break ;
-            case 5: dayOfWeek = "목";    break ;
-            case 6: dayOfWeek = "금";    break ;
-            case 7: dayOfWeek = "토";    break ;
+            case 1: dayOfWeek = "Son";    break ;
+            case 2: dayOfWeek = "Mon";    break ;
+            case 3: dayOfWeek = "Tue";    break ;
+            case 4: dayOfWeek = "Wed";    break ;
+            case 5: dayOfWeek = "Thu";    break ;
+            case 6: dayOfWeek = "Fri";    break ;
+            case 7: dayOfWeek = "Sat";    break ;
         }
         return dayOfWeek;
     }

@@ -3,14 +3,17 @@ package cookmap.cookandroid.hw.newcalendar.adpater;
 import android.app.Activity;
 import android.content.Intent;
 import android.graphics.Color;
+import android.os.Build;
 import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.Window;
+import android.view.animation.AnimationUtils;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import androidx.annotation.RequiresApi;
 import androidx.databinding.BindingAdapter;
 
 import com.bumptech.glide.Glide;
@@ -57,10 +60,12 @@ public class Binding_Adapter {
 
     }
 
-    @BindingAdapter("")
-    public static void setTextforday(View view, String day){
-        day = new Convert_Date().Convert_date_short();
+    @RequiresApi(api = Build.VERSION_CODES.O)
+    @BindingAdapter({"day_text", "type"})
+    public static void setTextforday(TextView view, String day, int type){
+        long date = new Convert_Date().Convert_StringToLong(day);
+        day = new Convert_Date().Convert_date_short(date, type);
+        view.setText(day);
     }
-
 
 }
