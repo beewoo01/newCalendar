@@ -1,6 +1,7 @@
 package cookmap.cookandroid.hw.newcalendar;
 
 import android.animation.ValueAnimator;
+import android.app.ActionBar;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Build;
@@ -9,8 +10,12 @@ import android.text.Html;
 import android.text.SpannableString;
 import android.text.Spanned;
 import android.util.Log;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Toast;
 
 import androidx.annotation.Nullable;
 import androidx.databinding.DataBindingUtil;
@@ -80,6 +85,60 @@ public class MainActivity extends BaseActivity implements FrgCalendar.OnFragment
         super.initView();
     }
 
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        MenuInflater inflater = getMenuInflater();
+        inflater.inflate(R.menu.actionbar_action, menu);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        if (item.getItemId() == R.id.setDate){
+            Toast.makeText(getApplicationContext(), "선택!",
+                    Toast.LENGTH_SHORT).show();
+            initselectedDay();
+        }else if (item.getItemId() == R.id.setToday){
+            Toast.makeText(getApplicationContext(), "Today!!",
+                    Toast.LENGTH_SHORT).show();
+            initControl();
+        }
+        return super.onOptionsItemSelected(item);
+    }
+
+    private void initselectedDay(){
+
+        Calendar calendar = Calendar.getInstance();
+        calendar.set(Calendar.YEAR, 1993);
+        calendar.set(Calendar.MONTH, Calendar.NOVEMBER);
+
+        AdapterFrgCalendar adapter = new AdapterFrgCalendar(this, calendar);
+        binding.pager.setAdapter(adapter);
+        adapter.setOnFragmentListener(this);
+        adapter.setNumOfMonth2(COUNT_PAGE);
+        binding.pager.setCurrentItem(COUNT_PAGE);
+        String title = adapter.getMonthDisplayed(COUNT_PAGE);
+        getSupportActionBar().setBackgroundDrawable(new ColorDrawable(Color.WHITE));
+        getSupportActionBar().setTitle(fromHtml(("<font color=\"black\">" + title + "</font>")));
+
+        binding.pager.registerOnPageChangeCallback(new ViewPager2.OnPageChangeCallback() {
+            @Override
+            public void onPageSelected(int position) {
+                String title = adapter.getMonthDisplayed(position);
+                //mTvCalendarTitle.setText(title);
+                getSupportActionBar().setTitle(fromHtml(("<font color=\"black\">" + title + "</font>")));
+
+                if (position == 0) {
+                    adapter.addPrev();
+                    binding.pager.setCurrentItem(COUNT_PAGE, false);
+                } else if (position == adapter.getItemCount() - 1) {
+                    adapter.addNext();
+                    binding.pager.setCurrentItem(adapter.getItemCount() - (COUNT_PAGE + 1), false);
+                }
+            }
+        });
+    }
+
     public void initControl() {
         AdapterFrgCalendar adapter = new AdapterFrgCalendar(this);
         binding.pager.setAdapter(adapter);
@@ -91,11 +150,7 @@ public class MainActivity extends BaseActivity implements FrgCalendar.OnFragment
         //mTvCalendarTitle.setText(title);
 
         getSupportActionBar().setBackgroundDrawable(new ColorDrawable(Color.WHITE));
-
         getSupportActionBar().setTitle(fromHtml(("<font color=\"black\">" + title + "</font>")));
-
-
-        Log.d("getSupportActionBar", String.valueOf(getSupportActionBar().getTitle()));
 
         binding.pager.registerOnPageChangeCallback(new ViewPager2.OnPageChangeCallback() {
             @Override
@@ -114,6 +169,9 @@ public class MainActivity extends BaseActivity implements FrgCalendar.OnFragment
             }
         });
 
+    }
+
+    private void setCalendarselected(){
 
     }
 

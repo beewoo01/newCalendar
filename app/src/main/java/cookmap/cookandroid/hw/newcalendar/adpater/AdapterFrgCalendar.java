@@ -1,5 +1,7 @@
 package cookmap.cookandroid.hw.newcalendar.adpater;
 
+import android.util.Log;
+
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentActivity;
@@ -21,10 +23,18 @@ public class AdapterFrgCalendar extends FragmentStateAdapter {
     private ArrayList<Long> listMonthByMillis = new ArrayList<>();
     private int numOfMonth;
     private FrgCalendar.OnFragmentListener onFragmentListener;
+    private Calendar calendar = null;
 
     public AdapterFrgCalendar(FragmentActivity fm) {
         super(fm);
         clearPrevFragments(fm);
+        frgMap = new HashMap<Integer, FrgCalendar>();
+    }
+
+    public AdapterFrgCalendar(FragmentActivity fm, Calendar calendar) {
+        super(fm);
+        clearPrevFragments(fm);
+        this.calendar = calendar;
         frgMap = new HashMap<Integer, FrgCalendar>();
     }
 
@@ -81,6 +91,21 @@ public class AdapterFrgCalendar extends FragmentStateAdapter {
         notifyDataSetChanged();
     }
 
+    public void setNumOfMonth2(int numOfMonth){
+        this.numOfMonth = numOfMonth;
+
+
+        calendar.add(Calendar.MONTH, -numOfMonth);
+        calendar.set(Calendar.DATE, 1);
+
+        for (int i = 0; i < numOfMonth * 2 + 1; i++) {
+            listMonthByMillis.add(calendar.getTimeInMillis());
+            calendar.add(Calendar.MONTH, 1);
+        }
+
+        notifyDataSetChanged();
+    }
+
     public void addNext() {
         long lastMonthMillis = listMonthByMillis.get(listMonthByMillis.size() - 1);
 
@@ -116,9 +141,11 @@ public class AdapterFrgCalendar extends FragmentStateAdapter {
             SimpleDateFormat sdf = new SimpleDateFormat("yyyy. MM");
             Date date = new Date();
             date.setTime(listMonthByMillis.get(position));
+            Log.d("getMonth", calendar.get(Calendar.YEAR) + ", " + calendar.get(Calendar.MONTH));
 
             return sdf.format(date);
         } else {
+            Log.d("getMonth", calendar.get(Calendar.YEAR) + ", " + calendar.get(Calendar.MONTH));
             return calendar.getDisplayName(Calendar.MONTH, Calendar.SHORT, Locale.getDefault());
         }
     }
