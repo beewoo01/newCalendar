@@ -24,6 +24,10 @@ public class CalendarItemView extends View {
 
     Paint mPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
     Paint mPaintTextWhite = new Paint(Paint.ANTI_ALIAS_FLAG);
+
+    Paint mPaintTextSunday = new Paint(Paint.ANTI_ALIAS_FLAG);
+    Paint mPaintTextSaturday = new Paint(Paint.ANTI_ALIAS_FLAG);
+
     Paint mPaintBackground = new Paint(Paint.ANTI_ALIAS_FLAG);
     Paint mPaintBackgroundToday = new Paint(Paint.ANTI_ALIAS_FLAG);
     Paint mPaintBackgroundEvent = new Paint(Paint.ANTI_ALIAS_FLAG);
@@ -59,6 +63,16 @@ public class CalendarItemView extends View {
         mPaintTextWhite.setColor(Color.WHITE);
         mPaintTextWhite.setTextSize(dp11);
         mPaintTextWhite.setTextAlign(Paint.Align.CENTER);
+
+        mPaintTextSunday.setColor(Color.RED);
+        mPaintTextSunday.setTextSize(dp11);
+        mPaintTextSunday.setTextAlign(Paint.Align.CENTER);
+
+        mPaintTextSaturday.setColor(Color.BLUE);
+        mPaintTextSaturday.setTextSize(dp11);
+        mPaintTextSaturday.setTextAlign(Paint.Align.CENTER);
+
+
         mPaintBackground.setColor(ContextCompat.getColor(getContext(), R.color.selectedDay));
         mPaintBackgroundToday.setColor(ContextCompat.getColor(getContext(), R.color.today));
         mPaintBackgroundEvent.setColor(ContextCompat.getColor(getContext(), R.color.colorPrimary));
@@ -154,7 +168,16 @@ public class CalendarItemView extends View {
                 canvas.drawText(calendar.get(Calendar.DATE) + "", xPos, yPos, mPaintTextWhite);
                 //((MultiCalendarActivity)getContext()).initData(millis);
             } else {
-                canvas.drawText(calendar.get(Calendar.DATE) + "", xPos, yPos, mPaint);
+                if (calendar.get(Calendar.DAY_OF_WEEK) == Calendar.SATURDAY){
+                    Log.d("Saturday", "SATURDAY");
+                    canvas.drawText(calendar.get(Calendar.DATE)+ "", xPos, yPos, mPaintTextSaturday);
+                }else if (calendar.get(Calendar.DAY_OF_WEEK) == Calendar.SUNDAY){
+                    Log.d("SUNDAY", "SUNDAY");
+                    canvas.drawText(calendar.get(Calendar.DATE)+ "", xPos, yPos, mPaintTextSunday);
+                }else{
+                    canvas.drawText(calendar.get(Calendar.DATE) + "", xPos, yPos, mPaint);
+                }
+
             }
         }
 
