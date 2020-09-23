@@ -2,6 +2,9 @@ package cookmap.cookandroid.hw.newcalendar;
 
 import android.animation.ValueAnimator;
 import android.app.ActionBar;
+import android.app.AlertDialog;
+import android.app.DatePickerDialog;
+import android.app.Dialog;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Build;
@@ -10,12 +13,14 @@ import android.text.Html;
 import android.text.SpannableString;
 import android.text.Spanned;
 import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Toast;
+import android.widget.NumberPicker;
+import android.widget.RelativeLayout;
 
 import androidx.annotation.Nullable;
 import androidx.databinding.DataBindingUtil;
@@ -31,14 +36,15 @@ import cookmap.cookandroid.hw.newcalendar.adpater.AdapterFrgCalendar;
 import cookmap.cookandroid.hw.newcalendar.adpater.Adapter_memoList;
 import cookmap.cookandroid.hw.newcalendar.databinding.ActivityMultiCalendarBinding;
 import cookmap.cookandroid.hw.newcalendar.db.Content_Room;
-import cookmap.cookandroid.hw.newcalendar.widget.CalendarItemView;
 
 public class MainActivity extends BaseActivity implements FrgCalendar.OnFragmentListener {
     private static final int COUNT_PAGE = 12;
 
     private long selectDate;
-    private List<Content_Room> memo_Click_List = new ArrayList<>();;
+    private List<Content_Room> memo_Click_List = new ArrayList<>();
+    ;
     private ActivityMultiCalendarBinding binding;
+    private AdapterFrgCalendar adapter;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -59,10 +65,8 @@ public class MainActivity extends BaseActivity implements FrgCalendar.OnFragment
     @Override
     public void initData(long data) {
         super.initData(data);
-        //데이터를 넣어주는곳
-        // 다른 곳에서는 recyclerview(메모)데이터를 여기서 넣어 줬음
-        //adapter_memoLine = new adapter_memoList();
-        if (data > 0){
+
+        if (data > 0) {
             String full = new Convert_Date().Convert_Date(data);
             Log.d("whats fullday : ", full);
             memo_Click_List.clear();
@@ -74,7 +78,6 @@ public class MainActivity extends BaseActivity implements FrgCalendar.OnFragment
             baseAdapter.notifyDataSetChanged();
         }
         selectDate = data;
-        //CalendarView - setCurrentSelectedView 에서 memo_Click_List에 item을 넣어줘야함
 
 
     }
@@ -94,25 +97,60 @@ public class MainActivity extends BaseActivity implements FrgCalendar.OnFragment
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        if (item.getItemId() == R.id.setDate){
-            Toast.makeText(getApplicationContext(), "선택!",
-                    Toast.LENGTH_SHORT).show();
-            initselectedDay();
-        }else if (item.getItemId() == R.id.setToday){
-            Toast.makeText(getApplicationContext(), "Today!!",
-                    Toast.LENGTH_SHORT).show();
+        if (item.getItemId() == R.id.setDate) {
+            showPicker();
+
+        } else if (item.getItemId() == R.id.setToday) {
             initControl();
         }
         return super.onOptionsItemSelected(item);
     }
 
-    private void initselectedDay(){
+    private void showPicker(){
+        Calendar c = Calendar.getInstance();
+        c.setTimeInMillis(selectDate);
+        AlertDialog dialog = new AlertDialog.Builder(this).create();
+        //LayoutInflater inflater = (LayoutInflater) this.getSystemService(LAYOUT_INFLATER_SERVICE);
+        View view = LayoutInflater.from(this).inflate(R.layout.custom_datepicker, null);
+        NumberPicker year = view.findViewById(R.id.year_picker);
+        NumberPicker month = view.findViewById(R.id.month_picker);
+        RelativeLayout cancle = view.findViewById(R.id.Cancel_picker);
+        RelativeLayout confirm = view.findViewById(R.id.Confirm_picker);
 
-        Calendar calendar = Calendar.getInstance();
-        calendar.set(Calendar.YEAR, 1993);
-        calendar.set(Calendar.MONTH, Calendar.NOVEMBER);
+        year.setWrapSelectorWheel(false);
+        month.setWrapSelectorWheel(false);
+        year.setDescendantFocusability(NumberPicker.FOCUS_BLOCK_DESCENDANTS);
+        month.setDescendantFocusability(NumberPicker.FOCUS_BLOCK_DESCENDANTS);
 
-        AdapterFrgCalendar adapter = new AdapterFrgCalendar(this, calendar);
+        year.setMinValue(1900);
+        month.setMinValue(1);
+        year.setMaxValue(2100);
+        month.setMaxValue(12);
+
+        year.setValue(c.get(Calendar.YEAR));
+        month.setValue(c.get(Calendar.MONTH)+1);
+
+        cancle.setOnClickListener(v -> {
+            dialog.dismiss();
+            dialog.cancel();
+        });
+
+        confirm.setOnClickListener(v -> {
+            c.set(Calendar.YEAR, year.getValue());
+            c.set(Calendar.MONTH, month.getValue() - 1 );
+            selectDate = c.getTimeInMillis();
+            initselectedDay(c);
+            dialog.dismiss();
+            dialog.cancel();
+        });
+
+        dialog.setView(view);
+        dialog.show();
+    }
+
+    private void initselectedDay(Calendar calendar) {
+
+        adapter = new AdapterFrgCalendar(this, calendar);
         binding.pager.setAdapter(adapter);
         adapter.setOnFragmentListener(this);
         adapter.setNumOfMonth2(COUNT_PAGE);
@@ -140,7 +178,7 @@ public class MainActivity extends BaseActivity implements FrgCalendar.OnFragment
     }
 
     public void initControl() {
-        AdapterFrgCalendar adapter = new AdapterFrgCalendar(this);
+        adapter = new AdapterFrgCalendar(this);
         binding.pager.setAdapter(adapter);
         binding.fabButton.setOnClickListener(v -> feb_click(v));
         adapter.setOnFragmentListener(this);
@@ -171,21 +209,20 @@ public class MainActivity extends BaseActivity implements FrgCalendar.OnFragment
 
     }
 
-    private void setCalendarselected(){
+    private void setCalendarselected() {
 
     }
 
     @SuppressWarnings("deprecation")
-    public Spanned fromHtml(String html){
-        if(html == null){
+    public Spanned fromHtml(String html) {
+        if (html == null) {
             return new SpannableString("");
-        }else if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+        } else if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
             return Html.fromHtml(html, Html.FROM_HTML_MODE_LEGACY);
         } else {
             return Html.fromHtml(html);
         }
     }
-
 
 
     @Override
@@ -205,7 +242,7 @@ public class MainActivity extends BaseActivity implements FrgCalendar.OnFragment
             return;
         }
         ValueAnimator anim = ValueAnimator.ofInt(binding.pager.getLayoutParams().height, mRootView.getHeight());
-        anim.addUpdateListener(new ValueAnimator.AnimatorUpdateListener()  {
+        anim.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
             @Override
             public void onAnimationUpdate(ValueAnimator valueAnimator) {
                 int val = (Integer) valueAnimator.getAnimatedValue();
@@ -219,19 +256,18 @@ public class MainActivity extends BaseActivity implements FrgCalendar.OnFragment
     }
 
     public void onItemClick(View view, int position) {
-        Log.d("onItemClick" ,"Yes");
+        Log.d("onItemClick", "Yes");
         Bundle bundle = new Bundle();
         bundle.putLong("date", selectDate);
         bundle.putInt("position", position);
         initIntent(MainActivity.this, bundle, Memo_Click_Activity.class);
     }
 
-    public void feb_click(View view){
+    public void feb_click(View view) {
         Log.d("feb_click", "옴?");
         Bundle bundle = new Bundle();
         bundle.putInt("id", 0);
         bundle.putLong("select_Day", selectDate);
-        //initIntent(MainActivity_2.this, bundle, writeActivity.class);
         initIntent(MainActivity.this, bundle, NoteAditActivity.class);
 
     }
