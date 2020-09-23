@@ -23,6 +23,7 @@
             android:layout_margin="20sp"
             android:background="@drawable/button_state"
             android:elevation="10dp"
+            android:onClick="@{activity::feb_click}"
             android:src="@drawable/ic_add_white_24dp" />
 
         <View
@@ -37,6 +38,30 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_below="@+id/div" />
+
+        <LinearLayout
+            android:id="@+id/empty_content"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:gravity="center"
+            android:visibility="gone"
+            android:layout_below="@+id/pager"
+            android:onClick="@{activity::feb_click}"
+            >
+            <ImageView
+                android:layout_width="50dp"
+                android:layout_height="50dp"
+                android:src="@drawable/ic_mood_black_24dp"
+                android:layout_gravity="center"
+                />
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textColor="@color/black"
+                android:textSize="20sp"
+                android:text="내용을 추가해 주세요"
+                />
+        </LinearLayout>
 
         <androidx.viewpager2.widget.ViewPager2
             android:id="@+id/pager"

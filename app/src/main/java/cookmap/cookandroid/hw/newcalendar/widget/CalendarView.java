@@ -147,7 +147,6 @@ public class CalendarView extends ViewGroup {
         invalidate();
     }
 
-    // TODO : touch로 scale in/out 기능 추가
     @Override
     public boolean onTouchEvent(MotionEvent event) {
         switch (event.getAction()) {
@@ -179,8 +178,6 @@ public class CalendarView extends ViewGroup {
     }
 
     public void setCurrentSelectedView(View view) {
-        Log.d("getParent112121", String.valueOf(getParent()));
-        Log.d("getParent232232", String.valueOf(view.getTag()));
 
         if (getParent() instanceof ViewGroup) {
             ViewGroup pager = (ViewGroup) getParent();

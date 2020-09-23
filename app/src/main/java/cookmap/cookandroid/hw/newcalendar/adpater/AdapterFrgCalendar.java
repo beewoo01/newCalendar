@@ -25,11 +25,11 @@ public class AdapterFrgCalendar extends FragmentStateAdapter {
     private FrgCalendar.OnFragmentListener onFragmentListener;
     private Calendar calendar = null;
 
-    public AdapterFrgCalendar(FragmentActivity fm) {
+    /*public AdapterFrgCalendar(FragmentActivity fm) {
         super(fm);
         clearPrevFragments(fm);
         frgMap = new HashMap<Integer, FrgCalendar>();
-    }
+    }*/
 
     public AdapterFrgCalendar(FragmentActivity fm, Calendar calendar) {
         super(fm);
@@ -76,7 +76,7 @@ public class AdapterFrgCalendar extends FragmentStateAdapter {
         return listMonthByMillis.size();
     }
 
-    public void setNumOfMonth(int numOfMonth) {
+    /*public void setNumOfMonth(int numOfMonth) {
         this.numOfMonth = numOfMonth;
 
         Calendar calendar = Calendar.getInstance();
@@ -90,8 +90,8 @@ public class AdapterFrgCalendar extends FragmentStateAdapter {
 
         notifyDataSetChanged();
     }
-
-    public void setNumOfMonth2(int numOfMonth){
+*/
+    public void setNumOfMonth(int numOfMonth){
         this.numOfMonth = numOfMonth;
 
 

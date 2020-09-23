@@ -1,10 +1,7 @@
 package cookmap.cookandroid.hw.newcalendar;
 
 import android.animation.ValueAnimator;
-import android.app.ActionBar;
 import android.app.AlertDialog;
-import android.app.DatePickerDialog;
-import android.app.Dialog;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Build;
@@ -41,8 +38,6 @@ public class MainActivity extends BaseActivity implements FrgCalendar.OnFragment
     private static final int COUNT_PAGE = 12;
 
     private long selectDate;
-    private List<Content_Room> memo_Click_List = new ArrayList<>();
-    ;
     private ActivityMultiCalendarBinding binding;
     private AdapterFrgCalendar adapter;
 
@@ -69,13 +64,20 @@ public class MainActivity extends BaseActivity implements FrgCalendar.OnFragment
         if (data > 0) {
             String full = new Convert_Date().Convert_Date(data);
             Log.d("whats fullday : ", full);
-            memo_Click_List.clear();
-            memo_Click_List = Database_Room.getInstance(this).getDao().getClickMemo(full);
+            List<Content_Room> memo_Click_List = Database_Room.getInstance(this).getDao().getClickMemo(full);
             Adapter_memoList baseAdapter = new Adapter_memoList(memo_Click_List);
             binding.memoRecycler.setAdapter(baseAdapter);
             binding.memoRecycler.setLayoutManager(new LinearLayoutManager(this));
             baseAdapter.setOnItemClickListener((view, position) -> onItemClick(view, position));
             baseAdapter.notifyDataSetChanged();
+
+            if (memo_Click_List.size() <= 0){
+                binding.emptyContent.setVisibility(View.VISIBLE);
+            }else{
+                binding.emptyContent.setVisibility(View.GONE);
+
+            }
+
         }
         selectDate = data;
 
@@ -139,7 +141,7 @@ public class MainActivity extends BaseActivity implements FrgCalendar.OnFragment
             c.set(Calendar.YEAR, year.getValue());
             c.set(Calendar.MONTH, month.getValue() - 1 );
             selectDate = c.getTimeInMillis();
-            initselectedDay(c);
+            initAdapter(c);
             dialog.dismiss();
             dialog.cancel();
         });
@@ -148,12 +150,13 @@ public class MainActivity extends BaseActivity implements FrgCalendar.OnFragment
         dialog.show();
     }
 
-    private void initselectedDay(Calendar calendar) {
+    private void initAdapter(Calendar calendar) {
+
 
         adapter = new AdapterFrgCalendar(this, calendar);
         binding.pager.setAdapter(adapter);
         adapter.setOnFragmentListener(this);
-        adapter.setNumOfMonth2(COUNT_PAGE);
+        adapter.setNumOfMonth(COUNT_PAGE);
         binding.pager.setCurrentItem(COUNT_PAGE);
         String title = adapter.getMonthDisplayed(COUNT_PAGE);
         getSupportActionBar().setBackgroundDrawable(new ColorDrawable(Color.WHITE));
@@ -178,39 +181,9 @@ public class MainActivity extends BaseActivity implements FrgCalendar.OnFragment
     }
 
     public void initControl() {
-        adapter = new AdapterFrgCalendar(this);
-        binding.pager.setAdapter(adapter);
-        binding.fabButton.setOnClickListener(v -> feb_click(v));
-        adapter.setOnFragmentListener(this);
-        adapter.setNumOfMonth(COUNT_PAGE);
-        binding.pager.setCurrentItem(COUNT_PAGE);
-        String title = adapter.getMonthDisplayed(COUNT_PAGE);
-        //mTvCalendarTitle.setText(title);
-
-        getSupportActionBar().setBackgroundDrawable(new ColorDrawable(Color.WHITE));
-        getSupportActionBar().setTitle(fromHtml(("<font color=\"black\">" + title + "</font>")));
-
-        binding.pager.registerOnPageChangeCallback(new ViewPager2.OnPageChangeCallback() {
-            @Override
-            public void onPageSelected(int position) {
-                String title = adapter.getMonthDisplayed(position);
-                //mTvCalendarTitle.setText(title);
-                getSupportActionBar().setTitle(fromHtml(("<font color=\"black\">" + title + "</font>")));
-
-                if (position == 0) {
-                    adapter.addPrev();
-                    binding.pager.setCurrentItem(COUNT_PAGE, false);
-                } else if (position == adapter.getItemCount() - 1) {
-                    adapter.addNext();
-                    binding.pager.setCurrentItem(adapter.getItemCount() - (COUNT_PAGE + 1), false);
-                }
-            }
-        });
-
-    }
-
-    private void setCalendarselected() {
-
+        Calendar calendar = Calendar.getInstance();
+        binding.setActivity(this);
+        initAdapter(calendar);
     }
 
     @SuppressWarnings("deprecation")
