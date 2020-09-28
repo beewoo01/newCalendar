@@ -29,13 +29,13 @@
                 android:layout_height="match_parent"
                 android:layout_alignParentStart="true"
                 android:src="@drawable/ic_back_button_icon"
-                android:contentDescription="TODO" />
+                android:contentDescription="@string/back" />
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_centerInParent="true"
-                android:text="일정 등록"
+                android:text="@string/addAct"
                 android:textColor="@color/colorBlack"
                 android:textSize="20sp" />
 
@@ -46,7 +46,7 @@
                 android:layout_alignParentEnd="true"
                 android:layout_centerInParent="true"
                 android:layout_marginEnd="20dp"
-                android:text="등록"
+                android:text="@string/add"
                 android:textColor="@color/colorPrimary"
                 android:textSize="20sp" />
 
@@ -71,7 +71,8 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="15dp"
             android:background="@android:color/transparent"
-            android:hint="제목"
+            android:hint="@string/title"
+            android:inputType="textShortMessage"
             android:singleLine="true"
             android:textSize="20sp"
             android:importantForAutofill="no"
@@ -127,8 +128,9 @@
                 android:layout_width="30dp"
                 android:layout_height="30dp"
                 android:src="@drawable/ic_calendar_afafaf_24dp"
-                android:layout_alignParentRight="true"
+                android:layout_alignParentEnd="true"
                 android:layout_centerHorizontal="true"
+                android:contentDescription="@string/change_date"
                 />
 
         </RelativeLayout>
@@ -154,11 +156,13 @@
                 android:layout_height="wrap_content"
                 android:background="@android:color/transparent"
                 android:layout_marginTop="10dp"
-                android:hint="내용"
+                android:hint="@string/descripsion"
                 android:inputType="textMultiLine"
                 android:maxLength="160"
                 android:maxLines="12"
-                android:textSize="20sp" />
+                android:textSize="20sp"
+                android:importantForAutofill="no"
+                />
 
         </LinearLayout>
 
@@ -178,14 +182,14 @@
                     android:id="@+id/fab_button"
                     android:layout_width="85dp"
                     android:layout_height="30dp"
-                    android:layout_alignParentLeft="true"
+                    android:layout_alignParentStart="true"
                     android:background="@drawable/button_state_two">
 
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_centerInParent="true"
-                        android:text="Add Img +"
+                        android:text="@string/addImg"
                         />
                 </RelativeLayout>
 
@@ -193,7 +197,7 @@
                     android:id="@+id/setLabelColor"
                     android:layout_width="30dp"
                     android:layout_height="30dp"
-                    android:layout_alignParentRight="true"
+                    android:layout_alignParentEnd="true"
                     android:background="@color/colorGray"
                     />
 
@@ -208,7 +212,7 @@
                 android:scrollbars="horizontal"
                 app:stackFromEnd="true"
                 app:reverseLayout="true"
-                ></androidx.recyclerview.widget.RecyclerView>
+                />
 
 
         </LinearLayout>

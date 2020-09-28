@@ -2,6 +2,19 @@
     <string name="app_name">newCalendar</string>
     <string name="count_indicator_text">"%1$d/%2$d"</string>
 
+    <string name="title">제목</string>
+    <string name="descripsion">내용</string>
+
+    <string name="confirm">확인</string>
+    <string name="cancle">취소</string>
+    <string name="add">등록</string>
+    <string name="back">뒤로</string>
+
+    <string name="addAct">일정 등록</string>
+
+    <string name="addImg">Add Img +</string>
+    <string name="change_date">날짜 변경</string>
+
     <string-array name="day_of_week">
         <item>sun</item>
         <item>mon</item>
