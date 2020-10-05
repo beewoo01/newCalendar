@@ -32,6 +32,7 @@
                 android:contentDescription="@string/back" />
 
             <TextView
+                android:id="@+id/Act_title"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_centerInParent="true"
@@ -47,6 +48,7 @@
                 android:layout_centerInParent="true"
                 android:layout_marginEnd="20dp"
                 android:text="@string/add"
+                android:layout_alignEnd="@+id/Act_title"
                 android:textColor="@color/colorPrimary"
                 android:textSize="20sp" />
 
@@ -109,7 +111,7 @@
                     android:layout_height="wrap_content"
                     android:layout_marginLeft="10sp"
                     android:layout_marginRight="10sp"
-                    android:text="-"
+                    android:text="@string/Tilde"
                     android:textColor="@color/colorBlack"
                     android:textStyle="bold" />
 

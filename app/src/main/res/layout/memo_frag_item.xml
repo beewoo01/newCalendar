@@ -39,8 +39,9 @@
                 android:layout_width="30sp"
                 android:layout_height="30sp"
                 android:layout_centerVertical="true"
-                android:layout_toRightOf="@+id/label_mfrag"
+                android:layout_toEndOf="@+id/label_mfrag"
                 android:adjustViewBounds="true"
+                android:contentDescription="@string/image"
                 app:imgUrl="@{activity.main_Img}"
                 app:cicle ="@{true}"
                 />
@@ -50,8 +51,8 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_centerVertical="true"
-                android:layout_marginLeft="25dp"
-                android:layout_toRightOf="@+id/coverImg_mfrg"
+                android:layout_marginEnd="25dp"
+                android:layout_toEndOf="@+id/coverImg_mfrg"
                 android:textColor="@color/colorBlack"
                 android:textSize="15sp"
                 android:textStyle="bold"
@@ -62,9 +63,11 @@
                 android:id="@+id/moreBtn_mfrag"
                 android:layout_width="30sp"
                 android:layout_height="30sp"
-                android:layout_alignParentRight="true"
+                android:layout_alignParentEnd="true"
                 android:layout_centerVertical="true"
-                android:layout_marginRight="10sp"
+                android:contentDescription="@string/more"
+                android:layout_marginEnd="10sp"
+                android:layout_alignEnd="@+id/title_mfrag"
                 android:src="@drawable/ic_more_black_24dp"
                 />
 
@@ -90,7 +93,6 @@
                 android:id="@+id/viewpager_bg"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_above="@+id/bottom_layout_mfrag"
                 android:orientation="vertical">
 
                 <androidx.viewpager2.widget.ViewPager2
@@ -116,7 +118,7 @@
             <LinearLayout
                 android:id="@+id/bottom_layout_mfrag"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
+                android:layout_height="0dp"
                 android:layout_weight="1"
                 >
 

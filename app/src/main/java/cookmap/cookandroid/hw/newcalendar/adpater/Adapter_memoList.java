@@ -1,6 +1,5 @@
 package cookmap.cookandroid.hw.newcalendar.adpater;
 
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.ViewGroup;
 
@@ -9,24 +8,17 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import java.util.List;
 
+import cookmap.cookandroid.hw.newcalendar.R;
 import cookmap.cookandroid.hw.newcalendar.databinding.MemoListContentsBinding;
 import cookmap.cookandroid.hw.newcalendar.db.Content_Room;
-import cookmap.cookandroid.hw.newcalendar.R;
 import cookmap.cookandroid.hw.newcalendar.utill.BaseViewHolder;
 
-public class Adapter_memoList extends RecyclerView.Adapter<BaseViewHolder<MemoListContentsBinding>>{
+public class Adapter_memoList extends RecyclerView.Adapter<BaseViewHolder<MemoListContentsBinding>> {
     private List<Content_Room> items;
     protected BaseViewHolder.OnRCVItemListener itemListener = null;
 
-    public void setOnItemClickListener(BaseViewHolder.OnRCVItemListener listener){
+    public void setOnItemClickListener(BaseViewHolder.OnRCVItemListener listener) {
         this.itemListener = listener;
-        if (listener != null){
-            Log.d("itemListener","not-null");
-        }else {
-            Log.d("itemListener","null");
-
-        }
-
     }
 
     public Adapter_memoList(List<Content_Room> items) {

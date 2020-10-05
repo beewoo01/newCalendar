@@ -23,6 +23,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import cookmap.cookandroid.hw.newcalendar.R;
+import cookmap.cookandroid.hw.newcalendar.databinding.GalleryItemBinding;
 
 public class Gallery_Adapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
@@ -107,13 +108,15 @@ public class Gallery_Adapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
 
             int width = (int) (parent.getResources().getDisplayMetrics().widthPixels / 3.25);
             LayoutInflater inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-            View view = inflater.inflate(R.layout.gallery_item, parent, false);
+            //View view = inflater.inflate(R.layout.gallery_item, parent, false);
             RelativeLayout.LayoutParams lp = new RelativeLayout.LayoutParams(width, width);
             lp.setMargins(2,2,2,2);
-            view.setLayoutParams(lp);
-            Gallery_Adapter.CustomViewHolder viewHolder = new Gallery_Adapter.CustomViewHolder(view);
+            //view.setLayoutParams(lp);
+            GalleryItemBinding viewHolder = GalleryItemBinding.inflate(inflater);
+            viewHolder.getRoot().setLayoutParams(lp);
+            //Gallery_Adapter.CustomViewHolder viewHolder = new Gallery_Adapter.CustomViewHolder(view);
 
-            return viewHolder;
+            return new CutomViewHolderBinding(viewHolder);
         } else {
 
             return new ProgressViewHolder(new ProgressBar(context, null, android.R.attr.progressBarStyleSmall));
@@ -121,7 +124,6 @@ public class Gallery_Adapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
     }
 
     public void addAll(List<String> lst) {
-        //thumbsDataList.clear();
         thumbsDataList.addAll(lst);
         notifyDataSetChanged();
     }
@@ -133,43 +135,42 @@ public class Gallery_Adapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
 
     @Override
     public void onBindViewHolder(@NonNull final RecyclerView.ViewHolder holder, int position) {
-        if (holder instanceof CustomViewHolder) {
-
-
-            ((CustomViewHolder) holder).imageView.setLayoutParams(new RelativeLayout.LayoutParams(
+        if (holder instanceof CutomViewHolderBinding){
+            ((CutomViewHolderBinding) holder).binding.pictureItem.setLayoutParams(new RelativeLayout.LayoutParams(
                     ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT));
-            ((CustomViewHolder) holder).dot_layout.setVisibility(View.INVISIBLE);
-            ((CustomViewHolder) holder).Picked_number_TextView.setVisibility(View.INVISIBLE);
-            ((CustomViewHolder) holder).bg_main.setPadding(4,4,4,4);
-            ((CustomViewHolder) holder).Picked_number_TextView.setLayoutParams(new RelativeLayout.LayoutParams(
+            ((CutomViewHolderBinding) holder).binding.numberDotItem.setVisibility(View.INVISIBLE);
+            ((CutomViewHolderBinding) holder).binding.pickedNumberTxt.setVisibility(View.INVISIBLE);
+            ((CutomViewHolderBinding) holder).binding.itemBgd.setPadding(4,4,4,4);
+
+            ((CutomViewHolderBinding) holder).binding.pickedNumberTxt.setLayoutParams(new RelativeLayout.LayoutParams(
                     ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT
             ));
             RelativeLayout.LayoutParams midd = new RelativeLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT,
                     ViewGroup.LayoutParams.WRAP_CONTENT);
-            ((CustomViewHolder) holder).Picked_number_TextView.setLayoutParams(midd);
+            ((CutomViewHolderBinding) holder).binding.pickedNumberTxt.setLayoutParams(midd);
             midd.addRule(RelativeLayout.CENTER_IN_PARENT);
 
-
-            if (selecedPosition.size() > 0 && holder.getAdapterPosition() != RecyclerView.NO_POSITION){ ;
+            if (selecedPosition.size() > 0 && holder.getAdapterPosition() != RecyclerView.NO_POSITION){
 
                 if (selecedPosition.contains(holder.getAdapterPosition())){
                     selecedPosition.indexOf(holder.getAdapterPosition());
                     selecedPosition.get(selecedPosition.indexOf(holder.getAdapterPosition()));
 
-                    ((CustomViewHolder) holder).dot_layout.setVisibility(View.VISIBLE);
-                    ((CustomViewHolder) holder).Picked_number_TextView.setVisibility(View.VISIBLE);
-                    ((CustomViewHolder) holder).Picked_number_TextView.setText(String.valueOf(selecedPosition.indexOf(holder.getAdapterPosition())+1));
-                    ((CustomViewHolder) holder).Picked_number_TextView.setTextColor(Color.parseColor("#FFFFFF"));
-                    ((CustomViewHolder) holder).imageView.setColorFilter(Color.parseColor("#7F000000"));
+                    ((CutomViewHolderBinding) holder).binding.numberDotItem.setVisibility(View.VISIBLE);
+                    ((CutomViewHolderBinding) holder).binding.pickedNumberTxt.setVisibility(View.VISIBLE);
+                    ((CutomViewHolderBinding) holder).binding.pickedNumberTxt.setText(String.valueOf(selecedPosition.indexOf(holder.getAdapterPosition())+1));
+                    ((CutomViewHolderBinding) holder).binding.pickedNumberTxt.setTextColor(Color.parseColor("#FFFFFF"));
+                    ((CutomViewHolderBinding) holder).binding.pictureItem.setColorFilter(Color.parseColor("#7F000000"));
                 }else {
-                    ((CustomViewHolder) holder).imageView.setColorFilter(Color.parseColor("#7F000000"), PorterDuff.Mode.DST);
+                    ((CutomViewHolderBinding) holder).binding.pictureItem.setColorFilter(Color.parseColor("#7F000000"), PorterDuff.Mode.DST);
                 }
 
             }
 
-            Glide.with(((CustomViewHolder) holder).imageView.getContext())
+            Glide.with(((CutomViewHolderBinding) holder).binding.pictureItem.getContext())
                     .load(thumbsDataList.get(position))
-                    .into(((CustomViewHolder) holder).imageView);
+                    .into(((CutomViewHolderBinding) holder).binding.pictureItem);
+
 
         }
 
@@ -187,12 +188,9 @@ public class Gallery_Adapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
 
     public void setProgressMore(final boolean isProgress) {
         if (isProgress) {
-            new Handler().post(new Runnable() {
-                @Override
-                public void run() {
+            new Handler().post(() ->  {
                     thumbsDataList.add(null);
                     notifyItemInserted(thumbsDataList.size() - 1);
-                }
             });
         } else {
             thumbsDataList.remove(thumbsDataList.size() - 1);
@@ -200,55 +198,40 @@ public class Gallery_Adapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
         }
     }
 
-    class CustomViewHolder extends RecyclerView.ViewHolder {
-        //RelativeLayout relativeLayout;
-        ImageView imageView;
-        RelativeLayout dot_layout, bg_main;
-        TextView Picked_number_TextView;
+    class CutomViewHolderBinding extends RecyclerView.ViewHolder{
+        GalleryItemBinding binding;
+        public CutomViewHolderBinding(@NonNull GalleryItemBinding binding) {
+            super(binding.getRoot());
+            this.binding = binding;
+            binding.getRoot().setOnClickListener(v -> {
+                int position = getAdapterPosition();
 
+                if (position != RecyclerView.NO_POSITION) {
+                    if (selecedPosition.size() <= 0){
+                        //처음 선택, 다 제거 후 선택
+                        selecedPosition.add(position);
 
-        public CustomViewHolder(@NonNull final View itemView) {
-            super(itemView);
-            //relativeLayout = (RelativeLayout) itemView;
-            bg_main =  itemView.findViewById(R.id.item_bgd);
-            imageView =  itemView.findViewById(R.id.picture_item);
-            dot_layout = itemView.findViewById(R.id.number_dot_item);
-            Picked_number_TextView = itemView.findViewById(R.id.picked_number_txt);
+                    }else {
+                        // 선택한 항목이 있는경우
+                        if (selecedPosition.contains(position)){
 
-            itemView.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    int position = getAdapterPosition();
-
-                    if (position != RecyclerView.NO_POSITION) {
-                        if (selecedPosition.size() <= 0){
-                            //처음 선택, 다 제거 후 선택
+                            selecedPosition.remove(selecedPosition.indexOf(position));
+                            binding.numberDotItem.setVisibility(View.INVISIBLE);
+                            binding.pickedNumberTxt.setVisibility(View.INVISIBLE);
+                            binding.pictureItem.setColorFilter(Color.parseColor("#7F000000"), PorterDuff.Mode.DST);
+                        } else if ( selecedPosition.size() < 10){
                             selecedPosition.add(position);
 
-                        }else {
-                            // 선택한 항목이 있는경우
-                                    if (selecedPosition.contains(position)){
-
-                                        selecedPosition.remove(selecedPosition.indexOf(position));
-                                        dot_layout.setVisibility(View.INVISIBLE);
-                                        Picked_number_TextView.setVisibility(View.INVISIBLE);
-                                        imageView.setColorFilter(Color.parseColor("#7F000000"), PorterDuff.Mode.DST);
-                                    } else if ( selecedPosition.size() < 10){
-                                        selecedPosition.add(position);
-
-                                    }
                         }
-
-                        notifyDataSetChanged();
                     }
 
+                    notifyDataSetChanged();
                 }
             });
-
         }
     }
 
-    static class ProgressViewHolder extends RecyclerView.ViewHolder {
+    class ProgressViewHolder extends RecyclerView.ViewHolder {
 
         public ProgressBar bar;
 

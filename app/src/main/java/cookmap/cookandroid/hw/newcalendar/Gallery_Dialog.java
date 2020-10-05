@@ -16,6 +16,7 @@ import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.databinding.DataBindingUtil;
 import androidx.fragment.app.DialogFragment;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.GridLayoutManager;
@@ -26,6 +27,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import cookmap.cookandroid.hw.newcalendar.adpater.Gallery_Adapter;
+import cookmap.cookandroid.hw.newcalendar.databinding.GalleryFragBinding;
 
 public class Gallery_Dialog extends DialogFragment implements Gallery_Adapter.OnLoadMoreListener{
     RecyclerView recyclerView;
@@ -49,11 +51,13 @@ public class Gallery_Dialog extends DialogFragment implements Gallery_Adapter.On
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+        GalleryFragBinding binding = DataBindingUtil.inflate(inflater, R.layout.gallery_frag, container, false);
+
         View view = inflater.inflate(R.layout.gallery_frag, container);
         back_Image = view.findViewById(R.id.back_btn_gf);
         addPhoto = view.findViewById(R.id.check_btn_gf);
         recyclerView = view.findViewById(R.id.gf_recycler);
-        recyclerView.setLayoutManager(new GridLayoutManager(getActivity(),3));
+        //recyclerView.setLayoutManager(new GridLayoutManager(getActivity(),3));
 
         imgArry =new ArrayList<>(10);
 
@@ -65,42 +69,24 @@ public class Gallery_Dialog extends DialogFragment implements Gallery_Adapter.On
         adapter.setGridLayoutManager(new GridLayoutManager(getActivity(),3));
         adapter.setRecyclerView(recyclerView);
 
-        back_Image.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                dismissDialog();
-            }
-        });
+        back_Image.setOnClickListener(v -> dismissDialog());
 
-        addPhoto.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-
-                adapter.setItemImage(new Gallery_Adapter.getImgListner(){
-                    @Override
-                    public void onImg(List list) {
-                        if (list.size() > 0){
-                            for (int i = 0; i < list.size(); i++){
-                                imgArry.add(String.valueOf(list.get(i))) ;
-                            }
-                        }
-                        passDataInterface.onDataReceived(imgArry);
-                        dismissDialog();
-
-
+        addPhoto.setOnClickListener(v -> {
+            adapter.setItemImage(list -> {
+                if (list.size() > 0) {
+                    for (int i = 0; i < list.size(); i++) {
+                        imgArry.add(String.valueOf(list.get(i)));
                     }
-                });
-            }
+                }
+                passDataInterface.onDataReceived(imgArry);
+                dismissDialog();
+            });
         });
-
 
         RecyclerView.ItemAnimator animator = recyclerView.getItemAnimator();
         if (animator instanceof SimpleItemAnimator) {
             ((SimpleItemAnimator) animator).setSupportsChangeAnimations(false);
         }
-
-
-
         recyclerView.setAdapter(adapter);
 
         return view;
@@ -150,9 +136,7 @@ public class Gallery_Dialog extends DialogFragment implements Gallery_Adapter.On
     public void onLoadMore() {
 
         adapter.setProgressMore(true);
-        new Handler().postDelayed(new Runnable() {
-            @Override
-            public void run() {
+        new Handler().postDelayed(() ->  {
                 thumbsIDList.clear();
                 thumbsDataList.clear();
 
@@ -162,7 +146,6 @@ public class Gallery_Dialog extends DialogFragment implements Gallery_Adapter.On
 
                 adapter.addItemMore(thumbsDataList);
                 adapter.setMoreLoading(false);
-            }
         }, 2000);
 
     }
@@ -204,11 +187,6 @@ public class Gallery_Dialog extends DialogFragment implements Gallery_Adapter.On
             e.printStackTrace();
         }
 
-
-
-
     }
-
-
 
 }

@@ -35,6 +35,7 @@
             android:layout_height="wrap_content"
             android:orientation="vertical"
             android:paddingStart="5dp"
+            android:paddingEnd="0dp"
             app:lightColor="@{item_content.label}"
             >
             <TextView
@@ -80,7 +81,7 @@
                     android:layout_height="wrap_content"
                     android:textColor="@color/white"
                     android:textSize="15sp"
-                    android:text="~"
+                    android:text="@string/Tilde"
                     android:layout_marginStart="10dp"
                     />
 

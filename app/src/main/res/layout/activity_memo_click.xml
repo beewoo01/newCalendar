@@ -33,7 +33,7 @@
                 android:layout_width="40sp"
                 android:layout_height="40sp"
                 android:layout_centerVertical="true"
-                android:layout_marginLeft="5sp"
+                android:layout_marginEnd="5sp"
                 android:onClick="@{activity::onclick}"
                 android:background="@drawable/ic_back_button_icon" />
         </RelativeLayout>
@@ -41,7 +41,7 @@
         <View
             android:id="@+id/line_in_mfrag"
             android:layout_width="match_parent"
-            android:layout_height="2sp"
+            android:layout_height="2dp"
             android:layout_below="@+id/tab_in_mfrag"
             android:background="@color/colorGray_No2" />
 
@@ -50,7 +50,7 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_below="@+id/line_in_mfrag"
-            android:layout_marginTop="5sp"></androidx.recyclerview.widget.RecyclerView>
+            android:layout_marginTop="5sp"/>
 
     </RelativeLayout>
 

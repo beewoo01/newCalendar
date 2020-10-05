@@ -24,36 +24,32 @@ import androidx.databinding.DataBindingUtil;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.viewpager2.widget.ViewPager2;
 
-import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
 
 import cookmap.cookandroid.hw.newcalendar.Database.Database_Room;
 import cookmap.cookandroid.hw.newcalendar.adpater.AdapterFrgCalendar;
 import cookmap.cookandroid.hw.newcalendar.adpater.Adapter_memoList;
-import cookmap.cookandroid.hw.newcalendar.databinding.ActivityMultiCalendarBinding;
+import cookmap.cookandroid.hw.newcalendar.databinding.ActivityMainBinding;
 import cookmap.cookandroid.hw.newcalendar.db.Content_Room;
 
 public class MainActivity extends BaseActivity implements FrgCalendar.OnFragmentListener {
     private static final int COUNT_PAGE = 12;
 
     private long selectDate;
-    private ActivityMultiCalendarBinding binding;
+    private ActivityMainBinding binding;
     private AdapterFrgCalendar adapter;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        //setContentView(R.layout.activity_multi_calendar);
-        binding = DataBindingUtil.setContentView(this, R.layout.activity_multi_calendar);
+        binding = DataBindingUtil.setContentView(this, R.layout.activity_main);
         initialize(Calendar.getInstance().getTimeInMillis());
     }
 
     @Override
     protected void onResume() {
         super.onResume();
-        Log.d("selectedData", new Convert_Date().Convert_Date(selectDate));
-        //binding.memoRecycler.getAdapter().notifyDataSetChanged();
         initData(selectDate);
     }
 
@@ -63,12 +59,11 @@ public class MainActivity extends BaseActivity implements FrgCalendar.OnFragment
 
         if (data > 0) {
             String full = new Convert_Date().Convert_Date(data);
-            Log.d("whats fullday : ", full);
             List<Content_Room> memo_Click_List = Database_Room.getInstance(this).getDao().getClickMemo(full);
             Adapter_memoList baseAdapter = new Adapter_memoList(memo_Click_List);
             binding.memoRecycler.setAdapter(baseAdapter);
             binding.memoRecycler.setLayoutManager(new LinearLayoutManager(this));
-            baseAdapter.setOnItemClickListener((view, position) -> onItemClick(view, position));
+            baseAdapter.setOnItemClickListener(this::onItemClick);
             baseAdapter.notifyDataSetChanged();
 
             if (memo_Click_List.size() <= 0){
@@ -215,14 +210,11 @@ public class MainActivity extends BaseActivity implements FrgCalendar.OnFragment
             return;
         }
         ValueAnimator anim = ValueAnimator.ofInt(binding.pager.getLayoutParams().height, mRootView.getHeight());
-        anim.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
-            @Override
-            public void onAnimationUpdate(ValueAnimator valueAnimator) {
-                int val = (Integer) valueAnimator.getAnimatedValue();
-                ViewGroup.LayoutParams layoutParams = binding.pager.getLayoutParams();
-                layoutParams.height = val;
-                binding.pager.setLayoutParams(layoutParams);
-            }
+        anim.addUpdateListener(animation -> {
+            int val = (Integer) animation.getAnimatedValue();
+            ViewGroup.LayoutParams layoutParam = binding.pager.getLayoutParams();
+            layoutParam.height = val;
+            binding.pager.setLayoutParams(layoutParam);
         });
         anim.setDuration(200);
         anim.start();

@@ -1,14 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/item_background"
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
-    android:id="@+id/item_background"
     android:orientation="vertical">
-
-    <View
-        android:layout_width="wrap_content"
-        android:layout_height="0.5sp"
-        android:background="@color/colorGray_No2" />
 
     <TextView
 
@@ -20,5 +15,10 @@
         android:layout_marginBottom="10sp"
         android:textColor="@color/colorBlack"
         android:textSize="20sp" />
+
+    <View
+        android:layout_width="wrap_content"
+        android:layout_height="0.5sp"
+        android:background="@color/colorGray_No2" />
 
 </LinearLayout>

@@ -10,10 +10,19 @@
     <string name="add">등록</string>
     <string name="back">뒤로</string>
 
+    <string name="more">더보기</string>
+    
+    <string name="pickedPicture">picked</string>
+
     <string name="addAct">일정 등록</string>
+    <string name="image">image</string>
+
+    <string name="emptyContent">내용을 추가해 주세요</string>
 
     <string name="addImg">Add Img +</string>
     <string name="change_date">날짜 변경</string>
+    <string name="memo_Act">메모장</string>
+    <string name="Tilde">~</string>
 
     <string-array name="day_of_week">
         <item>sun</item>

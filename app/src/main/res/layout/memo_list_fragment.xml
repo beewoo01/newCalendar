@@ -13,7 +13,7 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="메모장"
+            android:text="@string/memo_Act"
             android:textSize="20sp"
             android:textStyle="bold"
             android:textColor="@color/colorBlack"
@@ -25,13 +25,13 @@
             android:layout_height="40sp"
             android:background="@drawable/ic_back_button_icon"
             android:layout_centerVertical="true"
-            android:layout_marginLeft="5sp"
+            android:layout_marginStart="5sp"
             />
     </RelativeLayout>
     <View
         android:id="@+id/line_in_mfrag"
         android:layout_width="match_parent"
-        android:layout_height="2sp"
+        android:layout_height="2dp"
         android:background="@color/colorGray_No2"
         android:layout_below="@+id/tab_in_mfrag"
         />
@@ -42,6 +42,6 @@
         android:layout_height="match_parent"
         android:layout_below="@+id/line_in_mfrag"
         android:layout_marginTop="5sp"
-        ></androidx.recyclerview.widget.RecyclerView>
+        />
 
 </RelativeLayout>

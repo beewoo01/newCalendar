@@ -58,8 +58,6 @@ public class Convert_Date {
 
 
     public long Convert_StringToLong(String date)  {
-        /*DateTimeFormatter sdf = DateTimeFormatter.ofPattern(date,Locale.getDefault());
-        long day = LocalDate.parse(date, sdf).atStartOfDay(ZoneId.of("Asia/Seoul")).toInstant().toEpochMilli();*/
         Date to = null;
 
         try {

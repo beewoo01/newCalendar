@@ -46,7 +46,6 @@ public class Memo_Click_Activity extends BaseActivity {
     public void initView() {
         super.initView();
 
-
         String full_day = new Convert_Date().Convert_Date(date);
         String short_day = new Convert_Date().Convert_date_short(date, 0);
         binding.selectedDay.setText(short_day);

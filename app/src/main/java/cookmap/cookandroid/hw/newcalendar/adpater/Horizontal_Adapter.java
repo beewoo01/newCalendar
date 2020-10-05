@@ -22,11 +22,6 @@ public class Horizontal_Adapter extends RecyclerView.Adapter<BaseViewHolder<Last
     private Context context;
     private ArrayList list;
     public int coverNum;
-    protected BaseViewHolder.OnRCVItemListener listener;
-
-    public void setOnItemClickListener(BaseViewHolder.OnRCVItemListener listener){
-        this.listener = listener;
-    }
 
     public Horizontal_Adapter(ArrayList list){
         this.list = list;
@@ -44,7 +39,6 @@ public class Horizontal_Adapter extends RecyclerView.Adapter<BaseViewHolder<Last
     @Override
     public void onBindViewHolder(@NonNull BaseViewHolder<LastImgItemBinding> holder, int position) {
         Glide.with(context).load(list.get(position)).into(holder.binding().lastImg);
-        Log.d("posisisi", String.valueOf(position));
         if (coverNum == position) {
             holder.binding().lastImgBg.setBackgroundColor(Color.parseColor("#000000"));
         } else {

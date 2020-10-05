@@ -28,6 +28,7 @@
                 android:layout_height="100dp"
                 android:adjustViewBounds="false"
                 android:scaleType="centerCrop"
+                android:contentDescription="@string/pickedPicture"
                 tools:background="@mipmap/ic_launcher" />
 
         </RelativeLayout>
@@ -42,7 +43,8 @@
                 android:id="@+id/last_x_img"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:src="@drawable/ic_close_white_24dp" />
+                android:src="@drawable/ic_close_white_24dp"
+                android:contentDescription="@string/cancle" />
 
         </RelativeLayout>
 

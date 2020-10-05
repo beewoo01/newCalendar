@@ -100,7 +100,6 @@ public class NoteAditActivity extends BaseActivity implements View.OnClickListen
                 e.printStackTrace();
             }
         } else {
-            Log.d("id=0 ", "else옴");
             String setDay = new Convert_Date().Convert_Date(bundle.getLong("select_Day"));
             long selectedDay = bundle.getLong("select_Day");
             pair = Pair.create(selectedDay, selectedDay);
@@ -116,9 +115,7 @@ public class NoteAditActivity extends BaseActivity implements View.OnClickListen
 
         MaterialDatePicker.Builder<Pair<Long, Long>> builder = MaterialDatePicker.Builder.dateRangePicker();
         builder.setTitleText("날짜를 선택하세요");
-        Log.d("pair.toString ", pair.toString());
         builder.setSelection(pair);
-        Log.d("showDatePickerDialog ", sp.format(pair.first) + ", " + sp.format(pair.second));
         MaterialDatePicker materialDatePicker = builder.build();
 
         materialDatePicker.show(getSupportFragmentManager(), "태그");
@@ -137,7 +134,6 @@ public class NoteAditActivity extends BaseActivity implements View.OnClickListen
     }
 
     private void Modify(int id) throws Exception {
-        Log.d("수정" , "드러옴");
         //수정
 
         Memo_Date SNE = Database_Room.getInstance(this).getDao().getXN(id);
@@ -158,7 +154,6 @@ public class NoteAditActivity extends BaseActivity implements View.OnClickListen
             if (jsonObject.has(String.valueOf(i))) {
                 String key = jsonObject.getString(String.valueOf(i));
                 imgAddress.add(key);
-                Log.d("수정 이미지" + i + " ",imgAddress.get(i));
                 i++;
             } else break;
         }

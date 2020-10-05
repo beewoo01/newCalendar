@@ -116,7 +116,7 @@ public class Memo_ListView_Adapter extends RecyclerView.Adapter<RecyclerView.Vie
     }
 
 
-    class itemViewholder extends RecyclerView.ViewHolder {
+    class itemViewholder extends RecyclerView.ViewHolder implements View.OnLongClickListener {
         MemoFragItemBinding binding;
 
         public itemViewholder(@NonNull MemoFragItemBinding binding) {
@@ -126,6 +126,11 @@ public class Memo_ListView_Adapter extends RecyclerView.Adapter<RecyclerView.Vie
         }
 
 
+        @Override
+        public boolean onLongClick(View v) {
+            showDialog(1, getAdapterPosition());
+            return false;
+        }
     }
 
     class noImge extends RecyclerView.ViewHolder implements View.OnLongClickListener{
@@ -134,7 +139,6 @@ public class Memo_ListView_Adapter extends RecyclerView.Adapter<RecyclerView.Vie
         public noImge(@NonNull MemoListNoimgBinding binding) {
             super(binding.getRoot());
             this.binding = binding;
-            //binding.getRoot().setAnimation(AnimationUtils.loadAnimation(context, R.anim.recyclerview_anim));
             binding.getRoot().setOnLongClickListener(this);
         }
 

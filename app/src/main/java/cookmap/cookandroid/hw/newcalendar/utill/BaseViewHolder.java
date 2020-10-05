@@ -32,9 +32,8 @@ public class BaseViewHolder<T extends ViewDataBinding> extends RecyclerView.View
             if (position != RecyclerView.NO_POSITION){
                 if (listener != null){
                     listener.onItemClick(v, position);
-                    Log.d("ViewHolder ", "onRCVItemListener != null");
                 }else {
-                    Log.d("ViewHolder ", "onRCVItemListener ===== null");
+
                 }
 
             }
